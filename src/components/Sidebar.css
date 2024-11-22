@@ -1,0 +1,44 @@
+.sidebar-container {
+  width: 330px;
+  background-color: white;
+  height: 100vh;
+  display: flex;
+  flex: 1s;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.divider {
+  background-color: #2c2c2c;
+}
+
+.usthlogo {
+  width: auto;
+  height: 50px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.logout-section {
+  margin-top: auto;
+}
+
+.conv-history {
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  max-height: 0;
+  opacity: 0;
+}
+
+.conv-history.show {
+  max-height: 500px; 
+  opacity: 1;
+}
+
+.conv-history.hide {
+  max-height: 0;
+  opacity: 0;
+}
