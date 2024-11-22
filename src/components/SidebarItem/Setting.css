@@ -1,0 +1,141 @@
+/* Dark overlay for background */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    color: black;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .settings-container {
+    width: 700px;
+
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    z-index: 1001;
+  }
+  
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #727272;
+  }
+  
+  .settings-header h2 {
+    font-size: 18px;
+    margin: 0;
+  }
+  
+  .close-button {
+    color: black;
+    background: none;
+    border: none;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .close-button:hover {
+    background-color: rgb(255, 0, 0);
+  }
+  
+  .settings-content {
+    margin-top: 15px;
+  }
+  
+  .settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+  
+  .theme-toggle {
+    font-size: 10px;
+    cursor: pointer;
+    background: lightgray;
+    border: none;
+  }
+
+  .spanmargin{
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .toggle-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .toggle-switch {
+    width: 30px;
+    height: 15px;
+    background-color: #6c6c6c;
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .toggle-switch::before {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    top: 1px;
+    left: 2px;
+    transition: transform 0.3s;
+  }
+  
+  .toggle-switch.on {
+    background-color: #0a84ff;
+  }
+  
+  .toggle-switch.on::before {
+    transform: translateX(13px); 
+  }
+  
+
+  .dropdown {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+  
+
+  .manage-button,
+  .action-button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #8b8b8b;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    font-size: 14px;
+  }
+  .manage-button:hover,
+  .action-button:hover {
+    color: #ffffff;
+    background-color: #646464;
+  }
+  
+  .action-button.delete {
+    background-color: #e57373;
+    color: #ffffff;
+  }
+
+  .action-button.delete:hover{
+    background-color: red;
+  }
+  

@@ -1,3 +1,2 @@
-# ChatBotPlatform
-
-Topic: Personalized Learning Support for Students with Chatbots platform.
+USTH CHATBOT PROJECT
+UI by Ha Le Hoang
