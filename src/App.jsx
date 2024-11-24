@@ -8,6 +8,8 @@ import Login from './components/login';
 import Register from './components/register';
 import StudentDashboard from './components/StudentDashboard'; 
 import TeacherDashboard from './components/TeacherDashboard'; 
+import MultipleChoiceLayout from './components/test'; 
+import QuizPage from './components/quiz';
 import './App.css';
 
 const App = () => {
@@ -88,6 +90,26 @@ const App = () => {
           element={
             user && user.role === 'Teacher' ? (
               <TeacherDashboard />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+          <Route
+          path="/multiple-choice"
+          element={
+            user ? (
+              <MultipleChoiceLayout />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/quiz"
+          element={
+            user ? (
+              <QuizPage />
             ) : (
               <Navigate to="/login" />
             )

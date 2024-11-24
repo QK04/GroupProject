@@ -73,7 +73,7 @@ function Register() {
             <div className='register-container'>
                 <div className="header">
                     <img
-                        src="/Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi.png"
+                        src="/src/assets/logo.png"
                         alt="Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi"
                     />
                 </div>
