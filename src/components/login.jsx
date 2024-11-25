@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import './Login.css'; 
 
 const Login = ({ onLogin }) => {
@@ -34,8 +35,25 @@ const Login = ({ onLogin }) => {
 
       // If login is successful, call onLogin (you can pass additional user info if needed)
       if (response.status >= 200 && response.status < 300) {
-        const user = JSON.parse(response.data.body);
-        console.log("User Data from API:", user);
+        const responseBody = JSON.parse(response.data.body);
+
+        const { access_token } = responseBody;
+        console.log("User Data from API:", access_token);
+        // Decode the JWT token
+        const decodedToken = jwtDecode(access_token);
+        console.log("Decoded JWT:", decodedToken);
+
+        if (!decodedToken) {
+          setError('Failed to decode token');
+          return;
+        }
+
+        const user = {
+          access_token,
+          user_id: decodedToken.user_id,
+          user_name: decodedToken.user_name,
+          role: decodedToken.role,
+        };
 
         onLogin(user); // Pass user data to the parent component
 
@@ -43,7 +61,7 @@ const Login = ({ onLogin }) => {
         localStorage.setItem('user', JSON.stringify(user));
 
         // Log the user role to check if it's being properly returned
-        const role = user.role;
+        const role = decodedToken.role;
         console.log("User Role:", role);
         console.log("Role Type:", typeof role);
 

@@ -40,6 +40,12 @@ const App = () => {
     }
   }, [user]);
 
+  // Debugging - log user state and localStorage to check data
+  useEffect(() => {
+    console.log("User state updated:", user);
+    console.log("User data in localStorage:", localStorage.getItem('user'));
+  }, [user]);
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
