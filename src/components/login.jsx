@@ -2,29 +2,34 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css'; 
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
     setError(''); // Clear any previous error message
+    setLoading(true);
 
     try {
       // Call the login API
       const response = await axios.post(
-        'https://xds4mfuxv4.execute-api.us-east-1.amazonaws.com/prod/login',
+        `${import.meta.env.VITE_API_BASE_URL}/login`,
         {
           email: email,
           password: password,
         },
         {
           headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         }
@@ -36,9 +41,15 @@ const Login = ({ onLogin }) => {
       // If login is successful, call onLogin (you can pass additional user info if needed)
       if (response.status >= 200 && response.status < 300) {
         const responseBody = JSON.parse(response.data.body);
-
         const { access_token } = responseBody;
         console.log("User Data from API:", access_token);
+
+        if (!access_token) {
+          toast.error('Thông tin đăng nhập không hợp lệ');
+          setLoading(false);
+          return;
+        }
+
         // Decode the JWT token
         const decodedToken = jwtDecode(access_token);
         console.log("Decoded JWT:", decodedToken);
@@ -87,10 +98,14 @@ const Login = ({ onLogin }) => {
       } else {
         console.error("Login failed with status:", response.status);
         setError('Invalid credentials or something went wrong');
+        toast.error('Invalid email or password');
       }
     } catch (error) {
       console.error("Login failed:", error);
       setError('Invalid credentials or something went wrong');
+      toast.error('An error occurred, please try again');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,7 +137,7 @@ const Login = ({ onLogin }) => {
             required 
           />
         </div>
-        <button className="login-button" type="submit">Login</button>
+        <button className="login-button" type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
       </form>
 
       {error && <div className="error-message">{error}</div>}
@@ -131,6 +146,7 @@ const Login = ({ onLogin }) => {
         <p>New to the platform?</p>
         <button className="register-button" onClick={handleRegister}>Create an Account</button>
       </div>
+      <ToastContainer position="top-right" autoClose={5000} />
     </div>
   );
 };

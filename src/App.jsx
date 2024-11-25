@@ -9,6 +9,8 @@ import Register from './components/register';
 import StudentDashboard from './components/StudentDashboard'; 
 import TeacherDashboard from './components/TeacherDashboard'; 
 import MultipleChoiceLayout from './components/test'; 
+import ProtectedPage from './components/ProtectedPage';
+import Dashboard from './components/Dashboard';
 import QuizPage from './components/quiz';
 import './App.css';
 
@@ -121,6 +123,8 @@ const App = () => {
             )
           }
         />
+        <Route path="/protected" element={<ProtectedPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="/"
           element={
