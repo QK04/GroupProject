@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../api/axios'; 
 import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -37,10 +37,11 @@ const Login = ({ onLogin }) => {
 
       // Log the response to see what's being returned
       console.log("API Response:", response);
-
       // If login is successful, call onLogin (you can pass additional user info if needed)
       if (response.status >= 200 && response.status < 300) {
         const responseBody = JSON.parse(response.data.body);
+        
+
         const { access_token } = responseBody;
         console.log("User Data from API:", access_token);
 
@@ -61,6 +62,7 @@ const Login = ({ onLogin }) => {
 
         const user = {
           access_token,
+          refresh_token: responseBody.refresh_token,
           user_id: decodedToken.user_id,
           user_name: decodedToken.user_name,
           role: decodedToken.role,
