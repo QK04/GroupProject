@@ -35,7 +35,7 @@ function Register() {
 
         try {
             const response = await axios.post(
-                'https://gkxigym921.execute-api.us-east-1.amazonaws.com/prod/register',
+                `${import.meta.env.VITE_API_BASE_URL}/register`,
                 {
                     email: email,
                     user_name: username,
@@ -73,7 +73,7 @@ function Register() {
             <div className='register-container'>
                 <div className="header">
                     <img
-                        src="/Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi.png"
+                        src="/src/assets/logo.png"
                         alt="Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi"
                     />
                 </div>

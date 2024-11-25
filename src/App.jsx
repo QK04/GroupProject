@@ -8,6 +8,10 @@ import Login from './components/login';
 import Register from './components/register';
 import StudentDashboard from './components/StudentDashboard'; 
 import TeacherDashboard from './components/TeacherDashboard'; 
+import MultipleChoiceLayout from './components/test'; 
+import ProtectedPage from './components/ProtectedPage';
+import Dashboard from './components/Dashboard';
+import QuizPage from './components/quiz';
 import './App.css';
 
 const App = () => {
@@ -36,6 +40,12 @@ const App = () => {
     } else {
       localStorage.removeItem('user');
     }
+  }, [user]);
+
+  // Debugging - log user state and localStorage to check data
+  useEffect(() => {
+    console.log("User state updated:", user);
+    console.log("User data in localStorage:", localStorage.getItem('user'));
   }, [user]);
 
   const toggleSidebar = () => {
@@ -93,6 +103,28 @@ const App = () => {
             )
           }
         />
+          <Route
+          path="/multiple-choice"
+          element={
+            user ? (
+              <MultipleChoiceLayout />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/quiz"
+          element={
+            user ? (
+              <QuizPage />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route path="/protected" element={<ProtectedPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="/"
           element={
