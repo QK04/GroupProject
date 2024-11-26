@@ -1,0 +1,15 @@
+.student-dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+.row-container{
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  
+
+} 

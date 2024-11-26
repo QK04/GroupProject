@@ -1,5 +1,4 @@
 import React from "react";
-import sidebarLeftIcon from "../../assets/sidebar-left.png";
 import "./History.css";
 
 const History = ({ isOpen, onChatSelect }) => {
