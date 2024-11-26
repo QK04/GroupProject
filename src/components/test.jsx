@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import './test.css';
+import { useParams } from "react-router-dom";
+import "./test.css";
+import TopBar from "./Topbar";
 
-const MultipleChoiceLayout = () => {
-  const [questions, setQuestions] = useState([]); // Danh sách câu hỏi
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Câu hỏi hiện tại
-  const [answers, setAnswers] = useState({}); // Đáp án người dùng đã chọn
+const MultipleChoiceLayout = ({ toggleSidebar, toggleHistory, onLogout }) => {
+  const { testId } = useParams(); // Get test number from the route
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
 
-  // Hàm giả lập lấy dữ liệu từ API
   useEffect(() => {
     const fetchQuestions = async () => {
       const mockData = Array.from({ length: 15 }, (_, i) => ({
@@ -20,7 +22,6 @@ const MultipleChoiceLayout = () => {
     fetchQuestions();
   }, []);
 
-  // Hàm xử lý chọn đáp án
   const handleAnswerChange = (questionId, selectedOption) => {
     setAnswers((prev) => ({
       ...prev,
@@ -28,7 +29,6 @@ const MultipleChoiceLayout = () => {
     }));
   };
 
-  // Hàm chuyển sang câu hỏi trước hoặc sau
   const handleNavigation = (direction) => {
     setCurrentQuestionIndex((prev) =>
       direction === "next"
@@ -37,7 +37,6 @@ const MultipleChoiceLayout = () => {
     );
   };
 
-  // Hàm gửi câu trả lời
   const handleSubmit = () => {
     console.log("Submitted Answers:", answers);
     alert("Your answers have been submitted!");
@@ -45,15 +44,17 @@ const MultipleChoiceLayout = () => {
 
   return (
     <>
-      <meta charSet="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Multiple Choice Layout</title>
-      <link rel="stylesheet" href="test.css" />
-      <div className="container">
-        {/* Test selection section */}
-        <div className="test-selection">
-          <h3>Test Number 1:</h3>
-          {Array.from({ length: 15 }, (_, i) => (
+    <TopBar
+        toggleSidebar={toggleSidebar}
+        toggleHistory={toggleHistory}
+        onLogout={onLogout}
+      />
+    <div className="test-container">
+      {/* Sidebar for question navigation */}
+      <div className="test-sidebar">
+        <h4>Quiz Navigation</h4>
+        <div className="navigation-buttons">
+          {Array.from({ length: questions.length }, (_, i) => (
             <button
               key={i}
               onClick={() => setCurrentQuestionIndex(i)}
@@ -62,22 +63,23 @@ const MultipleChoiceLayout = () => {
               {i + 1}
             </button>
           ))}
-          <br />
-          <button className="finish" onClick={handleSubmit}>
-            Finished? Then Submit
-          </button>
         </div>
+        <button className="finish" onClick={handleSubmit}>
+          Finish Attempt
+        </button>
+      </div>
 
-        {/* Question section */}
-        <div className="question-section">
-          {questions.length > 0 && (
-            <>
-              <label>
-                <h2>{questions[currentQuestionIndex].text}</h2>
-              </label>
+      {/* Main question section */}
+      <div className="question-section">
+        <h4>Test Number: {testId}</h4>
+        {questions.length > 0 && (
+          <>
+            <h2>{questions[currentQuestionIndex].text}</h2>
+            <div className="options">
               {questions[currentQuestionIndex].options.map((option, idx) => (
-                <label key={idx}>
+                <label key={idx} className="option-label">
                   <input
+                  
                     type="radio"
                     name={`question${questions[currentQuestionIndex].id}`}
                     value={option}
@@ -94,16 +96,25 @@ const MultipleChoiceLayout = () => {
                   {option}
                 </label>
               ))}
-              <div className="button-container">
-                <button onClick={() => handleNavigation("prev")}>
-                  Previous
-                </button>
-                <button onClick={() => handleNavigation("next")}>Next</button>
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+            <div className="button-container">
+              <button
+                onClick={() => handleNavigation("prev")}
+                disabled={currentQuestionIndex === 0}
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => handleNavigation("next")}
+                disabled={currentQuestionIndex === questions.length - 1}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
       </div>
+    </div>
     </>
   );
 };

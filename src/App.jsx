@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/login';
 import Register from './components/register';
@@ -6,6 +6,9 @@ import StudentDashboard from './components/StudentDashboard';
 import TeacherDashboard from './components/TeacherDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/authContext';
+import MultipleChoiceLayout from "./components/test"; 
+import QuizPage from "./components/quiz";
+import "./App.css";
 
 const App = () => {
   return (
@@ -30,6 +33,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/quiz"
+            element={user ? <QuizPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/test/:testId"
+            element={user ? <MultipleChoiceLayout /> : <Navigate to="/login" />}
+          />    
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </AuthProvider>

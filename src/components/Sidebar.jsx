@@ -17,6 +17,7 @@ import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
+import { useNavigate } from 'react-router-dom';
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
   const [showSettings, setShowSettings] = useState(false);
@@ -24,12 +25,13 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const mainMenuItems = [
     { text: 'Add Chat', icon: addChatIcon },
-    { text: 'Award', icon: awardIcon },
+    { text: 'Theories', icon: addChatIcon},
+    { text: 'Rankings', icon: awardIcon },
     { text: 'Quiz', icon: quizIcon },
     { text: 'Setting', icon: settingIcon }
   ];
 
-
+  const navigate = useNavigate();
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
@@ -37,13 +39,16 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         toggleSidebar();
         console.log('Navigating to Add Chat');
         break;
-      case 'Award':
+      case 'Theories':
+        toggleSidebar();
+        break;
+      case 'Rankings':
         toggleSidebar();
         console.log('Navigating to Awards');
         break;
       case 'Quiz':
         toggleSidebar();
-        console.log('Navigating to Quiz');
+        navigate('/quiz')
         break;
       case 'Setting':
         toggleSidebar();
@@ -94,20 +99,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </List>
 
           <Divider className="divider" />
-
-          {/* Conversation History with Transition
-          <div className={`conv-history ${showConvHistory ? 'show' : 'hide'}`}>
-            <List>
-              {conversationChats.map((chat) => (
-                <ListItem key={chat} disablePadding>
-                  <ListItemButton onClick={() => handleChatSelect(chat)}>
-                    <ListItemText primary={chat} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-            <Divider className="divider" />
-          </div> */}
 
           {/*Logout Section */}
           <div className="logout-section">
