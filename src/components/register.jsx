@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './register.css';
+import './register.css'; // Scoped CSS
 import axios from 'axios';
 
 function Register() {
@@ -8,7 +8,7 @@ function Register() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [re_password, setRePassword] = useState("");
-    const [role, setRole] = useState("Student"); 
+    const [role, setRole] = useState("Student"); // Default to "Student"
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        // Validation
+        // Basic Validation
         if (password !== re_password) {
             setError("Passwords do not match");
             return;
@@ -29,8 +29,7 @@ function Register() {
             return;
         }
 
-        // Set loading state before sending request
-        setLoading(true);
+        setLoading(true); // Set loading state
         setError(""); // Clear previous errors
 
         try {
@@ -40,7 +39,7 @@ function Register() {
                     email: email,
                     user_name: username,
                     password: password,
-                    role: role, 
+                    role: role,
                 },
                 {
                     headers: {
@@ -49,83 +48,90 @@ function Register() {
                 }
             );
 
-            console.log('Response:', response);
-
             if (response.status >= 200 && response.status < 300) {
-                setSuccess(true);
+                setSuccess(true); // Registration successful
                 setTimeout(() => {
                     setSuccess(false);
                     navigate("/login");
-                }, 3000);
+                }, 3000); // Redirect after 3 seconds
             } else {
                 setError(response.data.message || 'Something went wrong');
             }
         } catch (error) {
-            console.error("Registration failed:", error);
             setError(error.response?.data?.message || "Registration failed");
         } finally {
-            setLoading(false); // Stop loading state after request
+            setLoading(false); // Reset loading state
         }
     };
 
     return (
-        <div className='register-page'>
-            <div className='register-container'>
+        <div className="register-page">
+            <div className="register-container">
+                {/* Logo Section */}
                 <div className="header">
                     <img
                         src="/src/assets/logo.png"
                         alt="Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi"
                     />
                 </div>
+
+                {/* Form Section */}
                 <div className="register-container-form">
                     <h2>Register</h2>
                     <form onSubmit={handleRegister}>
+                        {/* Email Input */}
                         <div className="form-group">
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
-                                required=""
-                                placeholder='Email'
+                                placeholder="Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
+
+                        {/* Username Input */}
                         <div className="form-group">
                             <input
                                 type="text"
                                 id="username"
                                 name="username"
-                                required=""
-                                placeholder='Username'
+                                placeholder="Username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
+                                required
                             />
                         </div>
+
+                        {/* Password Input */}
                         <div className="form-group">
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
-                                required=""
-                                placeholder='Password'
+                                placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
+
+                        {/* Re-enter Password */}
                         <div className="form-group">
                             <input
                                 type="password"
                                 id="re-password"
                                 name="re-password"
-                                required=""
-                                placeholder='Re-enter your password'
+                                placeholder="Re-enter your password"
                                 value={re_password}
                                 onChange={(e) => setRePassword(e.target.value)}
+                                required
                             />
                         </div>
 
-                        {/* Role selection */}
+                        {/* Role Selection */}
                         <div className="form-group">
                             <select
                                 id="role"
@@ -139,18 +145,25 @@ function Register() {
                             </select>
                         </div>
 
-                        <input type="submit" value={loading ? "Registering..." : "Register"} disabled={loading} />
-                        <div className="register">
-                            Already have an account? <Link to="/login">Sign in</Link>
-                        </div>
+                        {/* Submit Button */}
+                        <input
+                            type="submit"
+                            value={loading ? "Registering..." : "Register"}
+                            disabled={loading}
+                        />
                     </form>
+
+                    {/* Link to Login */}
+                    <div className="register">
+                        Already have an account? <Link to="/login">Sign in</Link>
+                    </div>
                 </div>
             </div>
 
-            {/* Display error message */}
+            {/* Error Pop-Up */}
             {error && <div className="error-pop-up">{error}</div>}
 
-            {/* Display success message */}
+            {/* Success Pop-Up */}
             {success && (
                 <div className="success-pop-up">
                     <p>You have successfully registered!</p>
@@ -158,6 +171,6 @@ function Register() {
             )}
         </div>
     );
-};
+}
 
 export default Register;

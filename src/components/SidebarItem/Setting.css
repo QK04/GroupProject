@@ -1,4 +1,4 @@
-/* Dark overlay for background */
+
 .overlay {
     position: fixed;
     top: 0;
@@ -14,7 +14,7 @@
   }
   
   .settings-container {
-    width: 700px;
+    width: 500px;
 
     padding: 20px;
     background-color: #ffffff;
