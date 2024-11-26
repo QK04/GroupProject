@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
-import './quiz.css';
+import { useNavigate } from "react-router-dom";
+import "./quiz.css";
+import CorrectIcon from "../assets/correct.png"
+import WrongIcon from "../assets/wrong.png"
+import TopBar from "./Topbar";
 
-const QuizPage = () => {
-  // State để lưu trữ danh sách câu hỏi
+const QuizPage = ({ toggleSidebar, toggleHistory, onLogout }) => {
+  // State to store the list of questions
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-  const questionsPerPage = 8; // Số lượng câu hỏi mỗi trang
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const questionsPerPage = 8; 
 
-  // Hàm giả lập lấy dữ liệu từ API
+  // Simulated API call to fetch questions
   useEffect(() => {
-    // Dữ liệu mẫu
     const fetchQuestions = async () => {
       const mockData = Array.from({ length: 50 }, (_, i) => ({
         id: i + 1,
-        correctRate: Math.random() * 100, // Tỉ lệ đúng ngẫu nhiên
-        errorRate: Math.random() * 100, // Tỉ lệ sai ngẫu nhiên
+        correctRate: Math.random() * 100, // Random correct rate
+        errorRate: Math.random() * 100, // Random error rate
       }));
       setQuestions(mockData);
     };
@@ -22,39 +26,56 @@ const QuizPage = () => {
     fetchQuestions();
   }, []);
 
-  // Lấy câu hỏi cho trang hiện tại
+  // Get questions for the current page
   const displayedQuestions = questions.slice(
     (currentPage - 1) * questionsPerPage,
     currentPage * questionsPerPage
   );
 
-  // Xử lý chuyển trang
+  // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  const goToTest = (testId) => {
+    navigate(`/test/${testId}`);
+  };
+
   return (
     <>
-      <div className="container">
+      <TopBar
+        toggleSidebar={toggleSidebar}
+        toggleHistory={toggleHistory}
+        onLogout={onLogout}
+      />
+      <div className="quiz-container">
         {displayedQuestions.map((question) => (
-          <button key={question.id} className="card">
-            <div className="number red-text">{question.id}</div>
-            <div className="bottom-right">
-              <div className="label orange-text">
-                <span>{question.errorRate.toFixed(0)}%</span>
-                <img src="img/error.png" alt="error-icon" />
-              </div>
+          <button
+          key={question.id}
+          className="quiz-card"
+          onClick={() => goToTest(question.id)}
+        >
+            <div
+              className={`quiz-number ${
+                question.correctRate > question.errorRate ? "green" : "red"
+              }`}
+            >
+              {question.id}
             </div>
-            <div className="bottom-left">
-              <div className="label green-text">
-                <img src="img/correct.png" alt="correct-icon" />
+            <div className="quiz-label-container">
+              <div className="quiz-label green">
+                <img src={CorrectIcon} alt="Correct icon" />
                 <span>{question.correctRate.toFixed(0)}%</span>
+              </div>
+              <div className="quiz-label orange">
+                <span>{question.errorRate.toFixed(0)}%</span>
+                <img src= {WrongIcon} alt="Error icon" />
               </div>
             </div>
           </button>
         ))}
       </div>
-      <div className="pagination">
+      <div className="quiz-pagination">
         <a
           href="#"
           onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}

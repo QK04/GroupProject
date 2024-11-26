@@ -5,6 +5,7 @@ import ChatArea from './ChatArea';
 import History from './SidebarItem/History';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
+import './StudentDashboard.css';
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
@@ -40,15 +41,13 @@ const StudentDashboard = () => {
   };
 
   const handleSendMessage = (message) => {
-    setChatHistories((prevHistories) => ({
-      ...prevHistories,
-      [currentChat]: [...prevHistories[currentChat], message],
+    setChatHistories((prev) => ({
+      ...prev,
+      [currentChat]: [...prev[currentChat], message],
     }));
   };
 
-  const toggleHistory = () => {
-    setIsHistoryOpen(!isHistoryOpen);
-  };
+  const toggleHistory = () => setIsHistoryOpen(!isHistoryOpen);
 
   const handleLogout = () => {
     console.log('Starting logout...');
@@ -61,12 +60,8 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="app">
-      <TopBar
-        toggleSidebar={toggleSidebar}
-        toggleHistory={toggleHistory}
-        onLogout={handleLogout}
-      />
+    <div className="student-dashboard">
+      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={onLogout} />
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect} />
@@ -81,4 +76,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default Dashboard;

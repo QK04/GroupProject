@@ -11,9 +11,10 @@ html, body {
   height: 100%;
   background-color: #e6f1f8;
   color: #d1d5db;
+  margin: 0px;
+  overflow-y: hidden;
  
 }
-
 
 .app {
   display: flex;
@@ -28,15 +29,6 @@ html, body {
   margin: 10px 0;
 }
 
-.row-container{
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex: 1;
 
-  
-}
 
 
