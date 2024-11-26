@@ -35,11 +35,11 @@ const App = () => {
           />
           <Route
             path="/quiz"
-            element={user ? <QuizPage /> : <Navigate to="/login" />}
+            element={<QuizPage />}
           />
           <Route
             path="/test/:testId"
-            element={user ? <MultipleChoiceLayout /> : <Navigate to="/login" />}
+            element={<MultipleChoiceLayout />}
           />    
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>

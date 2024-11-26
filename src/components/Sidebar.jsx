@@ -17,7 +17,7 @@ import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
-import { useNavigate } from 'react-router-dom';
+
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
   const [showSettings, setShowSettings] = useState(false);
@@ -30,8 +30,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { text: 'Quiz', icon: quizIcon },
     { text: 'Setting', icon: settingIcon }
   ];
-
-  const navigate = useNavigate();
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {

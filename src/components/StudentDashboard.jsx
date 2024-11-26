@@ -61,7 +61,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="student-dashboard">
-      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={onLogout} />
+      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={handleLogout} />
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect} />
@@ -76,4 +76,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default Dashboard;
+export default StudentDashboard;
