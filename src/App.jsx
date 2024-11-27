@@ -9,12 +9,14 @@ import { AuthProvider } from './context/authContext';
 import MultipleChoiceLayout from "./components/test"; 
 import QuizPage from "./components/quiz";
 import "./App.css";
+import UserProfile from "./components/UserProfile.jsx";
 
 const App = () => {
   return (
     <Router>
       <AuthProvider> 
         <Routes>
+          <Route path="/user_profile" element={<UserProfile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

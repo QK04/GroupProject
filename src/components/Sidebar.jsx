@@ -24,6 +24,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
 
   const mainMenuItems = [
+    { text: 'User', icon: addChatIcon },
     { text: 'Add Chat', icon: addChatIcon },
     { text: 'Theories', icon: addChatIcon},
     { text: 'Rankings', icon: awardIcon },
@@ -33,6 +34,10 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
+      case 'User':
+        toggleSidebar();
+        navigate('/user_profile');
+        break;
       case 'Add Chat':
         toggleSidebar();
         console.log('Navigating to Add Chat');
