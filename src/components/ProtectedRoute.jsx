@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
   if (requiredRole && user.role !== requiredRole) {
     console.log(`Unauthorized role: ${user.role}. Redirecting...`);
-    return <Navigate to="/ogin" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
