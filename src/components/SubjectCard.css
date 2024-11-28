@@ -1,0 +1,90 @@
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+.subjectCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  background-color: #00a1f5; /* Use the cardTheme color */
+  border-radius: 22.5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.subjectCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  line-height: 1.4;
+}
+.dropdownMenu {
+  position: absolute;
+  top: 35px;
+  right: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: left;
+  padding: 5px 0;
+}
+
+.dropdownMenu button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdownMenu button:hover {
+  background-color: #f5f5f5;
+}
+.moreCardImageButton {
+  transform: translateX(-50%); /* Adjust for natural width offset */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position:absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
+.moreCardImageButton:hover {
+  opacity: 0.8; /* Optional: Add hover effect */
+}
+.deleteCardButton:hover {
+  background-color: #707070;
+}
+.addCardButton{
+      width: 250px;
+      height: 250px;
+      border: #000 2px solid #eaeaea;
+      border-radius: 22.5px;
+      padding: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.addCardButton:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+}
