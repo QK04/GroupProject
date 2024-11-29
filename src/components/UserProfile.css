@@ -1,6 +1,8 @@
 .user_container {
+    
     font-family: Arial, sans-serif;
     margin: 0 auto;
+    margin-top: 100px;
     padding: 20px;
     max-width: 900px;
     background: #f8f9fa;

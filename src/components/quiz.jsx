@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import "./quiz.css";
 import CorrectIcon from "../assets/correct.png"
 import WrongIcon from "../assets/wrong.png"
-import TopBar from "./Topbar";
 
-const QuizPage = ({ toggleSidebar, toggleHistory, onLogout }) => {
+
+const QuizPage = () => {
   // State to store the list of questions
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
@@ -43,11 +43,7 @@ const QuizPage = ({ toggleSidebar, toggleHistory, onLogout }) => {
 
   return (
     <>
-      <TopBar
-        toggleSidebar={toggleSidebar}
-        toggleHistory={toggleHistory}
-        onLogout={onLogout}
-      />
+      
       <div className="quiz-container">
         {displayedQuestions.map((question) => (
           <button

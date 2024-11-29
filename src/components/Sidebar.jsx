@@ -25,7 +25,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const mainMenuItems = [
     { text: 'User', icon: addChatIcon },
-    { text: 'Add Chat', icon: addChatIcon },
+    { text: 'Chat Bot', icon: addChatIcon },
     { text: 'Theories', icon: addChatIcon},
     { text: 'Rankings', icon: awardIcon },
     { text: 'Quiz', icon: quizIcon },
@@ -38,16 +38,16 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         toggleSidebar();
         navigate('/user_profile');
         break;
-      case 'Add Chat':
+      case 'Chat Bot':
         toggleSidebar();
-        console.log('Navigating to Add Chat');
+        navigate('/student-dashboard');
         break;
       case 'Theories':
         toggleSidebar();
         break;
       case 'Rankings':
         toggleSidebar();
-        console.log('Navigating to Awards');
+        navigate('/ranking');
         break;
       case 'Quiz':
         toggleSidebar();

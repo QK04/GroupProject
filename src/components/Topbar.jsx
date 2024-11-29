@@ -1,28 +1,30 @@
-import React from 'react';
-import menuIcon from '../assets/menu.png';
-import logoIcon from '../assets/usthlogo.png';
-import sidebarRightIcon from '../assets/sidebar-right.png';
+import React from "react";
+import menuIcon from "../assets/menu.png";
+import logoIcon from "../assets/usthlogo.png";
+import "./TopBar.css";
 
-import './TopBar.css';
+const TopBar = ({ toggleSidebar, historyProps = {}}) => {
+  const { icon, action } = historyProps;
 
-const TopBar = ({ toggleSidebar, toggleHistory }) => {
   return (
     <div className="top-bar">
-      
-      <img  
-        src={sidebarRightIcon} 
-        alt="History" 
-        className="history-toggle"
-        onClick={toggleHistory} 
-      />
-      
+      {/* History Toggle */}
+      {icon && (
+        <img
+          src={historyProps.icon}
+          alt="History Icon"
+          className="history-toggle"
+          onClick={historyProps.action}
+        />
+      )}  
       <img
         src={menuIcon}
         alt="Menu"
         className="menu-toggle"
         onClick={toggleSidebar}
       />
-      <div className='logo-center'>
+      {/* Logo */}
+      <div className="logo-center">
         <img src={logoIcon} alt="Logo" className="logo" />
       </div>
     </div>

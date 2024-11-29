@@ -1,0 +1,115 @@
+.ranking_container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    margin-top: 100px;
+    background-color: #f8faff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: "Arial", sans-serif;
+}
+
+.ranking_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ranking_header h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.ranking_tab {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.ranking_tab.active,
+.ranking_tab:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.ranking_list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ranking_card {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.ranking_rank {
+    flex-shrink: 0;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ranking_medal {
+    width: 30px;
+    height: 30px;
+}
+
+.ranking_position {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.ranking_info {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.ranking_name {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.ranking_id {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+.ranking_progress {
+    flex-grow: 2;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 0 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ranking_bar {
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.4s ease;
+}
+
+.ranking_score {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+}

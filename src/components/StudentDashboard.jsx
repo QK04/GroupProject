@@ -47,7 +47,7 @@ const StudentDashboard = () => {
     }));
   };
 
-  const toggleHistory = () => setIsHistoryOpen(!isHistoryOpen);
+  const toggleHistory = () => setIsHistoryOpen(!isHistoryOpen); //toggle history is never read
 
   const handleLogout = () => {
     console.log('Starting logout...');
@@ -61,7 +61,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="student-dashboard">
-      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={handleLogout} />
+      
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect} />

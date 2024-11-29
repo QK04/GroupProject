@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./test.css";
-import TopBar from "./Topbar";
 
-const MultipleChoiceLayout = ({ toggleSidebar, toggleHistory, onLogout }) => {
+
+const MultipleChoiceLayout = () => {
   const { testId } = useParams(); // Get test number from the route
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -44,11 +44,7 @@ const MultipleChoiceLayout = ({ toggleSidebar, toggleHistory, onLogout }) => {
 
   return (
     <>
-    <TopBar
-        toggleSidebar={toggleSidebar}
-        toggleHistory={toggleHistory}
-        onLogout={onLogout}
-      />
+    
     <div className="test-container">
       {/* Sidebar for question navigation */}
       <div className="test-sidebar">
