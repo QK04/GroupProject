@@ -1,153 +1,116 @@
-import React, { useState } from 'react';
-import Sidebar from 'src\components\Sidebar.jsx';
-import test from 'test.jsx';
-<>
-  <meta charSet="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz</title>
-  <link rel="stylesheet" href="quiz.css" />
-  <div className="container">
-    {/* Card 1 */}
-    <a href="test1.jsx">
-      <button className="card">
-        <div className="number red-text">1</div>
-        <div className="bottom-right">
-          <div className="label orange-text">
-            <span>50%</span>
-            <img src="img\error.png" alt="icon" />
-          </div>
-        </div>
-        <div className="bottom-left">
-          <div className="label green-text">
-            <img src="img\correct.png" alt="icon" />
-            <span className="green-text">50%</span>
-          </div>
-        </div>
-      </button>
-    </a>
-    {/* Card 2 */}
-    <button className="card">
-      <div className="number red-text">2</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./quiz.css";
+import CorrectIcon from "../assets/correct.png"
+import WrongIcon from "../assets/wrong.png"
+import TopBar from "./Topbar";
+
+const QuizPage = ({ toggleSidebar, toggleHistory, onLogout }) => {
+  // State to store the list of questions
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Current page
+  const questionsPerPage = 8; 
+
+  // Simulated API call to fetch questions
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const mockData = Array.from({ length: 50 }, (_, i) => ({
+        id: i + 1,
+        correctRate: Math.random() * 100, // Random correct rate
+        errorRate: Math.random() * 100, // Random error rate
+      }));
+      setQuestions(mockData);
+    };
+
+    fetchQuestions();
+  }, []);
+
+  // Get questions for the current page
+  const displayedQuestions = questions.slice(
+    (currentPage - 1) * questionsPerPage,
+    currentPage * questionsPerPage
+  );
+
+  // Handle page change
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const goToTest = (testId) => {
+    navigate(`/test/${testId}`);
+  };
+
+  return (
+    <>
+      <TopBar
+        toggleSidebar={toggleSidebar}
+        toggleHistory={toggleHistory}
+        onLogout={onLogout}
+      />
+      <div className="quiz-container">
+        {displayedQuestions.map((question) => (
+          <button
+          key={question.id}
+          className="quiz-card"
+          onClick={() => goToTest(question.id)}
+        >
+            <div
+              className={`quiz-number ${
+                question.correctRate > question.errorRate ? "green" : "red"
+              }`}
+            >
+              {question.id}
+            </div>
+            <div className="quiz-label-container">
+              <div className="quiz-label green">
+                <img src={CorrectIcon} alt="Correct icon" />
+                <span>{question.correctRate.toFixed(0)}%</span>
+              </div>
+              <div className="quiz-label orange">
+                <span>{question.errorRate.toFixed(0)}%</span>
+                <img src= {WrongIcon} alt="Error icon" />
+              </div>
+            </div>
+          </button>
+        ))}
       </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
+      <div className="quiz-pagination">
+        <a
+          href="#"
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+        >
+          «
+        </a>
+        {Array.from(
+          { length: Math.ceil(questions.length / questionsPerPage) },
+          (_, i) => (
+            <a
+              key={i}
+              href="#"
+              onClick={() => handlePageChange(i + 1)}
+              className={currentPage === i + 1 ? "active" : ""}
+            >
+              {i + 1}
+            </a>
+          )
+        )}
+        <a
+          href="#"
+          onClick={() =>
+            handlePageChange(
+              Math.min(
+                currentPage + 1,
+                Math.ceil(questions.length / questionsPerPage)
+              )
+            )
+          }
+        >
+          »
+        </a>
       </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">3</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">4</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">5</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">6</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">7</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-    {/* Card 1 */}
-    <button className="card">
-      <div className="number red-text">8</div>
-      <div className="bottom-right">
-        <div className="label orange-text">
-          <span>50%</span>
-          <img src="img\error.png" alt="icon" />
-        </div>
-      </div>
-      <div className="bottom-left">
-        <div className="label green-text">
-          <img src="img\correct.png" alt="icon" />
-          <span className="green-text">50%</span>
-        </div>
-      </div>
-    </button>
-  </div>
-  <div className="pagination">
-    <a href="#">«</a>
-    <a href="#" className="active">
-      1
-    </a>
-    <a href="#">2</a>
-    <a href="#">3</a>
-    <a href="#">4</a>
-    <a href="#">5</a>
-    <a href="#">6</a>
-    <a href="#">»</a>
-  </div>
-</>
+    </>
+  );
+};
+
+export default QuizPage;

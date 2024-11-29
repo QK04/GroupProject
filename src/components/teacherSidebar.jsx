@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+import './Sidebar.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -8,55 +10,52 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import './Sidebar.css';
-import { useNavigate } from 'react-router-dom';
-import addChatIcon from '../assets/add_note.png';
-import awardIcon from '../assets/award.png';
-import historyIcon from '../assets/history.png';
+
 import logoutIcon from '../assets/logout.png';
-import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
-
+import theoryIcon from '../assets/theory.png';
+import testIcon from '../assets/test.png';
+import questionbankIcon from '../assets/questionbank.png';
+import subjectIcon from '../assets/subject.png';
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
   const [showSettings, setShowSettings] = useState(false);
-  const navigate = useNavigate();
+  const [newElements, setNewElements] = useState([]); // State for dynamic elements
 
   const mainMenuItems = [
-    { text: 'User', icon: addChatIcon },
-    { text: 'Add Chat', icon: addChatIcon },
-    { text: 'Theories', icon: addChatIcon},
-    { text: 'Rankings', icon: awardIcon },
-    { text: 'Quiz', icon: quizIcon },
-    { text: 'Setting', icon: settingIcon }
+    { text: 'Subjects', icon: subjectIcon },
+    { text: 'Theory', icon: theoryIcon },
+    { text: 'Question Bank', icon: questionbankIcon },
+    { text: 'Test', icon: testIcon },
+    { text: 'Setting', icon: settingIcon },
+
   ];
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
-      case 'User':
-        toggleSidebar();
-        navigate('/user_profile');
+      case 'Subjects':
+        handleSubjectCard();
         break;
-      case 'Add Chat':
-        toggleSidebar();
-        console.log('Navigating to Add Chat');
+      case 'Theory':
+
+        handleSettings();
         break;
-      case 'Theories':
-        toggleSidebar();
+      case 'Question Bank':
+
+        handleSettings();
         break;
-      case 'Rankings':
+      case 'Test':
         toggleSidebar();
-        console.log('Navigating to Awards');
-        break;
-      case 'Quiz':
-        toggleSidebar();
-        navigate('/quiz')
-        break;
+        handleSettings();
+        break;  
+
       case 'Setting':
         toggleSidebar();
         handleSettings();
         break;
+
       default:
         break;
     }
@@ -69,17 +68,12 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const handleLogout = () => {
     console.log('Logging out...');
-    localStorage.removeItem('user'); // Xóa thông tin người dùng khỏi localStorage
-    const userAfterLogout = localStorage.getItem('user');
-    console.log('Token after logout:', userAfterLogout); // Log token sau khi xóa (nên là null)
-  
-    toggleSidebar(); // Đóng Sidebar
-    navigate('/login'); // Chuyển hướng về trang login
-  }
+    toggleSidebar();
+  };
 
   return (
     <>
-      <Drawer open={isOpen} onClose={toggleSidebar} anchor="right">
+      <Drawer open={isOpen} onClose={toggleSidebar} anchor="left">
         <Box className="sidebar-container" role="presentation">
           <List>
             <img src={usthLogo} alt="USTH Logo" className="usthlogo" />
@@ -103,8 +97,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
           <Divider className="divider" />
 
-          {/*Logout Section */}
+          {/* Logout Section */}
           <div className="logout-section">
+          <Divider className="divider" />
             <ListItem disablePadding>
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon>

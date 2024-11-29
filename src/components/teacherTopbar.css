@@ -1,0 +1,32 @@
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    color: black;
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    z-index: 1000;
+    height: 60px; 
+    border: #000 15px;
+  }
+  
+  .menu-toggle,
+  
+  .logo-center {
+    position: absolute;
+    left: 50%; 
+    transform: translateX(-50%); /* Adjust for natural width offset */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 50px;
+    width: auto;
+  }
+  
