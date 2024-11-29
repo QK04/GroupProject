@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from "./teacherTopbar";
 import Sidebar from "./teacherSidebar";
-import SubjectCard from "./subjectCard";
+import SubjectCard from "./SubjectCard";
 import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
