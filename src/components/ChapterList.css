@@ -1,0 +1,35 @@
+.createChapterForm {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .createChapterForm .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .createChapterForm label {
+    display: block;
+    font-weight: bold;
+  }
+  
+  .createChapterForm .ql-container {
+    min-height: 200px;  /* Thêm chiều cao cho ReactQuill editor */
+  }
+  
+  .createChapterForm button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .createChapterForm button:hover {
+    background-color: #218838;
+  }
+  

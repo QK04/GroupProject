@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./SubjectCard.css";
+import { Link } from "react-router-dom";
+
 
 function SubjectCard() {
   const [cards, setCards] = useState([]);
@@ -151,8 +153,9 @@ function SubjectCard() {
   return (
     <div className="cardContainer">
       {cards.map((card) => (
+        <Link key={card.id || card.title} to={`/subject/${card.id}`} style={{ textDecoration: 'none' }}>
         <div
-          key={card.id}
+          key={card.id || card.title}          
           className="subjectCard"
           onClick={(e) => e.stopPropagation()} // Prevent click on card from closing the dropdown
         >
@@ -182,6 +185,7 @@ function SubjectCard() {
             <p className="title">{card.title}</p>
           </div>
         </div>
+        </Link>
       ))}
       <button className="addCardButton" onClick={handleAddCard}>
         Add New Card
