@@ -1,7 +1,8 @@
 import React from "react";
+import TopBar from "./Topbar";
 import "./Ranking.css";
 
-const Ranking = () => {
+const Ranking = ({toggleSidebar}) => {
     const data = [
         { name: "Nguyễn Gia Bách", id: "22b113052", score: 80, rank: 1 },
         { name: "Nguyễn Gia Bách", id: "22b113052", score: 75, rank: 2 },
@@ -10,7 +11,9 @@ const Ranking = () => {
     ];
 
     return (
+        
         <div className="ranking_container">
+            
             <header className="ranking_header">
                 <h2>Leaderboard</h2>
                 <nav>

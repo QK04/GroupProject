@@ -17,6 +17,8 @@ import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
+import profileIcon from '../assets/profile.png';
+import theoryIcon from '../assets/theory.png';
 
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
@@ -24,9 +26,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
 
   const mainMenuItems = [
-    { text: 'User', icon: addChatIcon },
+    { text: 'User', icon: profileIcon },
     { text: 'Chat Bot', icon: addChatIcon },
-    { text: 'Theories', icon: addChatIcon},
+    { text: 'Theories', icon: theoryIcon},
     { text: 'Rankings', icon: awardIcon },
     { text: 'Quiz', icon: quizIcon },
     { text: 'Setting', icon: settingIcon }

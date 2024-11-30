@@ -13,31 +13,21 @@ import TopBar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import UserProfile from './components/UserProfile';
 import transparentLogo from './assets/transparent.png';
-import HistoryLogo from './assets/history.png';
+
 import './App.css';
 
 const App = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [isHistoryOpen, setHistoryOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const toggleHistory = () => setHistoryOpen((prev) => !prev);
-
-  // Determine if current route is Ranking-related
-  const ChatbotPaths = ['/student-dashboard'];
-  const isChatbot = ChatbotPaths.includes(window.location.pathname);
-
-  // Dynamic props for TopBar's History button
-  const historyProps = isChatbot
-    ? { icon: HistoryLogo, action: toggleHistory } // Disable History on ranking pages
-    : { icon: transparentLogo, action: null };
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   return (
     <Router>
       <AuthProvider>
-        {/* TopBar and Sidebar */}
-        <TopBar toggleSidebar={toggleSidebar} historyProps={historyProps} />
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        
+        
         
         {/* Routes */}
         <Routes>
@@ -47,9 +37,7 @@ const App = () => {
             path="/student-dashboard"
             element={
               <ProtectedRoute requiredRole="Student">
-                <StudentDashboard toggleHistory={toggleHistory}
-                isHistoryOpen={isHistoryOpen}
-                />
+                <StudentDashboard/>
               </ProtectedRoute>
             }
           />
@@ -61,8 +49,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="/quiz" element={<QuizPage />} />
-          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/quiz" element={<QuizPage  />} />
+          <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />
           <Route path="/test/:testId" element={<MultipleChoiceLayout />}/>
           <Route path="/user_profile" element={<UserProfile />} />
           <Route path="/" element={<Navigate to="/login" />} />

@@ -6,6 +6,9 @@ import History from './SidebarItem/History';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import './StudentDashboard.css';
+import HistoryLogo from '../assets/history.png';
+import transparentLogo from '../assets/transparent.png';
+import { Outlet } from "react-router-dom";
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
@@ -29,11 +32,15 @@ const StudentDashboard = () => {
   }, [user, navigate]);
 
   if (!user) {
-    return null; // Không render dashboard nếu user null
+    return null;
   }
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const toggleHistory = () => setIsHistoryOpen(!isHistoryOpen);
+
+  
 
   const handleChatSelect = (chatName) => {
     setCurrentChat(chatName);
@@ -47,7 +54,7 @@ const StudentDashboard = () => {
     }));
   };
 
-  const toggleHistory = () => setIsHistoryOpen(!isHistoryOpen); //toggle history is never read
+
 
   const handleLogout = () => {
     console.log('Starting logout...');
@@ -61,16 +68,18 @@ const StudentDashboard = () => {
 
   return (
     <div className="student-dashboard">
-      
+      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={handleLogout} />
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect} />
+        <Outlet context={{ toggleSidebar, handleLogout }} />
+        <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect}/>
         <ChatArea
           isOpen={isHistoryOpen}
           currentChat={currentChat}
           messages={chatHistories[currentChat]}
           onSendMessage={handleSendMessage}
         />
+        
       </div>
     </div>
   );
