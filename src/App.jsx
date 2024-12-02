@@ -10,6 +10,8 @@ import MultipleChoiceLayout from "./components/test";
 import QuizPage from "./components/quiz";
 import "./App.css";
 import UserProfile from "./components/UserProfile.jsx";
+import ChapterList from "./components/ChapterList.jsx";
+import ChapterDetail from "./components/ChapterDetail.jsx";
 
 const App = () => {
   return (
@@ -44,6 +46,8 @@ const App = () => {
             element={<MultipleChoiceLayout />}
           />    
           <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/subject/:subjectId" element={<ChapterList />} />
+          <Route path="/chapter/:chapterId" element={<ChapterDetail />} />
         </Routes>
       </AuthProvider>
     </Router>
