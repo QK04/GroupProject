@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import TopBar from "./teacherTopbar";
 import Sidebar from "./teacherSidebar";
 import SubjectCard from "./SubjectCard";
+import QuestionBank from './QuestionBank';
 import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
@@ -26,12 +27,13 @@ const TeacherDashboard = () => {
       {/* TopBar stays at the top */}
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       
-      {/* Sidebar is displayed based on the `isSidebarOpen` state */}
+      {/* Sidebar is displayed based on the isSidebarOpen state */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       
       {/* Main Content */}
       <div className="dashboard-content">
-        <SubjectCard /> {/* Insert SubjectCard here */}
+        <SubjectCard />
+        <QuestionBank/>
       </div>
       <button onClick={handleLogout}>
         Logout

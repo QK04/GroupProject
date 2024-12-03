@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./SubjectCard.css";
 import { Link } from "react-router-dom";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 
 function SubjectCard() {
@@ -11,6 +13,7 @@ function SubjectCard() {
   const [activeCardId, setActiveCardId] = useState(null); // Track which card's dropdown is open
   const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
   const teacher_id = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user_id : null;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
   const fetchSubjects = async () => {
       try {
@@ -149,6 +152,9 @@ function SubjectCard() {
   if (loading) {
     return <p>Loading subjects...</p>;
   }
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="cardContainer">

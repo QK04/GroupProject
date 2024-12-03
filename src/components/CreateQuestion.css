@@ -1,0 +1,56 @@
+/* CreateQuestion.css */
+
+.box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+ }
+  
+  .box label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .box select,
+  .box textarea,
+  .box input,
+  .box button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .box button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .box button:hover {
+    background-color: #050095;
+  }
+  
+  .box textarea {
+    resize: vertical;
+  }
+  
+  .box input {
+    margin-bottom: 10px;
+  }
+  
+  .box select {
+    margin-bottom: 10px;
+  }
+  

@@ -12,6 +12,8 @@ import "./App.css";
 import UserProfile from "./components/UserProfile.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterDetail from "./components/ChapterDetail.jsx";
+import SubjectCard from './components/SubjectCard.jsx';
+import QuestionBank from './components/QuestionBank.jsx';
 
 const App = () => {
   return (
@@ -36,6 +38,14 @@ const App = () => {
                 <TeacherDashboard />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/QuestionBank"
+            element={<QuestionBank/>}
+          />
+          <Route
+            path="/SubjectCard"
+            element={<SubjectCard />}
           />
           <Route
             path="/quiz"
