@@ -11,7 +11,7 @@ body {
   }
   .container{
     width: 1250px;
-    height:100vh;
+    height:88vh;
     margin:auto;
     padding: 20px;
     border-radius: 8px;
@@ -19,15 +19,18 @@ body {
     background-color: #f9f9f9;
     border-collapse: collapse;
     margin-top: 80px;
+    margin-bottom: 80px;
     flex-grow: 1; /* Ensures it takes up the rest of the space */
 
   }
   
   .question-table {
-    width: 1200px;
-    height:100vh;
+    width: auto;
+    height:fit-content;
+    max-height: 80vh;
     padding: 20px;
     margin: auto;
+    margin-bottom: auto;
     border-radius: 8px;
     background-color: #f9f9f9;
     overflow-y:auto;

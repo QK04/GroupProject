@@ -33,7 +33,6 @@ const TeacherDashboard = () => {
       {/* Main Content */}
       <div className="dashboard-content">
         <SubjectCard />
-        <QuestionBank/>
       </div>
       <button onClick={handleLogout}>
         Logout
