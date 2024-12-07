@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import './Sidebar.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -9,8 +8,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import './Sidebar.css';
-
 import logoutIcon from '../assets/logout.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
@@ -20,9 +17,8 @@ import testIcon from '../assets/test.png';
 import questionbankIcon from '../assets/questionbank.png';
 import subjectIcon from '../assets/subject.png';
 
-export default function Sidebar({ isOpen, toggleSidebar }) {
+export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nhận onTestClick từ props
   const [showSettings, setShowSettings] = useState(false);
-  const [newElements, setNewElements] = useState([]); // State for dynamic elements
 
   const mainMenuItems = [
     { text: 'Subjects', icon: subjectIcon },
@@ -30,7 +26,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { text: 'Question Bank', icon: questionbankIcon },
     { text: 'Test', icon: testIcon },
     { text: 'Setting', icon: settingIcon },
-
   ];
 
   const handleMainMenuClick = (menuItem) => {
@@ -39,28 +34,23 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         handleSubjectCard();
         break;
       case 'Theory':
-
         handleSettings();
         break;
       case 'Question Bank':
-
         handleSettings();
         break;
       case 'Test':
         toggleSidebar();
-        handleSettings();
-        break;  
-
+        onTestClick(); // Gọi onTestClick khi nhấn vào "Test"
+        break;
       case 'Setting':
         toggleSidebar();
         handleSettings();
         break;
-
       default:
         break;
     }
   };
-
 
   const handleSettings = () => {
     setShowSettings(true);
@@ -99,7 +89,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
           {/* Logout Section */}
           <div className="logout-section">
-          <Divider className="divider" />
+            <Divider className="divider" />
             <ListItem disablePadding>
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon>

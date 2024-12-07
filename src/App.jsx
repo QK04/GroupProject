@@ -12,6 +12,8 @@ import "./App.css";
 import UserProfile from "./components/UserProfile.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterDetail from "./components/ChapterDetail.jsx";
+import FullListTest from './components/FullListTest';
+
 
 const App = () => {
   return (
@@ -40,6 +42,11 @@ const App = () => {
           <Route
             path="/quiz"
             element={<QuizPage />}
+          />
+
+          <Route
+            path="/FullListTest"
+            element={<FullListTest />}
           />
           <Route
             path="/test/:testId"

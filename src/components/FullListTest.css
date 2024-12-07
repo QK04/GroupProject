@@ -1,0 +1,66 @@
+.full-list-test-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .tests-list {
+    max-height: 400px; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Thêm thanh cuộn dọc nếu danh sách dài */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .test-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .test-item:last-child {
+    border-bottom: none; /* Bỏ viền cuối cùng */
+  }
+  
+  .test-label {
+    font-weight: bold;
+  }
+  
+  .test-id {
+    color: gray;
+  }
+  
+  .test-item {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .test-item:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .test-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .test-date {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .test-id {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  
