@@ -15,6 +15,7 @@
 }
 
 .subjectCard {
+  margin: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -87,13 +88,13 @@
   background-color: #707070;
 }
 .addCardButton{
+      margin-top: 10px;
       width: 250px;
       height: 250px;
       border: #000 2px solid #eaeaea;
       border-radius: 22.5px;
       padding: 15px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
+      cursor: pointer;
 }
 .addCardButton:hover {
   transform: translateY(-5px);
