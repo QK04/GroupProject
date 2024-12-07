@@ -1,10 +1,21 @@
+.main{
+  display: flex;
+  margin-top: 80px;
+  margin-left: 80px;
+}
 .cardContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
+  width: 100%;
+  max-height: 88vh; /* Define a fixed height to trigger the scrollbar */
+  overflow-y: auto; /* Enable vertical scrolling if content exceeds the container */
+  padding-right: 10px;
 }
+
 .subjectCard {
+  margin: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,7 +46,7 @@
   top: 35px;
   right: 10px;
   background-color: white;
-  border: 1px solid #ddd;
+  border: 1px solid #d1d1d1;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -46,6 +57,7 @@
 .dropdownMenu button {
   background: none;
   border: none;
+  color: #000;
   padding: 10px 20px;
   width: 100%;
   text-align: left;
@@ -76,13 +88,13 @@
   background-color: #707070;
 }
 .addCardButton{
+      margin-top: 10px;
       width: 250px;
       height: 250px;
       border: #000 2px solid #eaeaea;
       border-radius: 22.5px;
       padding: 15px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
+      cursor: pointer;
 }
 .addCardButton:hover {
   transform: translateY(-5px);

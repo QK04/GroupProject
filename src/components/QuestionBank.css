@@ -1,0 +1,138 @@
+/* General styling */
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden;
+  }
+  .container{
+    width: 1250px;
+    height:88vh;
+    margin:auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    border-collapse: collapse;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    flex-grow: 1; /* Ensures it takes up the rest of the space */
+    overflow-y: auto;
+
+  }
+  
+  .question-table {
+    width: auto;
+    height:fit-content;
+    max-height: 80vh;
+    padding: 20px;
+    margin: auto;
+    margin-bottom: auto;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    overflow-y:auto;
+    border-collapse: collapse;
+  }
+  .question-table::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 4px;
+    
+  }
+  .question-table::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Button styles */
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Table styling */
+  table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+  }
+  
+  thead th {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    text-align: center;
+  }
+  
+  tbody td {
+    padding: 10px; /* Add padding for better spacing */
+    text-align: center;
+    color: #000000;
+    vertical-align: top; /* Align content to the top */
+    word-wrap: break-word;
+  }
+  
+  /* Empty table message */
+  tbody td[colspan] {
+    text-align: center;
+    color: #777;
+  }
+  tbody tr:nth-child(even){background-color: #f2f2f2;}
+  tbody tr:hover {background-color: #ddd;}
+  
+  /* Action buttons */
+  td button {
+    margin: 0 15px; /* Add horizontal spacing between buttons */
+    padding: 0; /* Remove any default padding for consistency */
+    background: none; /* Remove background for a cleaner look */
+    border: none; /* Remove border for a cleaner look */
+    border-radius: 50%;
+  }
+  td button img {
+
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  
+  td button img:hover {
+    transform: scale(1.1);
+    background-color:#d1d1d1;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .question-table {
+      padding: 10px;
+    }
+  
+    button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    table {
+      font-size: 14px;
+    }
+  
+    thead th, tbody td {
+      padding: 8px;
+    }
+  }
+  

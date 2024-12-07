@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import TopBar from "./teacherTopbar";
 import Sidebar from "./teacherSidebar";
 import SubjectCard from "./SubjectCard";
+import QuestionBank from './QuestionBank';
 import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
@@ -30,6 +31,7 @@ const TeacherDashboard = () => {
     <div className="app">
       {/* TopBar stays at the top */}
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+<<<<<<< HEAD
 
       {/* Sidebar */}
       <Sidebar
@@ -41,6 +43,15 @@ const TeacherDashboard = () => {
       {/* Main Content */}
       <div className="dashboard-content">
         <SubjectCard /> {/* Default content */}
+=======
+      
+      {/* Sidebar is displayed based on the isSidebarOpen state */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      
+      {/* Main Content */}
+      <div className="dashboard-content">
+        <SubjectCard />
+>>>>>>> Bachn
       </div>
     </div>
   );
