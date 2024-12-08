@@ -14,7 +14,10 @@ import ChapterList from "./components/ChapterList.jsx";
 import ChapterDetail from "./components/ChapterDetail.jsx";
 
 import FullListTest from './components/FullListTest';
-
+import ViewTest from './components/ViewTest';
+import TestCreationOptions from './components/TestCreationOptions';
+import ManualCreateTest from './components/ManualCreateTest';
+import RandomlyCreateTest from './components/RandomlyCreateTest';
 
 import SubjectCard from './components/SubjectCard.jsx';
 import QuestionBank from './components/QuestionBank.jsx';
@@ -62,9 +65,29 @@ const App = () => {
             element={<FullListTest />}
           />
           <Route
+            path="/ViewTest/:testId"
+            element={<ViewTest />}
+          />
+
+          <Route
+          path="/TestCreationOptions"
+          element={<TestCreationOptions />} 
+          />
+
+          <Route
             path="/test/:testId"
             element={<MultipleChoiceLayout />}
           />    
+
+          <Route 
+          path="/ManualCreateTest" 
+          element={<ManualCreateTest />} 
+          />
+
+          <Route 
+          path="/RandomlyCreateTest" 
+          element={<RandomlyCreateTest />} 
+          />
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/subject/:subjectId" element={<ChapterList />} />
           <Route path="/chapter/:chapterId" element={<ChapterDetail />} />

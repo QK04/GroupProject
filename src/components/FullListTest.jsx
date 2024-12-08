@@ -56,12 +56,23 @@ const FullListTest = () => {
     navigate("/TestCreationOptions");
   };
 
+  // Điều hướng về trang Teacher Dashboard
+  const handleBackToDashboard = () => {
+    navigate("/teacher-dashboard"); // Điều hướng về trang Teacher Dashboard
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="full-list-test-container">
       <h1 className="full-list-test-title">Full List of Tests</h1>
+      
+      {/* Nút quay lại trang TeacherDashboard */}
+      <button className="back-to-dashboard-button" onClick={handleBackToDashboard}>
+        Back to Dashboard
+      </button>
+      
       <button className="create-test-button" onClick={handleCreateTest}>
         Create Test
       </button>

@@ -7,23 +7,22 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     subject: "",
     chapter: "",
     content: "",
-    options: ["", "", "", ""], 
-    correctAnswer: "", 
+    options: ["", "", "", ""],
+    correctAnswer: "",
   });
   const [loading, setLoading] = useState(false);
-  const [subjects, setSubjects] = useState([]); 
-  const [chapters, setChapters] = useState([]); 
+  const [subjects, setSubjects] = useState([]);
+  const [chapters, setChapters] = useState([]);
+  const [isSubjectLoaded, setIsSubjectLoaded] = useState(false);
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
-    
-  // Populate fields when editingQuestion is provided
   useEffect(() => {
     if (editingQuestion) {
       setNewQuestion({
-        subject: editingQuestion.subject || "",
+        subject: editingQuestion.subject_name || "",
         chapter: editingQuestion.chapter_name || "",
         content: editingQuestion.question_text || "",
         options: editingQuestion.choices.map((choice) => choice.choice_text) || [
@@ -58,6 +57,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         if (response.status === 200) {
           const data = JSON.parse(response.data.body);
           setSubjects(data.subjects || []);
+          setIsSubjectLoaded(true); 
         } else {
           console.error("Failed to fetch subjects");
         }
@@ -71,34 +71,40 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
 
   // Fetch chapters for the selected subject
   useEffect(() => {
-    if (newQuestion.subject) {
-      const fetchChapters = async () => {
-        try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_API_BASE_URL}/subject/${newQuestion.subject}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          if (response.status === 200) {
-            const data = JSON.parse(response.data.body);
-            setChapters(data || []);
-          } else {
-            console.error("Failed to fetch chapters");
-          }
-        } catch (error) {
-          console.error("Error fetching chapters:", error);
-        }
-      };
+    if (newQuestion.subject && isSubjectLoaded) {
+      const selectedSubject = subjects.find(
+        (subject) => subject.subject_name === newQuestion.subject
+      );
 
-      fetchChapters();
+      if (selectedSubject) {
+        const fetchChapters = async () => {
+          try {
+            const response = await axios.get(
+              `${import.meta.env.VITE_API_BASE_URL}/subject/${selectedSubject.subject_id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            if (response.status === 200) {
+              const data = JSON.parse(response.data.body);
+              setChapters(data || []);
+            } else {
+              console.error("Failed to fetch chapters");
+            }
+          } catch (error) {
+            console.error("Error fetching chapters:", error);
+          }
+        };
+
+        fetchChapters();
+      }
     } else {
-      setChapters([]);
+      setChapters([]); // Clear chapters if no subject is selected
     }
-  }, [newQuestion.subject, token]);
+  }, [newQuestion.subject, token, subjects, isSubjectLoaded]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -121,6 +127,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
   // Handle save (create or edit)
   const handleAddOrEditQuestion = async () => {
     const requestBody = {
+      subject_name: newQuestion.subject,
       chapter_name: newQuestion.chapter,
       type: "MCQ",
       question_text: newQuestion.content,
@@ -133,9 +140,10 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     setLoading(true);
 
     try {
+      let response;
       if (editingQuestion) {
         // Edit question
-        const response = await axios.put(
+        response = await axios.put(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions/${editingQuestion.quiz_id}`,
           requestBody,
           {
@@ -154,7 +162,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         }
       } else {
         // Create new question
-        const response = await axios.post(
+        response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions`,
           requestBody,
           {
@@ -194,7 +202,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         <select name="subject" value={newQuestion.subject} onChange={handleInputChange}>
           <option value="">Choose one...</option>
           {subjects.map((subject) => (
-            <option key={subject.subject_id} value={subject.subject_id}>
+            <option key={subject.subject_id} value={subject.subject_name}>
               {subject.subject_name}
             </option>
           ))}

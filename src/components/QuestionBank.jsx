@@ -44,7 +44,7 @@ const QuestionBank = () => {
   }, [token]);
 
   const addNewQuestion = (newQuestion) => {
-    setQuestions([...questions, { id: questions.length + 1, ...newQuestion }]);
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
     setEditingQuestion(null);
   };
 
@@ -157,7 +157,7 @@ const QuestionBank = () => {
               <tr key={question.quiz_id}>
                 <td>{question.quiz_id}</td>
                 <td>{question.question_text}</td>
-                <td>Python</td>
+                <td>{question.subject_name}</td>
                 <td>{question.chapter_name}</td>
                 <td>
                   <button onClick={() => deleteQuestion(question.quiz_id)}>

@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import './Sidebar.css';
-=======
 import { useNavigate } from 'react-router-dom';
->>>>>>> Bachn
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -39,28 +36,16 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
         navigate('/SubjectCard');
         break;
       case 'Theory':
-<<<<<<< HEAD
         handleSettings();
-        break;
-      case 'Question Bank':
-        handleSettings();
-        break;
+        break;  
       case 'Test':
         toggleSidebar();
-        onTestClick(); // Gọi onTestClick khi nhấn vào "Test"
-        break;
-=======
-        toggleSidebar();
+        navigate('/FullListTest'); 
         break;
       case 'Question Bank':
         toggleSidebar();
         navigate('/QuestionBank');
         break;
-      case 'Test':
-        toggleSidebar();
-        break;  
-
->>>>>>> Bachn
       case 'Setting':
         toggleSidebar();
         handleSettings();
