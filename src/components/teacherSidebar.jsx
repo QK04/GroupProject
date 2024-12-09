@@ -36,7 +36,6 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
         navigate('/SubjectCard');
         break;
       case 'Theory':
-        handleSettings();
         break;  
       case 'Test':
         toggleSidebar();

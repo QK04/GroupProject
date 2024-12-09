@@ -102,7 +102,7 @@ const ManualCreateTest = () => {
 
   return (
     <div className="manual-create-test-container">
-      <h1 className="manual-create-test-title">Manual Create Test</h1>
+      <h1 className="manual-create-test-title">Choose questions for your test</h1>
       <div className="question-bank">
         <h2>Question Bank</h2>
         {questionBank.length > 0 ? (

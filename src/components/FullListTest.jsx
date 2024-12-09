@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import "./FullListTest.css";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 const FullListTest = () => {
   const [tests, setTests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
@@ -63,12 +67,20 @@ const FullListTest = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="full-list-test-container">
-      <h1 className="full-list-test-title">Full List of Tests</h1>
+      <TopBar toggleSidebar={toggleSidebar}/>
+      
+      {/* Sidebar is displayed based on the `isSidebarOpen` state */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       
       {/* Nút quay lại trang TeacherDashboard */}
+
+      <div className="tests-list">
       <button className="back-to-dashboard-button" onClick={handleBackToDashboard}>
         Back to Dashboard
       </button>
@@ -76,7 +88,6 @@ const FullListTest = () => {
       <button className="create-test-button" onClick={handleCreateTest}>
         Create Test
       </button>
-      <div className="tests-list">
         {tests.length > 0 ? (
           tests.map((test, index) => (
             <div

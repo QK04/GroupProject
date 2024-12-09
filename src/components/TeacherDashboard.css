@@ -7,8 +7,6 @@
   
   .dashboard-content {
     flex-grow: 1; /* Ensures it takes up the rest of the space */
-    padding: 20px;
-    margin-top: 80px; /* Match the height of the TopBar */
     overflow-y: auto; /* Enable scrolling if content overflows */
     background-color: #e6f1f8;
   }
