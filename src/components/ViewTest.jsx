@@ -150,7 +150,7 @@ const ViewTest = () => {
             </tbody>
           </table>
         ) : (
-          <p>Chưa có học sinh làm test.</p>
+          <p>No students have taken the test yet.</p>
         )}
       </div>
     </div>
