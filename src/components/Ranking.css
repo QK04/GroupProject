@@ -1,0 +1,76 @@
+/* Container */
+.ranking-container {
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title */
+  .ranking-title {
+    text-align: center;
+    color: #004085;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Table */
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .ranking-header, .ranking-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .ranking-header {
+    background-color: #004085;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .ranking-row {
+    background-color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .ranking-row:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Rank, Name, Points */
+  .header-rank, .rank {
+    width: 10%;
+    text-align: center;
+  }
+  
+  .header-name, .name {
+    width: 50%;
+    text-align: left;
+  }
+  
+  .header-points, .points {
+    width: 20%;
+    text-align: center;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .ranking-header, .ranking-row {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .header-name, .name, .header-points, .points {
+      width: 100%;
+    }
+  }
+  

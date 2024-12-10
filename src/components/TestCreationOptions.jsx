@@ -18,7 +18,7 @@ const TestCreationOptions = () => {
   const handleRandomCreation = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/create-test`,
+        `${import.meta.env.VITE_API_BASE_URL}/test/create-test-random`,
         {},
         {
           headers: {
@@ -32,7 +32,7 @@ const TestCreationOptions = () => {
 
       if (response.status === 200 && parsedBody.test_id) {
         // Điều hướng đến trang CreateTest với dữ liệu bài kiểm tra
-        navigate("/CreateTest", { state: parsedBody });
+        navigate("/RandomlyCreateTest", { state: parsedBody });
       } else {
         alert("Failed to create random test.");
       }
