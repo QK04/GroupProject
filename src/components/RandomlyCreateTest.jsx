@@ -1,56 +1,91 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 import "./RandomlyCreateTest.css";
 
 const RandomlyCreateTest = () => {
-  const location = useLocation();
+  const [testData, setTestData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
+  
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
-  const { test_id, questions, start_time, end_time } = location.state || {};
+  useEffect(() => {
+    const fetchTestData = async () => {
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/test/create-test-random`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const parsedBody = JSON.parse(response.data.body);
 
-  // Hàm xử lý khi nhấn nút Submit
+        if (response.status === 200 && parsedBody.test_id) {
+          setTestData(parsedBody);
+        } else {
+          throw new Error("Failed to fetch test data.");
+        }
+      } catch (err) {
+        console.error("Error fetching test data:", err);
+        setError("An error occurred while creating the test.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTestData();
+  }, [token]);
+
   const handleSubmit = () => {
-    // Giữ bài kiểm tra trong danh sách và điều hướng về FullListTest
-    navigate("/FullListTest");
+    alert("Test submitted!");
   };
 
-  // Hàm xử lý khi nhấn nút Cancel
   const handleCancel = async () => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/test/${test_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      navigate("/FullListTest"); // Điều hướng về danh sách bài kiểm tra
+      if (testData?.test_id) {
+        await axios.delete(
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testData.test_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+      alert("Test canceled!");
+      navigate("/FullListTest");
     } catch (err) {
       console.error("Error deleting test:", err);
       alert("An error occurred while deleting the test.");
     }
   };
 
+  if (loading) return <p>Loading test data...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <div className="create-test-container">
       <h1 className="create-test-title">Create Test</h1>
-      {test_id ? (
+      {testData ? (
         <>
           <div className="test-info">
-            <p>Test ID: {test_id}</p>
-            <p>Start Time: {new Date(start_time).toLocaleString()}</p>
-            <p>End Time: {new Date(end_time).toLocaleString()}</p>
+            <p>Test ID: {testData.test_id}</p>
+            <p>Start Time: {new Date(testData.start_time).toLocaleString()}</p>
+            <p>End Time: {new Date(testData.end_time).toLocaleString()}</p>
           </div>
           <div className="questions-list">
             <h2>Selected Questions:</h2>
-            {questions.map((question, index) => (
+            {testData.questions.map((question, index) => (
               <div className="question-item" key={question.question_id}>
                 <h3>
                   {index + 1}. {question.question_text}
