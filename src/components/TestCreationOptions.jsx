@@ -1,20 +1,21 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import axios from "../api/axios";
 import "./TestCreationOptions.css";
+import RandomlyCreateTest from "./RandomlyCreateTest";
+import ManualCreateTest from "./ManualCreateTest";
 
 const TestCreationOptions = () => {
-  const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState(null); // Track which option is selected
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
-  // Hàm điều hướng đến trang tạo bài kiểm tra thủ công
+  // Handle manual test creation button click
   const handleManualCreation = () => {
-    navigate("/ManualCreateTest"); // Điều hướng đến trang tạo thủ công
+    setSelectedOption("manual");
   };
 
-  // Hàm xử lý tạo bài kiểm tra ngẫu nhiên
+  // Handle random test creation button click
   const handleRandomCreation = async () => {
     try {
       const response = await axios.post(
@@ -31,8 +32,7 @@ const TestCreationOptions = () => {
       const parsedBody = JSON.parse(response.data.body);
 
       if (response.status === 200 && parsedBody.test_id) {
-        // Điều hướng đến trang CreateTest với dữ liệu bài kiểm tra
-        navigate("/CreateTest", { state: parsedBody });
+        setSelectedOption("random");
       } else {
         alert("Failed to create random test.");
       }
@@ -46,12 +46,31 @@ const TestCreationOptions = () => {
     <div className="test-creation-options-container">
       <h1>Choose Test Creation Method</h1>
       <div className="button-group">
-        <button className="manual-create-button" onClick={handleManualCreation}>
+        <button
+          className="manual-create-button"
+          onClick={handleManualCreation}
+        >
           Create Test Manually
         </button>
-        <button className="random-create-button" onClick={handleRandomCreation}>
+        <button
+          className="random-create-button"
+          onClick={handleRandomCreation}
+        >
           Create Test Randomly
         </button>
+      </div>
+
+      <div className="test-creation-content">
+        {selectedOption === "manual" && (
+          <div className="manual-create-container">
+            <ManualCreateTest />
+          </div>
+        )}
+        {selectedOption === "random" && (
+          <div className="random-create-container">
+            <RandomlyCreateTest />
+          </div>
+        )}
       </div>
     </div>
   );

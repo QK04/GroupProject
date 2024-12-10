@@ -1,6 +1,8 @@
 .test-creation-options-container {
     text-align: center;
-    padding: 20px;
+    height: 100vh;
+    overflow-y: visible;
+    overflow-x: hidden;
   }
   
   .button-group {
