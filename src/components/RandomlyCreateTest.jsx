@@ -22,7 +22,7 @@ const RandomlyCreateTest = () => {
   const handleCancel = async () => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/delete-test/${test_id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/test/${test_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

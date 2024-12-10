@@ -70,7 +70,7 @@ const ManualCreateTest = () => {
       }
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/create-test-manual`,
+        `${import.meta.env.VITE_API_BASE_URL}/test/create-test`,
         { question_ids: selectedQuestions },
         {
           headers: {

@@ -19,7 +19,7 @@ const TestCreationOptions = () => {
   const handleRandomCreation = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/create-test`,
+        `${import.meta.env.VITE_API_BASE_URL}/test/create-test-random`,
         {},
         {
           headers: {
@@ -30,7 +30,7 @@ const TestCreationOptions = () => {
       );
 
       const parsedBody = JSON.parse(response.data.body);
-
+      console.log(parsedBody);
       if (response.status === 200 && parsedBody.test_id) {
         setSelectedOption("random");
       } else {
