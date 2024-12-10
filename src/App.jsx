@@ -18,6 +18,7 @@ import ViewTest from './components/ViewTest';
 import TestCreationOptions from './components/TestCreationOptions';
 import ManualCreateTest from './components/ManualCreateTest';
 import RandomlyCreateTest from './components/RandomlyCreateTest';
+import Ranking from './components/Ranking';
 
 import SubjectCard from './components/SubjectCard.jsx';
 import QuestionBank from './components/QuestionBank.jsx';
@@ -58,6 +59,11 @@ const App = () => {
           <Route
             path="/quiz"
             element={<QuizPage />}
+          />
+
+          <Route
+            path="/Ranking"
+            element={<Ranking />}
           />
 
           <Route

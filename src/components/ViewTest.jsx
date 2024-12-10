@@ -6,7 +6,9 @@ import "./ViewTest.css";
 const ViewTest = () => {
   const { testId } = useParams(); // Lấy testId từ URL
   const [testDetails, setTestDetails] = useState(null);
+  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [studentLoading, setStudentLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const token = localStorage.getItem("user")
@@ -46,10 +48,45 @@ const ViewTest = () => {
       }
     };
 
+    const fetchStudents = async () => {
+      try {
+        setStudentLoading(true);
+
+        // Gửi yêu cầu đến API để lấy danh sách học sinh
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/teacher/get-userscore`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const parsedBody = JSON.parse(response.data.body);
+
+        if (parsedBody && parsedBody.students) {
+          setStudents(parsedBody.students);
+        } else if (parsedBody && parsedBody.error) {
+          setError(parsedBody.error);
+          setStudents([]); // Đảm bảo danh sách học sinh là mảng trống
+        } else {
+          console.error("Unexpected data structure:", parsedBody);
+          setError("Invalid response format for students API.");
+        }
+      } catch (err) {
+        console.error("Error fetching students:", err);
+        setError(err.message || "Error fetching students data.");
+      } finally {
+        setStudentLoading(false);
+      }
+    };
+
     fetchTestDetails();
+    fetchStudents();
   }, [testId]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading || studentLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -89,6 +126,33 @@ const ViewTest = () => {
           </div>
         </>
       )}
+      <h2 className="students-title">Students Scores</h2>
+      <div className="students-list">
+        {students.length > 0 ? (
+          <table className="students-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student, index) => (
+                <tr key={student.student_id}>
+                  <td>{index + 1}</td>
+                  <td>{student.student_id}</td>
+                  <td>{student.student_name || "N/A"}</td>
+                  <td>{student.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>Chưa có học sinh làm test.</p>
+        )}
+      </div>
     </div>
   );
 };
