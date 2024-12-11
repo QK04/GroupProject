@@ -60,6 +60,10 @@ const App = () => {
             path="/quiz"
             element={<QuizPage />}
           />
+          <Route
+            path="/UserProfile"
+            element={<UserProfile />}
+          />
 
           <Route
             path="/Ranking"

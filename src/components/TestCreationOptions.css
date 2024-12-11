@@ -3,6 +3,7 @@
     height: 100vh;
     overflow-y: visible;
     overflow-x: hidden;
+    margin-bottom: 10px;
   }
   
   .button-group {

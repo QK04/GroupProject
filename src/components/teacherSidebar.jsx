@@ -17,6 +17,7 @@ import theoryIcon from '../assets/theory.png';
 import testIcon from '../assets/test.png';
 import questionbankIcon from '../assets/questionbank.png';
 import subjectIcon from '../assets/subject.png';
+import profileIcon from '../assets/profile.png';
 
 export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nhận onTestClick từ props
   const [showSettings, setShowSettings] = useState(false);
@@ -26,7 +27,9 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
     { text: 'Theory', icon: theoryIcon },
     { text: 'Question Bank', icon: questionbankIcon },
     { text: 'Test', icon: testIcon },
+    { text: 'Profile', icon: profileIcon },
     { text: 'Setting', icon: settingIcon },
+
   ];
   const navigate = useNavigate();
   const handleMainMenuClick = (menuItem) => {
@@ -45,12 +48,15 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
         toggleSidebar();
         navigate('/QuestionBank');
         break;
+      case 'Profile':
+        toggleSidebar();
+        navigate('/UserProfile')
+        break;
       case 'Setting':
         toggleSidebar();
         handleSettings();
         break;
-      default:
-        break;
+      
     }
   };
 
@@ -59,8 +65,8 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
   };
 
   const handleLogout = () => {
-    console.log('Logging out...');
-    toggleSidebar();
+    localStorage.removeItem("user");
+    window.location.href = "/login"; // Redirect to login page after logout
   };
 
   return (

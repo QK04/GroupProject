@@ -43,6 +43,14 @@
     border-bottom: 2px solid #007bff; /* Underline for emphasis */
     padding-bottom: 5px;
   }
+  .students-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 15px;
+    border-bottom: 2px solid #007bff; /* Underline for emphasis */
+    padding-bottom: 5px;
+  }
   
   .questions-list {
     margin-top: 10px;

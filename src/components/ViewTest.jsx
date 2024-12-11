@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import "./ViewTest.css";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 const ViewTest = () => {
   const { testId } = useParams(); // Lấy testId từ URL
@@ -10,7 +12,6 @@ const ViewTest = () => {
   const [loading, setLoading] = useState(true);
   const [studentLoading, setStudentLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
@@ -91,6 +92,15 @@ const ViewTest = () => {
 
   return (
     <div className="view-test-container">
+      {/* TopBar stays at the top */}
+      <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+
+      {/* Sidebar */}
+      <Sidebar
+        isOpen={isSidebarOpen}
+        toggleSidebar={toggleSidebar}
+        // Gửi function điều hướng tới Sidebar
+      />
       <h1 className="view-test-title">Test Details</h1>
       {testDetails && (
         <>
