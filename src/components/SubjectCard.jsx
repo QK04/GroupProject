@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./SubjectCard.css";
 import { Link } from "react-router-dom";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 
 function SubjectCard() {
@@ -11,6 +13,7 @@ function SubjectCard() {
   const [activeCardId, setActiveCardId] = useState(null); // Track which card's dropdown is open
   const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
   const teacher_id = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user_id : null;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
   const fetchSubjects = async () => {
       try {
@@ -149,49 +152,59 @@ function SubjectCard() {
   if (loading) {
     return <p>Loading subjects...</p>;
   }
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
+    <div className="main">
+    
     <div className="cardContainer">
-      {cards.map((card) => (
-        <Link key={card.id || card.title} to={`/subject/${card.id}`} style={{ textDecoration: 'none' }}>
-        <div
-          key={card.id || card.title}          
-          className="subjectCard"
-          onClick={(e) => e.stopPropagation()} // Prevent click on card from closing the dropdown
-        >
-          {/* More icon to toggle the dropdown */}
-          <img
-            src="src\assets\more.png"
-            alt="Options"
-            className="moreCardImageButton"
-            onClick={(e) => {
-              e.stopPropagation(); // Prevent click from propagating to the card
-              toggleDropdown(card.id);
-            }}
-          />
+      <TopBar toggleSidebar={toggleSidebar}/>
+      
+      {/* Sidebar is displayed based on the `isSidebarOpen` state */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-          {/* Conditional rendering of dropdown */}
-          {activeCardId === card.id && (
-            <div
-              ref={dropdownRef} // Reference to the dropdown menu
-              className="dropdownMenu"
-            >
-              <button onClick={() => handleEditCard(card.id)}>Edit</button>
-              <button onClick={() => handleDeleteCard(card.id)}>Delete</button>
+        {cards.map((card) => (
+            <div key={card.id || card.title} className="subjectCard">
+                <Link
+                    to={`/subject/${card.id}`}
+                    style={{ textDecoration: 'none' }}
+                    onClick={(e) => e.stopPropagation()} // Prevent propagation from the card to the Link
+                >
+                    <div className="cardTheme">
+                        <p className="title">{card.title}</p>
+                    </div>
+                </Link>
+                {/* More icon to toggle the dropdown */}
+                <img
+                    src="src\assets\more.png"
+                    alt="Options"
+                    className="moreCardImageButton"
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent click from propagating to the Link
+                        toggleDropdown(card.id);
+                    }}
+                />
+                {/* Conditional rendering of dropdown */}
+                {activeCardId === card.id && (
+                    <div
+                        ref={dropdownRef} // Reference to the dropdown menu
+                        className="dropdownMenu"
+                    >
+                        <button onClick={() => handleEditCard(card.id)}>Edit</button>
+                        <button onClick={() => handleDeleteCard(card.id)}>Delete</button>
+                    </div>
+                )}
             </div>
-          )}
-
-          <div className="cardTheme">
-            <p className="title">{card.title}</p>
-          </div>
+        ))}
+        <button className="addCardButton" onClick={handleAddCard}>
+            Add New Card
+        </button>
         </div>
-        </Link>
-      ))}
-      <button className="addCardButton" onClick={handleAddCard}>
-        Add New Card
-      </button>
     </div>
-  );
+);
+
 }
 
 export default SubjectCard;

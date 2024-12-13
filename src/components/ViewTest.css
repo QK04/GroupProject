@@ -1,0 +1,123 @@
+.view-test-container {
+    padding: 20px;
+    max-width: 100vw;
+    height: 100vh;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #e6f1f8; /* Light background */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    overflow-y: auto;
+  }
+  
+  .view-test-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .test-info {
+    background-color: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  }
+  
+  .test-info p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .questions-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff; /* Underline for emphasis */
+    padding-bottom: 5px;
+  }
+  .students-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 15px;
+    border-bottom: 2px solid #007bff; /* Underline for emphasis */
+    padding-bottom: 5px;
+  }
+  
+  .questions-list {
+    margin-top: 10px;
+  }
+  
+  .question-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .choices-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .choice-item {
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa; /* Light gray background */
+    transition: background-color 0.3s ease;
+  }
+  
+  .choice-item:hover {
+    background-color: #f0f8ff; /* Slight blue hover effect */
+  }
+  
+  .correct-choice {
+    background-color: #d4edda; /* Green background for correct answers */
+    border-color: #c3e6cb;
+    color: #155724;
+    font-weight: bold;
+  }
+  
+  .correct-label {
+    font-size: 0.9rem;
+    color: #28a745;
+    margin-left: 5px;
+  }
+  
+  @media (max-width: 768px) {
+    .view-test-container {
+      padding: 15px;
+      max-width: 100%;
+    }
+  
+    .view-test-title {
+      font-size: 1.8rem;
+    }
+  
+    .test-info p,
+    .question-text {
+      font-size: 1rem;
+    }
+  }
+  

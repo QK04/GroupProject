@@ -2,21 +2,12 @@
     display: flex;
     flex-direction: column;
     height: 100vh; /* Full viewport height */
-    overflow: hidden; /* Prevent overflow issues */
+    overflow-y: auto;
   }
   
   .dashboard-content {
     flex-grow: 1; /* Ensures it takes up the rest of the space */
-    padding: 20px;
-    margin-top: 80px; /* Match the height of the TopBar */
     overflow-y: auto; /* Enable scrolling if content overflows */
     background-color: #e6f1f8;
-  }
-  
-  .cardContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Add space between cards */
-    justify-content: flex-start;
   }
   

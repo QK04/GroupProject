@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         break;
       case 'Rankings':
         toggleSidebar();
-        console.log('Navigating to Awards');
+        navigate('/Ranking');
         break;
       case 'Quiz':
         toggleSidebar();

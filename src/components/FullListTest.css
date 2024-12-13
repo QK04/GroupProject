@@ -1,0 +1,104 @@
+.full-list-test-container {
+  padding: 20px;
+  max-height: 100vh;
+  max-width: 100vw;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+  background-color: #E6F1F8; /* Light background for contrast */
+  margin-top: 45px;
+}
+
+.tests-list {
+
+  max-height: 90vh; /* Adjusted height to avoid full-screen overflow */
+  width: 100%; /* More responsive width */
+  max-width: 800px;
+  overflow-y: auto; /* Vertical scrolling for long lists */
+  border: 1px solid #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  margin: auto;
+  background-color: #fff; /* White background for clarity */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.back-to-dashboard-button,
+.create-test-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff; /* Blue button color */
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-to-dashboard-button:hover,
+.create-test-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.test-item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.test-item:hover {
+  background-color: #f0f8ff; /* Subtle blue highlight */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.test-label {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.test-date {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.test-id {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+  text-align: right;
+}
+
+.test-item:last-child {
+  margin-bottom: 0; /* No margin for the last item */
+}
+
+@media (max-width: 768px) {
+  .tests-list {
+    width: 95%; /* Full width on smaller screens */
+  }
+
+  .test-item {
+    flex-direction: column; /* Stack content for smaller screens */
+    align-items: flex-start;
+  }
+
+  .test-label, .test-date, .test-id {
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .test-id {
+    margin-top: 5px;
+  }
+}

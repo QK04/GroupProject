@@ -3,12 +3,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../pages/Login';
 import StudentDashboard from '../components/StudentDashboard';
 import TeacherDashboard from '../components/TeacherDashboard';
+import FullListTest from '../components/FullListTest'; // Import FullListTest
 import ProtectedRoute from '../components/ProtectedRoute';
 
 const AppRouter = () => (
   <Router>
     <Routes>
+      {/* Route cho trang Login */}
       <Route path="/login" element={<Login />} />
+
+      {/* Route cho StudentDashboard */}
       <Route
         path="/student-dashboard"
         element={
@@ -17,6 +21,8 @@ const AppRouter = () => (
           </ProtectedRoute>
         }
       />
+
+      {/* Route cho TeacherDashboard */}
       <Route
         path="/teacher-dashboard"
         element={
@@ -25,6 +31,9 @@ const AppRouter = () => (
           </ProtectedRoute>
         }
       />
+
+     
+    
     </Routes>
   </Router>
 );
