@@ -3,16 +3,19 @@ import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill's styles
 import { useParams } from "react-router-dom";
+import "./ChapterDetail.css"; // Import the scoped CSS
 
 function ChapterDetail() {
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [newTheoryContent, setNewTheoryContent] = useState('');
+  const [newTheoryContent, setNewTheoryContent] = useState("");
   const quillRef = useRef(null); // Reference for the Quill editor
 
   const { chapterId } = useParams(); // Get chapterId from URL
-  const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
+  const token = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).access_token
+    : null;
 
   // Fetch chapter detail when the component mounts
   const fetchChapterDetail = async () => {
@@ -41,14 +44,14 @@ function ChapterDetail() {
   };
 
   useEffect(() => {
-    fetchChapterDetail();  // Fetch chapter details when component mounts
+    fetchChapterDetail(); // Fetch chapter details when component mounts
   }, [chapterId, token]);
 
   const handleSaveTheory = async () => {
     try {
       // Get the content from the Quill editor as HTML
       const quillContent = quillRef.current.getEditor().root.innerHTML;
-      
+
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
         { theory_content: quillContent },
@@ -79,9 +82,10 @@ function ChapterDetail() {
   }
 
   return (
-    <div className="chapterDetailContainer">
-      <h2>{chapter.chapter_name}</h2>
-      <div>
+    <div className="chapterDetail-container">
+      <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
+
+      <div className="chapterDetail-editorContainer">
         {isEditing ? (
           <div>
             {/* Use Quill editor when in editing mode */}
@@ -90,19 +94,36 @@ function ChapterDetail() {
               value={newTheoryContent}
               onChange={setNewTheoryContent}
               theme="snow"
+              className="chapterDetail-editor"
             />
-            <div>
-              <button onClick={handleSaveTheory}>Save</button>
-              <button onClick={() => setIsEditing(false)}>Cancel</button>
+            <div className="chapterDetail-buttons">
+              <button
+                className="chapterDetail-saveButton"
+                onClick={handleSaveTheory}
+              >
+                Save
+              </button>
+              <button
+                className="chapterDetail-cancelButton"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         ) : (
           <div>
             {/* Display the content when not editing */}
             <div
+              className="chapterDetail-content"
               dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
             />
-            <button onClick={() => setIsEditing(true)}>Edit Theory</button>
+            <button
+              className="chapterDetail-editButton"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Theory
+            </button>
           </div>
         )}
       </div>

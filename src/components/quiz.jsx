@@ -1,76 +1,77 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./quiz.css";
-import CorrectIcon from "../assets/correct.png"
-import WrongIcon from "../assets/wrong.png"
-import TopBar from "./Topbar";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./Sidebar";
 
-const QuizPage = ({ toggleSidebar, toggleHistory, onLogout }) => {
-  // State to store the list of questions
+const QuizPage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // Current page
-  const questionsPerPage = 8; 
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 8;
 
-  // Simulated API call to fetch questions
   useEffect(() => {
     const fetchQuestions = async () => {
-      const mockData = Array.from({ length: 50 }, (_, i) => ({
-        id: i + 1,
-        correctRate: Math.random() * 100, // Random correct rate
-        errorRate: Math.random() * 100, // Random error rate
-      }));
-      setQuestions(mockData);
+      try {
+        const response = await axios.get(
+          "https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test"
+        );
+
+        const data = JSON.parse(response.data.body);
+        const tests = data.tests;
+
+        const quizData = tests.map((test, index) => ({
+          id: test.test_id,
+          testNumber: index + 1,
+        }));
+
+        setQuestions(quizData);
+      } catch (error) {
+        console.error("Failed to fetch questions:", error);
+      }
     };
 
     fetchQuestions();
   }, []);
 
-  // Get questions for the current page
   const displayedQuestions = questions.slice(
     (currentPage - 1) * questionsPerPage,
     currentPage * questionsPerPage
   );
 
-  // Handle page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const goToTest = (testId) => {
-    navigate(`/test/${testId}`);
+  const goToTestDetail = (testId) => {
+    navigate(`/test/${testId}/details`);
   };
 
   return (
     <>
-      <TopBar
-        toggleSidebar={toggleSidebar}
-        toggleHistory={toggleHistory}
-        onLogout={onLogout}
-      />
       <div className="quiz-container">
+        <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         {displayedQuestions.map((question) => (
           <button
-          key={question.id}
-          className="quiz-card"
-          onClick={() => goToTest(question.id)}
-        >
-            <div
-              className={`quiz-number ${
-                question.correctRate > question.errorRate ? "green" : "red"
-              }`}
-            >
-              {question.id}
-            </div>
-            <div className="quiz-label-container">
-              <div className="quiz-label green">
-                <img src={CorrectIcon} alt="Correct icon" />
-                <span>{question.correctRate.toFixed(0)}%</span>
-              </div>
-              <div className="quiz-label orange">
-                <span>{question.errorRate.toFixed(0)}%</span>
-                <img src= {WrongIcon} alt="Error icon" />
-              </div>
+            key={question.id}
+            className="quiz-card"
+            onClick={() => goToTestDetail(question.id)}
+          >
+            <div className="quiz-number">
+              Test {question.testNumber}
             </div>
           </button>
         ))}

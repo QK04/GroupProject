@@ -4,9 +4,10 @@
   justify-content: space-between;
   gap: 20px;
   padding: 20px;
- 
+  
   max-width: 1100px;
   margin: 0 auto;
+  margin-top: 100px;
   font-family: Arial, sans-serif;
 }
 
@@ -31,6 +32,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  justify-content: center;
   margin-bottom: 15px;
 }
 
@@ -100,17 +102,15 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 15px;
   color: #333;
+  
 }
 
 .option-label input {
   margin-right: 10px;
   width: 13px;
   height: 13px;
-
-
- 
 }
 
 .button-container {
@@ -135,4 +135,15 @@
 .button-container button:disabled {
   background: #ddd;
   cursor: not-allowed;
+}
+
+.test-score{
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: 100px;
+  font-family: Arial, sans-serif;
+  color: black;
 }

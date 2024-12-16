@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './register.css'; // Scoped CSS
 import axios from 'axios';
+import usthLogo from '../assets/usthlogo.png';
+import styled from '@emotion/styled';
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -70,7 +72,8 @@ function Register() {
                 {/* Logo Section */}
                 <div className="header">
                     <img
-                        src="/src/assets/logo.png"
+                        src={usthLogo}
+                        className='register-logo'
                         alt="Logo-Truong-Dai-hoc-Khoa-hoc-va-Cong-nghe-Ha-Noi"
                     />
                 </div>

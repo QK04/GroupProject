@@ -11,6 +11,8 @@
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
+  z-index: 1001;
+  position: fixed;
 }
 
 h2 {
@@ -18,7 +20,7 @@ h2 {
   margin-bottom: 1rem;
 }
 
-form {
+.login-form {
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 8px;
@@ -28,7 +30,7 @@ form {
   max-width: 400px;
 }
 
-form div {
+.login-form div {
   margin-bottom: 1rem;
 }
 

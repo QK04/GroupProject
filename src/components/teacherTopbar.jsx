@@ -2,20 +2,19 @@ import React from 'react';
 import menuIcon from '../assets/menu.png';
 import logoIcon from '../assets/usthlogo.png';
 import sidebarRightIcon from '../assets/sidebar-right.png';
-
-import './TopBar.css';
+import './teacherTopBar.css';
 
 const TopBar = ({ toggleSidebar, toggleHistory }) => {
   return (
-    <div className="top-bar">
+    <div className="teacher-top-bar">
       <img
         src={menuIcon}
         alt="Menu"
-        className="menu-toggle"
+        className="teacher-menu-toggle"
         onClick={toggleSidebar}
       />
-      <div className='logo-center'>
-        <img src={logoIcon} alt="Logo" className="logo" />
+      <div className='teacher-logo-center'>
+        <img src={logoIcon} alt="Logo" className="teacher-logo" />
       </div>
     </div>
   );

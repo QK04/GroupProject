@@ -17,30 +17,37 @@ import theoryIcon from '../assets/theory.png';
 import testIcon from '../assets/test.png';
 import questionbankIcon from '../assets/questionbank.png';
 import subjectIcon from '../assets/subject.png';
-import profileIcon from '../assets/profile.png';
+import profileIcon from '../assets/profile.png'
 
-export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nhận onTestClick từ props
+export default function Sidebar({ isOpen, toggleSidebar }) {
+  const navigate = useNavigate();
   const [showSettings, setShowSettings] = useState(false);
+  const [newElements, setNewElements] = useState([]); // State for dynamic elements
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    localStorage.removeItem('user'); // Xóa thông tin người dùng khỏi localStorage
+    const userAfterLogout = localStorage.getItem('user');
+    console.log('Token after logout:', userAfterLogout); 
+    toggleSidebar(); // Đóng Sidebar
+    navigate('/login'); // Chuyển hướng về trang login
+  }
 
   const mainMenuItems = [
     { text: 'Subjects', icon: subjectIcon },
-    { text: 'Theory', icon: theoryIcon },
     { text: 'Question Bank', icon: questionbankIcon },
-    { text: 'Test', icon: testIcon },
+    { text: 'Tests', icon: testIcon },
     { text: 'Profile', icon: profileIcon },
     { text: 'Setting', icon: settingIcon },
 
   ];
-  const navigate = useNavigate();
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
       case 'Subjects':
         toggleSidebar();
         navigate('/SubjectCard');
-        break;
-      case 'Theory':
-        break;  
-      case 'Test':
+        break; 
+      case 'Tests':
         toggleSidebar();
         navigate('/FullListTest'); 
         break;
@@ -64,14 +71,10 @@ export default function Sidebar({ isOpen, toggleSidebar, onTestClick }) {  // Nh
     setShowSettings(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    window.location.href = "/login"; // Redirect to login page after logout
-  };
 
   return (
     <>
-      <Drawer open={isOpen} onClose={toggleSidebar} anchor="left">
+      <Drawer open={isOpen} onClose={toggleSidebar} anchor="right">
         <Box className="sidebar-container" role="presentation">
           <List>
             <img src={usthLogo} alt="USTH Logo" className="usthlogo" />

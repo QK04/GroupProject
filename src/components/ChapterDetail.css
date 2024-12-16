@@ -1,0 +1,111 @@
+/* Main Container */
+.chapterDetail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    padding-top: 60px ;
+  }
+  
+  /* Header */
+  .chapterDetail-container h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+
+  .chapterDetail-container h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #f8282c;
+    margin-bottom: 20px;
+  }
+  
+  /* Buttons */
+  .chapterDetail-container button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .chapterDetail-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .chapterDetail-container button:last-of-type {
+    background-color: #dc3545;
+  }
+  
+  .chapterDetail-container button:last-of-type:hover {
+    background-color: #c82333;
+  }
+  
+  /* Editor Container */
+  .chapterDetail-editorContainer {
+    margin-top: 20px;
+  }
+  
+  .chapterDetail-editorContainer .ql-container {
+    height: 200px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Display Content */
+  .chapterDetail-content {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+  }
+  
+  .chapterDetail-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+  }
+  
+  .chapterDetail-content blockquote {
+    font-style: italic;
+    margin: 10px 0;
+    padding-left: 10px;
+    border-left: 3px solid #007bff;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .chapterDetail-container {
+      padding: 10px;
+    }
+  
+    .chapterDetail-container h2 {
+      font-size: 20px;
+    }
+  
+    .chapterDetail-container button {
+      font-size: 12px;
+      padding: 8px 12px;
+    }
+  
+    .chapterDetail-content {
+      font-size: 14px;
+    }
+  }
+  

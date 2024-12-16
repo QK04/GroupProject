@@ -1,9 +1,19 @@
+.page_container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #e6f1f8;
+}
+
 .user_container {
+    
     font-family: Arial, sans-serif;
     margin: 0 auto;
     padding: 20px;
+    width: 100%;
     max-width: 900px;
-    background: #f8f9fa;
+    background: #f8f9fb;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
