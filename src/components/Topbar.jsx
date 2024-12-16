@@ -3,7 +3,7 @@ import menuIcon from '../assets/menu.png';
 import logoIcon from '../assets/usthlogo.png';
 import sidebarRightIcon from '../assets/sidebar-right.png';
 
-import './TopBar.css';
+import './Topbar.css';
 
 const TopBar = ({ toggleSidebar, toggleHistory }) => {
   return (
