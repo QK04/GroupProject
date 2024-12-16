@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+import './Sidebar.css';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -8,65 +10,63 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import './Sidebar.css';
-import { useNavigate } from 'react-router-dom';
-import addChatIcon from '../assets/add_note.png';
-import awardIcon from '../assets/award.png';
-import historyIcon from '../assets/history.png';
+
 import logoutIcon from '../assets/logout.png';
-import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
-import profileIcon from '../assets/profile.png';
 import theoryIcon from '../assets/theory.png';
-
+import testIcon from '../assets/test.png';
+import questionbankIcon from '../assets/questionbank.png';
+import subjectIcon from '../assets/subject.png';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
-  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
+  const [showSettings, setShowSettings] = useState(false);
+  const [newElements, setNewElements] = useState([]); // State for dynamic elements
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    localStorage.removeItem('user'); // Xóa thông tin người dùng khỏi localStorage
+    const userAfterLogout = localStorage.getItem('user');
+    console.log('Token after logout:', userAfterLogout); 
+    toggleSidebar(); // Đóng Sidebar
+    navigate('/login'); // Chuyển hướng về trang login
+  }
 
   const mainMenuItems = [
-    
-    { text: 'Chat Bot', icon: addChatIcon },
-    { text: 'Theories', icon: theoryIcon},
-    { text: 'Excercise', icon: quizIcon },
-    { text: 'Tests', icon: quizIcon },
-    { text: 'Rankings', icon: awardIcon },
-    { text: 'User', icon: profileIcon },
-    { text: 'Setting', icon: settingIcon }
+    { text: 'Subjects', icon: subjectIcon },
+    { text: 'Theory', icon: theoryIcon },
+    { text: 'Question Bank', icon: questionbankIcon },
+    { text: 'Test', icon: testIcon },
+    { text: 'Setting', icon: settingIcon },
+
   ];
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
-      
-      case 'Chat Bot':
-        toggleSidebar();
-        navigate('/student-dashboard');
+      case 'Subjects':
+        handleSubjectCard();
         break;
-      case 'Theories':
-        toggleSidebar();
-        navigate('/theory');
+      case 'Theory':
+        
+        handleSettings();
         break;
-      case 'Excercise':
-        toggleSidebar();
-        console.log('Excercise');
+      case 'Question Bank':
+
+        handleSettings();
         break;
-      case 'Tests':
+      case 'Test':
         toggleSidebar();
-        navigate('/quiz')
-        break;
-      case 'Rankings':
-        toggleSidebar();
-        navigate('/ranking');
-        break;
-      case 'User':
-        toggleSidebar();
-        navigate('/user_profile');
-        break;
+        handleSettings();
+        break;  
+
       case 'Setting':
         toggleSidebar();
         handleSettings();
         break;
+
       default:
         break;
     }
@@ -77,15 +77,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     setShowSettings(true);
   };
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    localStorage.removeItem('user'); // Xóa thông tin người dùng khỏi localStorage
-    const userAfterLogout = localStorage.getItem('user');
-    console.log('Token after logout:', userAfterLogout); // Log token sau khi xóa (nên là null)
-  
-    toggleSidebar(); // Đóng Sidebar
-    navigate('/login'); // Chuyển hướng về trang login
-  }
 
   return (
     <>
@@ -113,8 +104,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
           <Divider className="divider" />
 
-          {/*Logout Section */}
+          {/* Logout Section */}
           <div className="logout-section">
+          <Divider className="divider" />
             <ListItem disablePadding>
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon>

@@ -1,0 +1,57 @@
+.student-chapter-list-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 100px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header */
+  .student-chapter-list-container h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
+  /* Chapter List */
+  .student-chapter-list {
+    margin-top: 20px;
+  }
+  
+  .student-chapter-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .student-chapter-card h3 {
+    font-size: 18px;
+    margin: 0 0 10px;
+    color: #007bff;
+  }
+  
+  .student-chapter-card h3 a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .student-chapter-card h3 a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+    .student-chapter-list-container {
+      padding: 10px;
+    }
+  
+    .student-chapter-card h3 {
+      font-size: 16px;
+    }
+  }
+  

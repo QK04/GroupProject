@@ -1,8 +1,18 @@
-import React from "react";
-import TopBar from "./Topbar";
+import React,{useState} from "react";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./Sidebar";
 import "./Ranking.css";
 
-const Ranking = ({toggleSidebar}) => {
+const Ranking = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
     const data = [
         { name: "Nguyễn Gia Bách", id: "22b113052", score: 80, rank: 1 },
         { name: "Nguyễn Gia Bách", id: "22b113052", score: 75, rank: 2 },
@@ -11,7 +21,9 @@ const Ranking = ({toggleSidebar}) => {
     ];
 
     return (
-        
+        <div className="page_container">
+            <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <div className="ranking_container">
             
             <header className="ranking_header">
@@ -42,7 +54,8 @@ const Ranking = ({toggleSidebar}) => {
                 ))}
             </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default Ranking;

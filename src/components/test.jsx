@@ -3,8 +3,19 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./test.css";
 import { useAuth } from "../context/authContext";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./Sidebar";
 
 const MultipleChoiceLayout = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
   const { testId } = useParams(); // Get test ID from the route
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -123,8 +134,10 @@ const MultipleChoiceLayout = () => {
 
   return (
     <div className="test-container">
+      <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+      
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       {/* navigation */}
-      {score !== null && <h3 className="test-score">Your Score: {score}</h3>}
       <div className="test-sidebar">
         <h4>Quiz Navigation</h4>
         <div className="navigation-buttons">

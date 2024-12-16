@@ -6,15 +6,20 @@ import StudentDashboard from './components/StudentDashboard';
 import TeacherDashboard from './components/TeacherDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/authContext';
-import MultipleChoiceLayout from './components/test'; 
-import QuizPage from './components/quiz';
+import MultipleChoiceLayout from "./components/test"; 
+import QuizPage from "./components/quiz";
+import "./App.css";
+import UserProfile from "./components/UserProfile.jsx";
+import ChapterList from "./components/ChapterList.jsx";
+import ChapterDetail from "./components/ChapterDetail.jsx";
 import Ranking from './components/Ranking';
-import TopBar from './components/Topbar';
-import Sidebar from './components/Sidebar';
-import UserProfile from './components/UserProfile';
-import transparentLogo from './assets/transparent.png';
+import TestDetailsPage from './components/TestDetailsPage';
+import StudentTheory from './components/studentTheory';
+import ChapterListStudent from './components/ChapterListStudent';
+import ResultPage from './components/ResultPage.jsx';
 
 import './App.css';
+import ChapterDetailStudent from './components/ChapterDetailStudent.jsx';
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -50,10 +55,36 @@ const App = () => {
             }
           />
           <Route path="/quiz" element={<QuizPage  />} />
-          <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />
+          <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />4
+          <Route path="/test/:testId/details" element={<TestDetailsPage />} />
           <Route path="/test/:testId" element={<MultipleChoiceLayout />}/>
           <Route path="/user_profile" element={<UserProfile />} />
           <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/results/:testId" element={<ResultPage />} />
+          <Route path='/theory' element={<StudentTheory/>}/>
+          <Route
+            path="/subject/:subjectId"
+            element={
+              localStorage.getItem("user") &&
+              JSON.parse(localStorage.getItem("user")).role === "Teacher" ? (
+                <ChapterList />
+              ) : (
+                <ChapterListStudent />
+              )
+            }
+          />
+          <Route
+            path="/chapter/:chapterId"
+            element={
+              localStorage.getItem("user") &&
+              JSON.parse(localStorage.getItem("user")).role === "Teacher" ? (
+                <ChapterDetail />
+              ) : (
+                <ChapterDetailStudent />
+              )
+            }
+          />
+
         </Routes>
       </AuthProvider>
     </Router>

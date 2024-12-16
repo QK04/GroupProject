@@ -32,6 +32,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  justify-content: center;
   margin-bottom: 15px;
 }
 
@@ -101,17 +102,15 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 15px;
   color: #333;
+  
 }
 
 .option-label input {
   margin-right: 10px;
   width: 13px;
   height: 13px;
-
-
- 
 }
 
 .button-container {

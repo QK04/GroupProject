@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./UserProfile.css";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./Sidebar";
 
 const UserProfile = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
     const [profile, setProfile] = useState({
         first_name: "",
         last_name: "",
@@ -116,6 +128,11 @@ const UserProfile = () => {
     }
 
     return (
+    <div className="page_container">
+        <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+      
+        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
         <div className="user_container">
             {/* Header */}
             <header className="user_header">
@@ -209,6 +226,7 @@ const UserProfile = () => {
                     </div>
                 )}
             </main>
+        </div>
         </div>
     );
 };
