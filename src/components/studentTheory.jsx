@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
-import "./TeacherDashboard.css";
+import "./studentTheory.css";
 import StudentSubjectCard from './studentSubjectCard';
 
 const StudentTheory = () => {
@@ -19,13 +19,13 @@ const StudentTheory = () => {
   };
 
   return (
-    <div className="app">
+    <div className="student-theory">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       
       {/* Main Content */}
-      <div className="dashboard-content">
+      <div className="student-dashboard-content">
         <StudentSubjectCard /> 
       </div>
     </div>

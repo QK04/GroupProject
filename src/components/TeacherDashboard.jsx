@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import TopBar from "./teacherTopbar";
 import Sidebar from "./teacherSidebar";
 import SubjectCard from "./SubjectCard";
 import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Khởi tạo navigate
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Function to toggle the sidebar
@@ -16,7 +16,7 @@ const TeacherDashboard = () => {
 
   
   return (
-    <div className="app">
+    <div className="teacher-dashboard">
       {/* TopBar stays at the top */}
       <TopBar toggleSidebar={toggleSidebar} />
       
@@ -25,7 +25,7 @@ const TeacherDashboard = () => {
       
       {/* Main Content */}
       <div className="dashboard-content">
-        <SubjectCard /> {/* Insert SubjectCard here */}
+        <SubjectCard /> {/* Default content */}
       </div>
       
     </div>

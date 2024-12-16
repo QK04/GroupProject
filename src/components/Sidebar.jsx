@@ -57,7 +57,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         break;
       case 'Rankings':
         toggleSidebar();
-        navigate('/ranking');
+        navigate('/Ranking');
         break;
       case 'User':
         toggleSidebar();

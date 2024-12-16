@@ -1,61 +1,78 @@
-import React,{useState} from "react";
-import TopBar from "./teacherTopbar";
-import Sidebar from "./Sidebar";
-import "./Ranking.css";
+import React, { useState, useEffect } from "react";
+import axios from '../api/axios'; 
+import './ranking.css';
 
 const Ranking = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [rankings, setRankings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-    const data = [
-        { name: "Nguyễn Gia Bách", id: "22b113052", score: 80, rank: 1 },
-        { name: "Nguyễn Gia Bách", id: "22b113052", score: 75, rank: 2 },
-        { name: "Nguyễn Gia Bách", id: "22b113052", score: 65, rank: 3 },
-        { name: "Nguyễn Gia Bách", id: "22b113052", score: 60, rank: 4 },
-    ];
 
-    return (
-        <div className="page_container">
-            <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        <div className="ranking_container">
-            
-            <header className="ranking_header">
-                <h2>Leaderboard</h2>
-                <nav>
-                    <button className="ranking_tab active">Leaderboard</button>
-                
-                </nav>
-            </header>
-            <div className="ranking_list">
-                {data.map((item, index) => (
-                    <div className="ranking_card" key={index}>
-                        <div className="ranking_rank">
-                                <span className="ranking_position">{item.rank}</span>
-                        </div>
-                        <div className="ranking_info">
-                            <h3 className="ranking_name">{item.name}</h3>
-                            <p className="ranking_id">{item.id}</p>
-                        </div>
-                        <div className="ranking_progress">
-                            <div
-                                className="ranking_bar"
-                                style={{ width: `${item.score}%` }}
-                            ></div>
-                        </div>
-                        <div className="ranking_score">{item.score}%</div>
-                    </div>
-                ))}
-            </div>
+  // Payload cho yêu cầu POST
+  const payload = {
+    httpMethod: "POST",
+  };
+  const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
+  // Fetch rankings
+  useEffect(() => {
+    const fetchRankings = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/ranking`, payload, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // Parse JSON từ body
+        const parsedBody = JSON.parse(response.data.body);
+
+
+
+        if (Array.isArray(parsedBody.ranking)) {
+          const sortedData = parsedBody.ranking.sort((a, b) => b.total_points - a.total_points);
+          setRankings(sortedData);
+        } else {
+          console.error("Unexpected data structure:", parsedBody);
+          setError("Invalid response format from API.");
+        }
+      } catch (err) {
+        console.error("Error fetching rankings:", err);
+        setError(err.message || "Error fetching data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRankings();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <div className="ranking-container">
+      <h1 className="ranking-title">Leaderboard</h1>
+      <div className="ranking-table">
+        <div className="ranking-header">
+          <span className="header-rank">Rank</span>
+          <span className="header-name">Name</span>
+          <span className="header-points">Points</span>
         </div>
+        {rankings.map((ranking, index) => (
+          <div className="ranking-row" key={ranking.user_id}>
+            <span className="rank">
+              {index + 1}{" "}
+              {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : ""}
+            </span>
+            <span className="name">{ranking.user_name}</span>
+            <span className="points">{ranking.total_points} points</span>
+          </div>
+        ))}
+      </div>
     </div>
-);
+  );
 };
 
 export default Ranking;

@@ -1,0 +1,37 @@
+.test-creation-options-container {
+    text-align: center;
+    height: 100vh;
+    overflow-y: visible;
+    overflow-x: hidden;
+    margin-bottom: 10px;
+  }
+  
+  .button-group {
+    margin-top: 20px;
+  }
+  
+  .manual-create-button,
+  .random-create-button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .manual-create-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .random-create-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .manual-create-button:hover,
+  .random-create-button:hover {
+    opacity: 0.9;
+  }
+  

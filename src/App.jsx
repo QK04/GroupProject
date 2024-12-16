@@ -12,7 +12,15 @@ import "./App.css";
 import UserProfile from "./components/UserProfile.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterDetail from "./components/ChapterDetail.jsx";
+
+import FullListTest from './components/FullListTest';
+import ViewTest from './components/ViewTest';
+import TestCreationOptions from './components/TestCreationOptions';
+import ManualCreateTest from './components/ManualCreateTest';
+import RandomlyCreateTest from './components/RandomlyCreateTest';
 import Ranking from './components/Ranking';
+import SubjectCard from './components/SubjectCard.jsx';
+import QuestionBank from './components/QuestionBank.jsx';
 import TestDetailsPage from './components/TestDetailsPage';
 import StudentTheory from './components/studentTheory';
 import ChapterListStudent from './components/ChapterListStudent';
@@ -54,6 +62,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/QuestionBank"
+            element={<QuestionBank/>}
+          />
+          <Route
+            path="/SubjectCard"
+            element={<SubjectCard />}
+          />
           <Route path="/quiz" element={<QuizPage  />} />
           <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />4
           <Route path="/test/:testId/details" element={<TestDetailsPage />} />
@@ -73,6 +89,34 @@ const App = () => {
               )
             }
           />
+          
+          <Route
+            path="/FullListTest"
+            element={<FullListTest/>}
+          />
+          <Route
+            path="/ViewTest/:testId"
+            element={<ViewTest/>}
+          />
+
+          <Route
+          path="/TestCreationOptions"
+          element={<TestCreationOptions />} 
+          />
+
+          <Route
+            path="/test/:testId"
+            element={<MultipleChoiceLayout />}
+          />
+          <Route 
+          path="/ManualCreateTest" 
+          element={<ManualCreateTest />} 
+          />
+
+          <Route 
+          path="/RandomlyCreateTest" 
+          element={<RandomlyCreateTest />} 
+          />    
           <Route
             path="/chapter/:chapterId"
             element={
@@ -84,7 +128,19 @@ const App = () => {
               )
             }
           />
-
+          <Route
+            path="/subject/:subjectId"
+            element={
+              localStorage.getItem("user") &&
+              JSON.parse(localStorage.getItem("user")).role === "Teacher" ? (
+                <ChapterList />
+              ) : (
+                <ChapterListStudent />
+              )
+            }
+          />
+          <Route path="/" element={<Navigate to="/login" />} />
+        
         </Routes>
       </AuthProvider>
     </Router>

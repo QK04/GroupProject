@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-
 import './Sidebar.css';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -9,8 +9,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import './Sidebar.css';
-
 import logoutIcon from '../assets/logout.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
@@ -19,7 +17,7 @@ import theoryIcon from '../assets/theory.png';
 import testIcon from '../assets/test.png';
 import questionbankIcon from '../assets/questionbank.png';
 import subjectIcon from '../assets/subject.png';
-import { Navigate, useNavigate } from 'react-router-dom';
+import profileIcon from '../assets/profile.png'
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
@@ -37,41 +35,37 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const mainMenuItems = [
     { text: 'Subjects', icon: subjectIcon },
-    { text: 'Theory', icon: theoryIcon },
     { text: 'Question Bank', icon: questionbankIcon },
-    { text: 'Test', icon: testIcon },
+    { text: 'Tests', icon: testIcon },
+    { text: 'Profile', icon: profileIcon },
     { text: 'Setting', icon: settingIcon },
 
   ];
-
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
       case 'Subjects':
-        handleSubjectCard();
-        break;
-      case 'Theory':
-        
-        handleSettings();
+        toggleSidebar();
+        navigate('/SubjectCard');
+        break; 
+      case 'Tests':
+        toggleSidebar();
+        navigate('/FullListTest'); 
         break;
       case 'Question Bank':
-
-        handleSettings();
-        break;
-      case 'Test':
         toggleSidebar();
-        handleSettings();
-        break;  
-
+        navigate('/QuestionBank');
+        break;
+      case 'Profile':
+        toggleSidebar();
+        navigate('/UserProfile')
+        break;
       case 'Setting':
         toggleSidebar();
         handleSettings();
         break;
-
-      default:
-        break;
+      
     }
   };
-
 
   const handleSettings = () => {
     setShowSettings(true);
@@ -106,7 +100,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
           {/* Logout Section */}
           <div className="logout-section">
-          <Divider className="divider" />
+            <Divider className="divider" />
             <ListItem disablePadding>
               <ListItemButton onClick={handleLogout}>
                 <ListItemIcon>
