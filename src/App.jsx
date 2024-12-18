@@ -81,14 +81,20 @@ const App = () => {
           <Route
             path="/subject/:subjectId"
             element={
-              localStorage.getItem("user") &&
-              JSON.parse(localStorage.getItem("user")).role === "Teacher" ? (
-                <ChapterList />
-              ) : (
-                <ChapterListStudent />
-              )
+              (() => {
+                const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+
+                if (user && user.role === "Teacher") {
+                  return <ChapterList />;
+                } else if (user && user.role === "Student") {
+                  return <ChapterListStudent />;
+                } else {
+                  return <Navigate to="/login" />; // Hoặc trang khác mà bạn muốn điều hướng
+                }
+              })()
             }
           />
+
           
           <Route
             path="/FullListTest"
