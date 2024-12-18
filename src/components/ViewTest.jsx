@@ -12,10 +12,20 @@ const ViewTest = () => {
   const [loading, setLoading] = useState(true);
   const [studentLoading, setStudentLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+  
   useEffect(() => {
     const fetchTestDetails = async () => {
       try {
