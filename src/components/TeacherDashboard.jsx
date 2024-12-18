@@ -14,30 +14,20 @@ const TeacherDashboard = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    // Remove user info from localStorage
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
-
-
+  
   return (
-    <div className="app">
+    <div className="teacher-dashboard">
       {/* TopBar stays at the top */}
-      <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-        // Gửi function điều hướng tới Sidebar
-      />
-
+      <TopBar toggleSidebar={toggleSidebar} />
+      
+      {/* Sidebar is displayed based on the `isSidebarOpen` state */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      
       {/* Main Content */}
       <div className="dashboard-content">
         <SubjectCard /> {/* Default content */}
       </div>
+      
     </div>
   );
 };

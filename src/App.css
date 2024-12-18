@@ -8,11 +8,10 @@ html, body {
   display: flexbox;
   flex:1;
   font-family: 'Roboto', sans-serif;
-  height: 100%;
   background-color: #e6f1f8;
   color: #d1d5db;
   margin: 0px;
-  overflow-y: hidden;
+  
  
 }
 

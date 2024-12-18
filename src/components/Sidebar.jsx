@@ -17,6 +17,8 @@ import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
 import Setting from './SidebarItem/Setting';
+import profileIcon from '../assets/profile.png';
+import theoryIcon from '../assets/theory.png';
 
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
@@ -24,34 +26,42 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
 
   const mainMenuItems = [
-    { text: 'User', icon: addChatIcon },
-    { text: 'Add Chat', icon: addChatIcon },
-    { text: 'Theories', icon: addChatIcon},
+    
+    { text: 'Chat Bot', icon: addChatIcon },
+    { text: 'Theories', icon: theoryIcon},
+    { text: 'Excercise', icon: quizIcon },
+    { text: 'Tests', icon: quizIcon },
     { text: 'Rankings', icon: awardIcon },
-    { text: 'Quiz', icon: quizIcon },
+    { text: 'User', icon: profileIcon },
     { text: 'Setting', icon: settingIcon }
   ];
 
   const handleMainMenuClick = (menuItem) => {
     switch (menuItem) {
-      case 'User':
+      
+      case 'Chat Bot':
         toggleSidebar();
-        navigate('/user_profile');
-        break;
-      case 'Add Chat':
-        toggleSidebar();
-        console.log('Navigating to Add Chat');
+        navigate('/student-dashboard');
         break;
       case 'Theories':
         toggleSidebar();
+        navigate('/theory');
+        break;
+      case 'Excercise':
+        toggleSidebar();
+        console.log('Excercise');
+        break;
+      case 'Tests':
+        toggleSidebar();
+        navigate('/quiz')
         break;
       case 'Rankings':
         toggleSidebar();
         navigate('/Ranking');
         break;
-      case 'Quiz':
+      case 'User':
         toggleSidebar();
-        navigate('/quiz')
+        navigate('/user_profile');
         break;
       case 'Setting':
         toggleSidebar();

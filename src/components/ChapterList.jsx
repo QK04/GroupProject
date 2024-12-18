@@ -144,7 +144,7 @@ function ChapterList() {
       {/* Form tạo chapter */}
       {showForm && (
         <div className="createChapterForm">
-          <form onSubmit={handleCreateChapter}>
+          <form className="createChapterTable" onSubmit={handleCreateChapter}>
             <div className="formGroup">
               <label htmlFor="chapterName">Chapter Name:</label>
               <input

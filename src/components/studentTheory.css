@@ -1,0 +1,11 @@
+.student-theory {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto;
+  }
+  
+  .student-dashboard-content {
+    padding-top: 80px;
+    background-color: #e6f1f8;
+  }
