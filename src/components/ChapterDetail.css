@@ -1,6 +1,7 @@
 /* Main Container */
 .chapterDetail-container {
     max-width: 1000px;
+    max-height: 100vh;
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
@@ -9,6 +10,10 @@
     font-family: 'Arial', sans-serif;
     color: #333;
     padding-top: 60px ;
+    overflow-y: auto;
+  }
+  .chapterDetail-container::-webkit-scrollbar {
+    display: none;
   }
   
   /* Header */
@@ -45,11 +50,11 @@
   }
   
   .chapterDetail-container button:last-of-type {
-    background-color: #dc3545;
+    background-color: #027cff;
   }
   
   .chapterDetail-container button:last-of-type:hover {
-    background-color: #c82333;
+    background-color: #0056b3;
   }
   
   /* Editor Container */

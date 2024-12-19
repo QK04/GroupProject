@@ -189,7 +189,6 @@ function ChapterList() {
             <h3>
               <Link to={`/chapter/${chapter.chapter_id}`}>{chapter.chapter_name}</Link>
             </h3>
-
             <div className="chapterCardButton">
             {/* Nút Edit */}
             {editingChapterId === chapter.chapter_id ? (

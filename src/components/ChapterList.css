@@ -112,6 +112,7 @@
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 15px;
+
 }
 
 .chapterCard h3 {
@@ -128,6 +129,10 @@
 
 .chapterCard h3 a:hover {
   text-decoration: underline;
+}
+.chatpterCardButton{
+  display: flex;
+  right: 10%;
 }
 
 .chatpterCardButton{
