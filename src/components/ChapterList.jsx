@@ -190,6 +190,7 @@ function ChapterList() {
               <Link to={`/chapter/${chapter.chapter_id}`}>{chapter.chapter_name}</Link>
             </h3>
 
+            <div className="chapterCardButton">
             {/* Nút Edit */}
             {editingChapterId === chapter.chapter_id ? (
               <div>
@@ -223,6 +224,7 @@ function ChapterList() {
             <button onClick={() => handleDeleteChapter(chapter.chapter_id)}>
               Delete
             </button>
+            </div>
           </div>
         ))}
       </div>

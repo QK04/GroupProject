@@ -119,6 +119,7 @@ const QuestionBank = () => {
   };
 
   return (
+    <div className="question-bank-page">
     <div className="container">
       <TopBar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
@@ -172,6 +173,7 @@ const QuestionBank = () => {
           )}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

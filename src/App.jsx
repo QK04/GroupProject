@@ -81,14 +81,13 @@ const App = () => {
           <Route
             path="/subject/:subjectId"
             element={
-              localStorage.getItem("user") &&
-              JSON.parse(localStorage.getItem("user")).role === "Teacher" ? (
-                <ChapterList />
-              ) : (
-                <ChapterListStudent />
-              )
+              (() => {
+                const user = JSON.parse(localStorage.getItem("user") || "{}");
+                return user.role === "Teacher" ? <ChapterList /> : <ChapterListStudent />;
+              })()
             }
           />
+
           
           <Route
             path="/FullListTest"
