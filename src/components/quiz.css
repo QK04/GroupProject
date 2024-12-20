@@ -9,7 +9,7 @@
 }
 
 .quiz-card {
-  width: 255px;
+  width: calc((100% - 4 * 20px) / 5);
   height: 255px;
   background: #f8f9fa;
   border: 1px solid #ddd;
@@ -47,27 +47,42 @@
   margin-top: 20px;
 }
 
-.quiz-pagination a {
-  color: #007bff;
-  padding: 8px 16px;
-  text-decoration: none;
+.quiz-pagination button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #90caf9;
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  color: #1565c0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-pagination button:hover {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  color: #ffffff;
+}
+
+.quiz-pagination button.active-page {
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  color: #ffffff;
+  border-color: #1565c0;
+}
+
+.quiz-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-arrow {
   font-size: 16px;
-  margin: 0 5px;
-  border-radius: 5px;
-  border: 1px solid #007bff;
-  transition: all 0.2s ease-in-out;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  color: #1565c0;
 }
-
-.quiz-pagination a.active {
-  background-color: #007bff;
-  color: white;
-}
-
-.quiz-pagination a:hover:not(.active) {
-  background-color: #e9ecef;
-}
-
-.quiz-pagination a:active {
-  transform: scale(0.95);
-}
-

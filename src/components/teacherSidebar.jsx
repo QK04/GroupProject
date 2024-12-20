@@ -57,7 +57,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         break;
       case 'Profile':
         toggleSidebar();
-        navigate('/UserProfile')
+        navigate('/user_profile')
         break;
       case 'Setting':
         toggleSidebar();

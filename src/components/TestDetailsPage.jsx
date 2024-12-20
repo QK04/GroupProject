@@ -16,11 +16,11 @@ const TestDetailsPage = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-  const { testId } = useParams(); // Get the test ID from the route
-  const { user } = useAuth(); // Access the `user` object from AuthContext
-  const [testDetails, setTestDetails] = useState(null); // Store test details
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const { testId } = useParams(); 
+  const { user } = useAuth(); 
+  const [testDetails, setTestDetails] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const TestDetailsPage = () => {
       try {
         // Fetch test details using the provided API
         const response = await axios.get(
-          `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}/student/${user.user_id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${user.user_id}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

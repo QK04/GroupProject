@@ -16,12 +16,12 @@ const ResultPage = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-  const { testId } = useParams(); // Get test ID from route
-  const { state } = useLocation(); // Get userId from state passed in TestDetailsPage
-  const { user } = useAuth(); // Access user info from AuthContext
-  const [testResult, setTestResult] = useState(null); // Store test result
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const { testId } = useParams(); 
+  const { state } = useLocation(); 
+  const { user } = useAuth(); 
+  const [testResult, setTestResult] = useState(null); 
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   // Create a ref for each question to allow scrolling
   const questionRefs = useRef([]);
@@ -38,7 +38,7 @@ const ResultPage = () => {
 
       try {
         const response = await axios.get(
-          `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}/student/${userId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

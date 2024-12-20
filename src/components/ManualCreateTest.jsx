@@ -3,19 +3,24 @@ import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import "./ManualCreateTest.css";
 
-const ManualCreateTest = () => {
-  const [questionBank, setQuestionBank] = useState([]); // Mảng câu hỏi
-  const [selectedQuestions, setSelectedQuestions] = useState([]); // Câu hỏi được chọn
-  const [loading, setLoading] = useState(false); // Trạng thái tải
-  const [error, setError] = useState(null); // Trạng thái lỗi
+const ManualCreateTest = ({ subjectName }) => {
+  const [allQuestions, setAllQuestions] = useState([]); 
+  const [questionBank, setQuestionBank] = useState([]); 
+  const [selectedQuestions, setSelectedQuestions] = useState([]);
+  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState(null); 
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
+  const teacherName = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).user_name
+    : null;
+
   const navigate = useNavigate();
 
-  // Lấy danh sách câu hỏi từ question bank
+  // Fetch danh sách câu hỏi
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -30,25 +35,32 @@ const ManualCreateTest = () => {
           }
         );
 
-        // Giải mã (parse) body nếu cần
         const data = JSON.parse(response.data.body);
-
-        // Kiểm tra và gán dữ liệu nếu hợp lệ
         if (data && Array.isArray(data.questions)) {
-          setQuestionBank(data.questions);
+          setAllQuestions(data.questions); 
         } else {
           throw new Error("Invalid question bank format.");
         }
       } catch (err) {
         console.error("Error fetching question bank:", err);
-        setError(err.message || "Failed to fetch question bank.");
+        setError(err.response?.data?.message || "Failed to fetch question bank.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchQuestions();
-  }, []);
+  }, [token]);
+
+  // Lọc câu hỏi theo subject_name mỗi khi allQuestions hoặc subjectName thay đổi
+  useEffect(() => {
+    if (subjectName && allQuestions.length > 0) {
+      const filteredQuestions = allQuestions.filter(
+        (question) => question.subject_name === subjectName
+      );
+      setQuestionBank(filteredQuestions);
+    }
+  }, [subjectName, allQuestions]);
 
   // Xử lý chọn/deselect câu hỏi
   const handleQuestionSelect = (questionId) => {
@@ -71,7 +83,7 @@ const ManualCreateTest = () => {
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/test/create-test`,
-        { question_ids: selectedQuestions },
+        { question_ids: selectedQuestions, teacher_name: teacherName, subject_name: subjectName },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -102,7 +114,7 @@ const ManualCreateTest = () => {
 
   return (
     <div className="manual-create-test-container">
-      <h1 className="manual-create-test-title">Choose questions for your test</h1>
+      <h1 className="manual-create-test-title">Choose questions for {subjectName}</h1>
       <div className="question-bank">
         <h2>Question Bank</h2>
         {questionBank.length > 0 ? (
@@ -118,13 +130,15 @@ const ManualCreateTest = () => {
             </div>
           ))
         ) : (
-          <p>No questions available in the question bank.</p>
+          <p>No questions available for the selected subject.</p>
         )}
       </div>
       <div className="button-group">
-        <button className="submit-test-button" onClick={handleSubmit}>
-          Submit
-        </button>
+        {questionBank.length > 0 && (
+          <button className="submit-test-button" onClick={handleSubmit}>
+            Submit
+          </button>
+        )}
         <button className="cancel-test-button" onClick={handleCancel}>
           Cancel
         </button>

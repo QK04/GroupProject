@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './Setting.css';
+import React, { useState, useEffect, useRef } from "react";
+import "./Setting.css";
 
 function Setting({ closeSettings }) {
   const [isAlwaysShowCode, setIsAlwaysShowCode] = useState(false);
@@ -14,16 +14,16 @@ function Setting({ closeSettings }) {
     setIsLightTheme(!isLightTheme);
   };
 
-  {/* Close when clicking outside */}
+  // Close when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (settingsRef.current && !settingsRef.current.contains(event.target)) {
         closeSettings();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [closeSettings]);
 
@@ -42,25 +42,13 @@ function Setting({ closeSettings }) {
             <div className="toggle-container">
               <span className="spanmargin">Light</span>
               <button
-                className={`toggle-switch ${isLightTheme ? 'on' : 'off'}`}
+                className={`toggle-switch ${isLightTheme ? "on" : "off"}`}
                 onClick={handleThemeToggle}
               ></button>
               <span className="spanmargin">Dark</span>
             </div>
           </div>
           <hr />
-
-          <div className="settings-item">
-            <span>Always show code when using data analyst</span>
-            <div className="toggle-container">
-              <span className="spanmargin">Off</span>
-              <button
-                className={`toggle-switch ${isAlwaysShowCode ? 'on' : 'off'}`}
-                onClick={handleToggle}
-              ></button>
-              <span className="spanmargin">On</span>
-            </div>
-          </div>
 
           <div className="settings-item">
             <span>Language</span>

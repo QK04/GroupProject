@@ -13,7 +13,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
   const [loading, setLoading] = useState(false);
   const [subjects, setSubjects] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [isSubjectLoaded, setIsSubjectLoaded] = useState(false);
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
@@ -41,7 +40,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     }
   }, [editingQuestion]);
 
-  // Fetch subjects from the API
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
@@ -57,9 +55,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         if (response.status === 200) {
           const data = JSON.parse(response.data.body);
           setSubjects(data.subjects || []);
-          setIsSubjectLoaded(true); 
-        } else {
-          console.error("Failed to fetch subjects");
         }
       } catch (error) {
         console.error("Error fetching subjects:", error);
@@ -69,9 +64,8 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     fetchSubjects();
   }, [token]);
 
-  // Fetch chapters for the selected subject
   useEffect(() => {
-    if (newQuestion.subject && isSubjectLoaded) {
+    if (newQuestion.subject) {
       const selectedSubject = subjects.find(
         (subject) => subject.subject_name === newQuestion.subject
       );
@@ -91,8 +85,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
             if (response.status === 200) {
               const data = JSON.parse(response.data.body);
               setChapters(data || []);
-            } else {
-              console.error("Failed to fetch chapters");
             }
           } catch (error) {
             console.error("Error fetching chapters:", error);
@@ -102,11 +94,10 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         fetchChapters();
       }
     } else {
-      setChapters([]); // Clear chapters if no subject is selected
+      setChapters([]);
     }
-  }, [newQuestion.subject, token, subjects, isSubjectLoaded]);
+  }, [newQuestion.subject, token, subjects]);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewQuestion((prevState) => ({
@@ -124,7 +115,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     }));
   };
 
-  // Handle save (create or edit)
   const handleAddOrEditQuestion = async () => {
     const requestBody = {
       subject_name: newQuestion.subject,
@@ -140,10 +130,8 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
     setLoading(true);
 
     try {
-      let response;
       if (editingQuestion) {
-        // Edit question
-        response = await axios.put(
+        const response = await axios.put(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions/${editingQuestion.quiz_id}`,
           requestBody,
           {
@@ -157,12 +145,9 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
         if (response.status === 200) {
           alert("Question updated successfully!");
           saveEditedQuestion({ ...requestBody, quiz_id: editingQuestion.quiz_id });
-        } else {
-          alert("Failed to update the question.");
         }
       } else {
-        // Create new question
-        response = await axios.post(
+        const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions`,
           requestBody,
           {
@@ -183,8 +168,6 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
             options: ["", "", "", ""],
             correctAnswer: "",
           });
-        } else {
-          alert("Failed to create the question.");
         }
       }
     } catch (error) {
@@ -196,71 +179,80 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
   };
 
   return (
-    <div className="box">
-      <div>
-        <label>Subject</label>
-        <select name="subject" value={newQuestion.subject} onChange={handleInputChange}>
-          <option value="">Choose one...</option>
-          {subjects.map((subject) => (
-            <option key={subject.subject_id} value={subject.subject_name}>
-              {subject.subject_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>Chapter</label>
-        <select name="chapter" value={newQuestion.chapter} onChange={handleInputChange}>
-          <option value="">Choose one...</option>
-          {chapters.map((chapter) => (
-            <option key={chapter.chapter_id} value={chapter.chapter_name}>
-              {chapter.chapter_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label>Content</label>
-        <textarea
-          name="content"
-          value={newQuestion.content}
-          onChange={handleInputChange}
-          rows="4"
-          placeholder="Enter the question content here"
-        />
-      </div>
-      {["A", "B", "C", "D"].map((label, idx) => (
-        <div key={idx}>
-          <label>Option {label}</label>
-          <input
-            type="text"
-            value={newQuestion.options[idx]}
-            onChange={(e) => handleOptionChange(idx, e.target.value)}
-            placeholder={`Enter Option ${label}`}
+    <div className="create-question-container">
+      <h1>{editingQuestion ? "Edit Question" : "Create New Question"}</h1>
+      <div className="form">
+        <div className="form-group">
+          <label>Subject</label>
+          <select
+            name="subject"
+            value={newQuestion.subject}
+            onChange={handleInputChange}
+          >
+            <option value="">-- Select Subject --</option>
+            {subjects.map((subject) => (
+              <option key={subject.subject_id} value={subject.subject_name}>
+                {subject.subject_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Chapter</label>
+          <select
+            name="chapter"
+            value={newQuestion.chapter}
+            onChange={handleInputChange}
+          >
+            <option value="">-- Select Chapter --</option>
+            {chapters.map((chapter) => (
+              <option key={chapter.chapter_id} value={chapter.chapter_name}>
+                {chapter.chapter_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Content</label>
+          <textarea
+            name="content"
+            value={newQuestion.content}
+            onChange={handleInputChange}
+            rows="4"
           />
         </div>
-      ))}
-      <div>
-        <label>Correct Answer</label>
-        <select
-          name="correctAnswer"
-          value={newQuestion.correctAnswer}
-          onChange={handleInputChange}
-        >
-          <option value="">Choose the correct answer</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          <option value="D">D</option>
-        </select>
-      </div>
-      <div style={{ marginTop: "10px" }}>
+
+        {["A", "B", "C", "D"].map((label, idx) => (
+          <div className="form-group" key={idx}>
+            <label>Option {label}</label>
+            <input
+              type="text"
+              value={newQuestion.options[idx]}
+              onChange={(e) => handleOptionChange(idx, e.target.value)}
+            />
+          </div>
+        ))}
+
+        <div className="form-group">
+          <label>Correct Answer</label>
+          <select
+            name="correctAnswer"
+            value={newQuestion.correctAnswer}
+            onChange={handleInputChange}
+          >
+            <option value="">-- Select Correct Answer --</option>
+            {["A", "B", "C", "D"].map((answer) => (
+              <option key={answer} value={answer}>
+                {answer}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button onClick={handleAddOrEditQuestion} disabled={loading}>
-          {loading
-            ? "Saving..."
-            : editingQuestion
-            ? "Update Question"
-            : "Create Question"}
+          {loading ? "Saving..." : editingQuestion ? "Update Question" : "Create Question"}
         </button>
       </div>
     </div>
