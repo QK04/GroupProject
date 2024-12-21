@@ -1,7 +1,7 @@
 /* Container Styling */
 .question-bank-container {
   width: 90%;
-  max-width: 900px;
+  max-width: 1200px;
   margin: auto;
   padding: 20px;
   border-radius: 16px;
@@ -12,6 +12,9 @@
   height: auto;
   max-height: calc(100vh - 150px);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.question-bank-container::-webkit-scrollbar{
+  display: none;
 }
 
 /* Header Styling */
@@ -176,21 +179,15 @@ tbody tr:hover {
 }
 
 .pagination button:hover {
-  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  background: linear-gradient(135deg, #42a5f5, #1e88e5); 
   color: #ffffff;
 }
 
 .pagination button.active-page {
-  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  background: linear-gradient(135deg, #1e88e5, #1565c0); 
   color: #ffffff;
   border-color: #1565c0;
 }
-
-.pagination button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .header h1 {

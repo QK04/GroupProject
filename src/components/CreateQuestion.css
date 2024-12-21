@@ -1,6 +1,7 @@
 .create-question-container {
   padding: 20px;
-  max-width: 600px;
+  max-width: 1200px;
+  ;
   margin: 0 auto;
   background: linear-gradient(135deg, #ffffff, #f3f8fc);
   border-radius: 16px;
@@ -53,7 +54,7 @@ textarea {
   min-height: 100px;
 }
 
-button {
+.submit {
   padding: 10px 20px;
   background: linear-gradient(90deg, #1e88e5, #1565c0);
   color: white;
@@ -64,7 +65,7 @@ button {
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+.submit:hover {
   background: linear-gradient(90deg, #1565c0, #0d47a1);
   transform: translateY(-2px);
 }

@@ -251,7 +251,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
           </select>
         </div>
 
-        <button onClick={handleAddOrEditQuestion} disabled={loading}>
+        <button className="submit" onClick={handleAddOrEditQuestion} disabled={loading}>
           {loading ? "Saving..." : editingQuestion ? "Update Question" : "Create Question"}
         </button>
       </div>
