@@ -3,7 +3,7 @@ import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import "./RandomlyCreateTest.css";
 
-const RandomlyCreateTest = () => {
+const RandomlyCreateTest = ({ subjectName }) => {
   const [testData, setTestData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,12 +14,16 @@ const RandomlyCreateTest = () => {
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
+  const teacherName = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).user_name
+    : null;
+
   useEffect(() => {
     const fetchTestData = async () => {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/test/create-test-random`,
-          {},
+          { teacher_name: teacherName, subject_name: subjectName },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -27,23 +31,27 @@ const RandomlyCreateTest = () => {
             },
           }
         );
-        const parsedBody = JSON.parse(response.data.body);
 
-        if (response.status === 200 && parsedBody.test_id) {
-          setTestData(parsedBody);
+        if (response.data && response.data.body) {
+          const parsedBody = JSON.parse(response.data.body);
+          console.log(parsedBody);
+          if (response.status === 200 && parsedBody.test_id) {
+            setTestData(parsedBody);
+          } else {
+            throw new Error("Failed to fetch test data.");
+          }
         } else {
-          throw new Error("Failed to fetch test data.");
+          throw new Error("Invalid API response.");
         }
       } catch (err) {
         console.error("Error fetching test data:", err);
-        setError("An error occurred while creating the test.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchTestData();
-  }, [token]);
+  }, [token, subjectName]);
 
   const handleSubmit = () => {
     alert("Test submitted!");
@@ -81,7 +89,6 @@ const RandomlyCreateTest = () => {
           <div className="test-info">
             <p>Test ID: {testData.test_id}</p>
             <p>Start Time: {new Date(testData.start_time).toLocaleString()}</p>
-            <p>End Time: {new Date(testData.end_time).toLocaleString()}</p>
           </div>
           <div className="questions-list">
             <h2>Selected Questions:</h2>
@@ -109,16 +116,23 @@ const RandomlyCreateTest = () => {
             ))}
           </div>
           <div className="button-group">
-            <button className="submit-test-button" onClick={handleSubmit}>
-              Submit
-            </button>
+            {testData.questions.length > 0 && (
+              <button className="submit-test-button" onClick={handleSubmit}>
+                Submit
+              </button>
+            )}
             <button className="cancel-test-button" onClick={handleCancel}>
               Cancel
             </button>
           </div>
         </>
       ) : (
-        <p>No test data available.</p>
+        <div className="no-questions-container">
+          <p>No questions available for the selected subject.</p>
+          <button className="no-questions" onClick={handleCancel}>
+                Cancel
+          </button>
+        </div>
       )}
     </div>
   );

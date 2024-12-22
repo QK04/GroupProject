@@ -1,83 +1,76 @@
-.box {
-  border: 1px solid #ccc;
+.create-question-container {
   padding: 20px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  margin: 20px auto; /* Adds some spacing around the box */
-  background-color: #ffffff; /* Clean white background for better readability */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a modern look */
+  max-width: 1200px;
+  ;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #ffffff, #f3f8fc);
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-.box label {
-  display: block;
-  margin-bottom: 8px;
+.create-question-container h1 {
+  text-align: center;
+  color: #1565c0;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
   font-weight: bold;
-  font-size: 14px; /* Slightly increase font size for better readability */
-  color: #333; /* Neutral color for better contrast */
+  color: #333;
 }
 
-.box select,
-.box textarea,
-.box input {
-  width: 100%;
+select,
+textarea,
+input {
   padding: 10px;
-  margin-bottom: 15px;
+  border-radius: 8px;
   border: 1px solid #ddd;
-  border-radius: 5px;
   font-size: 14px;
-  background-color: #f9f9f9; /* Light background for input fields */
-  color: #333; /* Neutral text color */
-  transition: border-color 0.3s ease; /* Smooth transition on focus */
+  transition: border-color 0.3s ease;
 }
 
-.box select:focus,
-.box textarea:focus,
-.box input:focus {
-  border-color: #007bff; /* Highlight border on focus */
+select:focus,
+textarea:focus,
+input:focus {
+  border-color: #1565c0;
   outline: none;
 }
 
-.box textarea {
-  resize: vertical; /* Allow vertical resizing only */
-  min-height: 80px; /* Ensure textarea is visible enough by default */
+textarea {
+  resize: vertical;
+  min-height: 100px;
 }
 
-.box button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
+.submit {
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.box button:hover {
-  background-color: #0056b3; /* Slightly darker blue for hover effect */
-  transform: translateY(-2px); /* Subtle lift effect on hover */
+.submit:hover {
+  background: linear-gradient(90deg, #1565c0, #0d47a1);
+  transform: translateY(-2px);
 }
 
-.box button:disabled {
-  background-color: #ccc; /* Gray out button when disabled */
+button:disabled {
+  background: #ccc;
   cursor: not-allowed;
-}
-
-.box input::placeholder,
-.box textarea::placeholder {
-  color: #aaa; /* Light gray for placeholder text */
-}
-
-@media (max-width: 768px) {
-  .box {
-    padding: 15px;
-  }
-
-  .box button {
-    font-size: 14px;
-    padding: 8px;
-  }
 }

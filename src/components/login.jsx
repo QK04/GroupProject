@@ -120,41 +120,47 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form className='login-form' onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input 
-            className='login-input'
-            type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
+    <div className="login-page">
+      <div className="login-container">
+        <h2>Welcome Back!</h2>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+          <button className="login-button" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+  
+        <div className="register-section">
+          <p>New to the platform?</p>
+          <button className="register-button" onClick={handleRegister}>
+            Create an Account
+          </button>
         </div>
-        <div>
-          <label>Password</label>
-          <input 
-            className='login-input'
-            type="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
-        </div>
-        <button className="login-button" type="submit" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
-      </form>
-
-      {error && <div className="error-message">{error}</div>}
-      
-      <div className="register-link">
-        <p>New to the platform?</p>
-        <button className="register-button" onClick={handleRegister}>Create an Account</button>
+  
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
-      <ToastContainer position="top-right" autoClose={5000} />
     </div>
   );
+  
 };
 
 export default Login;

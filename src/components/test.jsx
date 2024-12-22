@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./test.css";
 import { useAuth } from "../context/authContext";
@@ -7,62 +7,44 @@ import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
 
 const MultipleChoiceLayout = () => {
+  const { testId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-    const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-  const { testId } = useParams(); // Get test ID from the route
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState(
+    JSON.parse(localStorage.getItem(`answers_${testId}`)) || {}
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { user } = useAuth(); // Access the `user` object from AuthContext
-  const [score, setScore] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(600); 
+  const timerRef = useRef(null);
 
+  // Toggle sidebar
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // Fetch questions for the specific test
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
+  // Fetch questions
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        if (!user || !user.access_token) {
-          setError("User authentication is missing.");
-          setLoading(false);
-          return;
-        }
-
         const response = await axios.get(
-          `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}`,
           {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "application/json",
-            },
+            headers: { Authorization: `Bearer ${user.access_token}` },
           }
         );
 
-        // Parse the API response
         const responseData = JSON.parse(response.data.body);
-        const fetchedQuestions = responseData.questions.map((question) => ({
-          questionId: question.question_id, // Ensure this is the correct field
-          text: question.question_text,
-          options: question.choices.map((choice, idx) => ({
-            optionId: idx + 1, // Assuming choices are 1-based
-            text: choice.choice_text,
-          })),
-        }));
-        console.log("API Response Data:", responseData);
-
-        setQuestions(fetchedQuestions);
-        setLoading(false);
+        setQuestions(responseData.questions);
       } catch (err) {
-        console.error("Failed to fetch questions:", err);
-        setError("Failed to load questions. Please try again later.");
+        setError("Failed to load questions.");
+      } finally {
         setLoading(false);
       }
     };
@@ -70,63 +52,83 @@ const MultipleChoiceLayout = () => {
     fetchQuestions();
   }, [testId, user]);
 
-  const handleAnswerChange = (questionId, selectedOptionId) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: selectedOptionId, // Use `questionId` as the key
-    }));
-    console.log("Updated Answers:", answers);
-  };
+  // Timer countdown
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          handleSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-  const handleNavigation = (direction) => {
-    setCurrentQuestionIndex((prev) =>
-      direction === "next"
-        ? Math.min(prev + 1, questions.length - 1)
-        : Math.max(prev - 1, 0)
-    );
-  };
+    return () => clearInterval(timerRef.current);
+  }, []);
 
-  const handleSubmit = async () => {
-    try {
-      if (!user || !user.access_token) {
-        alert("User authentication is missing.");
-        return;
+  useEffect(() => {
+    const handleTabSwitch = () => {
+      if (document.hidden) {
+        const confirmed = window.confirm(
+          "You have switched tabs! Switching tabs is not allowed during the test. Click OK to submit your test now."
+        );
+  
+        if (confirmed) {
+          handleSubmit();
+        } else {
+          confirm("You have switched tabs! Switching tabs is not allowed during the test. Click OK to submit your test now.");
+          handleSubmit();
+        }
       }
+    };
+  
+    document.addEventListener("visibilitychange", handleTabSwitch);
+  
+    return () => document.removeEventListener("visibilitychange", handleTabSwitch);
+  }, []);
+  
 
+  // Save progress to localStorage
+  useEffect(() => {
+    localStorage.setItem(`answers_${testId}`, JSON.stringify(answers));
+  }, [answers, testId]);
+
+  // Submit answers
+  const handleSubmit = async () => {
+    clearInterval(timerRef.current);
+
+    try {
       const payload = {
         user_id: user.user_id,
-        answers: Object.entries(answers).map(([questionId, answer]) => ({
-          question_id: questionId,
+        answers: Object.entries(answers).map(([qId, answer]) => ({
+          question_id: qId,
           answer: answer.toString(),
         })),
-        time_limit: 10, // Time user takes to finish the test
+        time_limit: 600 - timeLeft, // Time spent
       };
-      
 
-      const response = await axios.post(
-        `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}`,
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/test/${testId}`,
         payload,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { Authorization: `Bearer ${user.access_token}` } }
       );
 
-      console.log("Submission Response:", response.data);
-
-      //show score
-      const responseBody = JSON.parse(response.data.body);
-      
-      const testScore = responseBody.test_point;
-      setScore(testScore); // Update the score state
-
-      alert("Your answers have been submitted!");
+      alert("Your test has been submitted successfully.");
+      navigate(`/test/${testId}/details`);
     } catch (err) {
-      console.error("Failed to submit answers:", err);
-      alert("Failed to submit answers. Please try again later.");
+      alert("Error submitting the test. Please try again.");
     }
+  };
+
+  const handleAnswerChange = (questionId, optionId) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   if (loading) return <p>Loading questions...</p>;
@@ -135,9 +137,8 @@ const MultipleChoiceLayout = () => {
   return (
     <div className="test-container">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-      
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      {/* navigation */}
+
       <div className="test-sidebar">
         <h4>Quiz Navigation</h4>
         <div className="navigation-buttons">
@@ -152,54 +153,53 @@ const MultipleChoiceLayout = () => {
           ))}
         </div>
         <button className="finish" onClick={handleSubmit}>
-          Finish Attempt
+          Finish Test
         </button>
       </div>
 
-      
       <div className="question-section">
+        <div className="timer">Time Left: {formatTime(timeLeft)}</div>
         <h4>Test ID: {testId}</h4>
-        {questions.length > 0 && (
-          <>
-            <h2>{questions[currentQuestionIndex].text}</h2>
-            <div className="options">
-              {questions[currentQuestionIndex].options.map((option) => (
-                <label key={option.optionId} className="option-label">
-                  <input
-                    type="radio"
-                    name={`question${currentQuestionIndex}`}
-                    value={option.optionId}
-                    checked={
-                      answers[questions[currentQuestionIndex].questionId] ===
-                      option.optionId
-                    }
-                    onChange={() =>
-                      handleAnswerChange(
-                        questions[currentQuestionIndex].questionId,
-                        option.optionId
-                      )
-                    }
-                  />
-                  {option.text}
-                </label>
-              ))}
-            </div>
-            <div className="button-container">
-              <button
-                onClick={() => handleNavigation("prev")}
-                disabled={currentQuestionIndex === 0}
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => handleNavigation("next")}
-                disabled={currentQuestionIndex === questions.length - 1}
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+        <h2>{questions[currentQuestionIndex].question_text}</h2>
+        <div className="options">
+          {questions[currentQuestionIndex]?.choices.map((choice) => (
+            <label key={choice.choice_id} className="option-label">
+              <input
+                type="radio"
+                name={`question${currentQuestionIndex}`}
+                checked={
+                  answers[questions[currentQuestionIndex].question_id] ===
+                  choice.choice_id
+                }
+                onChange={() =>
+                  handleAnswerChange(
+                    questions[currentQuestionIndex].question_id,
+                    choice.choice_id
+                  )
+                }
+              />
+              {choice.choice_text}
+            </label>
+          ))}
+        </div>
+        <div className="button-container">
+          <button
+            onClick={() => setCurrentQuestionIndex((i) => Math.max(0, i - 1))}
+            disabled={currentQuestionIndex === 0}
+          >
+            Previous
+          </button>
+          <button
+            onClick={() =>
+              setCurrentQuestionIndex((i) =>
+                Math.min(i + 1, questions.length - 1)
+              )
+            }
+            disabled={currentQuestionIndex === questions.length - 1}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
