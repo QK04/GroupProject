@@ -15,7 +15,7 @@
 .tests-list {
   flex-grow: 1;
   width: 100%;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   background: linear-gradient(135deg, #ffffff, #e3f2fd); 
@@ -25,6 +25,9 @@
   max-height: calc(100vh - 200px);
   margin-top: 80px;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.tests-list::-webkit-scrollbar{
+  display: none;
 }
 
 /* Header and Create Test Button */

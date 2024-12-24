@@ -141,45 +141,54 @@ const QuestionBank = () => {
   );
 
   const totalPages = Math.ceil(filteredQuestions.length / questionsPerPage);
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const getPaginationGroup = () => {
+    const startPage = Math.max(currentPage - 2, 1);
+    const endPage = Math.min(startPage + 4, totalPages);
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" },);
+  };
 
   return (
-    <div className="question-bank-container">
+    <div className="question-bank-wrapper">
       <TopBar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className="content">
-        <div className="header">
-          <button className="create-btn" onClick={toggleCreateQuestion}>
-            {showCreateQuestion ? "Cancel" : "+ Create Question"}
-          </button>
+      <div className="question-bank-container">
+        <div className="content">
+          <div className="header">
+            <button className="create-btn" onClick={toggleCreateQuestion}>
+              {showCreateQuestion ? "Cancel" : "+ Create Question"}
+            </button>
 
-          {/* Subject Filter */}
-          {!showCreateQuestion && (
-            <div className="filter-container">
-              <select
-                className="filter-dropdown"
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-              >
-                <option value="">-- Select Subject --</option>
-                {subjects.map((subject) => (
-                  <option key={subject.subject_id} value={subject.subject_name}>
-                    {subject.subject_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
+            {/* Subject Filter */}
+            {!showCreateQuestion && (
+              <div className="filter-container">
+                <select
+                  className="filter-dropdown"
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
+                  <option value="">-- Select Subject --</option>
+                  {subjects.map((subject) => (
+                    <option key={subject.subject_id} value={subject.subject_name}>
+                      {subject.subject_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
 
-        {showCreateQuestion ? (
-          <CreateQuestion
-            addNewQuestion={(newQuestion) => setQuestions([...questions, newQuestion])}
-            editingQuestion={editingQuestion}
-          />
-        ) : (
-          <>
+          {showCreateQuestion ? (
+            <CreateQuestion
+              addNewQuestion={(newQuestion) => setQuestions([...questions, newQuestion])}
+              editingQuestion={editingQuestion}
+            />
+          ) : (
             <div className="table-container">
               <table className="question-table">
                 <thead>
@@ -227,25 +236,49 @@ const QuestionBank = () => {
                 </tbody>
               </table>
             </div>
+          )}
+        </div>
+      </div>
 
-            {/* Pagination */}
-            <div className="pagination">
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (pageNumber) => (
-                  <button
-                    key={pageNumber}
-                    className={
-                      pageNumber === currentPage ? "active-page" : ""
-                    }
-                    onClick={() => paginate(pageNumber)}
-                  >
-                    {pageNumber}
-                  </button>
-                )
-              )}
-            </div>
-          </>
-        )}
+      {/* Pagination */}
+      <div className="pagination">
+        <button
+          onClick={() => paginate(1)}
+          disabled={currentPage === 1}
+          className="pagination-arrow"
+        >
+          «
+        </button>
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="pagination-arrow"
+        >
+          ‹
+        </button>
+        {getPaginationGroup().map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => paginate(pageNumber)}
+            className={currentPage === pageNumber ? "active-page" : ""}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="pagination-arrow"
+        >
+          ›
+        </button>
+        <button
+          onClick={() => paginate(totalPages)}
+          disabled={currentPage === totalPages}
+          className="pagination-arrow"
+        >
+          »
+        </button>
       </div>
     </div>
   );

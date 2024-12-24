@@ -192,8 +192,8 @@ function SubjectCard() {
                         ref={dropdownRef} // Reference to the dropdown menu
                         className="dropdownMenu"
                     >
-                        <button onClick={() => handleEditCard(card.id)}>Edit</button>
-                        <button onClick={() => handleDeleteCard(card.id)}>Delete</button>
+                        <button className="Edit" onClick={() => handleEditCard(card.id)}>Edit</button>
+                        <button className="Delete" onClick={() => handleDeleteCard(card.id)}>Delete</button>
                     </div>
                 )}
             </div>
