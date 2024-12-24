@@ -10,6 +10,8 @@ function ChapterDetail() {
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [newTheoryContent, setNewTheoryContent] = useState("");
+  const [youtubeLink, setYoutubeLink] = useState("");
+  const [isUploading, setIsUploading] = useState(false); // For loading state
   const quillRef = useRef(null); // Reference for the Quill editor
 
   const { chapterId } = useParams(); // Get chapterId from URL
@@ -30,10 +32,12 @@ function ChapterDetail() {
         }
       );
 
-      const body = JSON.parse(response.data.body); // Parse the body field
+      const body = JSON.parse(response.data.body); 
+      console.log("Chapter detail response:", body);
       if (body && body.data) {
         setChapter(body.data); // Set the data object from the response
         setNewTheoryContent(body.data.theory_content); // Set initial theory content
+        setYoutubeLink(body.data.video_url || ""); // Set initial YouTube link
       }
 
       setLoading(false);
@@ -45,16 +49,44 @@ function ChapterDetail() {
 
   useEffect(() => {
     fetchChapterDetail(); // Fetch chapter details when component mounts
-  }, [chapterId, token]);
+  }, [chapterId]);
+
+  // Convert YouTube link to Embed URL
+  const convertYoutubeLinkToEmbed = (youtubeLink) => {
+    const regex =
+      /(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = youtubeLink.match(regex);
+    if (match && match[1]) {
+      return `https://www.youtube.com/embed/${match[1]}`;
+    }
+    return null; // Invalid YouTube link
+  };
 
   const handleSaveTheory = async () => {
     try {
-      // Get the content from the Quill editor as HTML
+      setIsUploading(true);
+
+      // Get Quill editor content
       const quillContent = quillRef.current.getEditor().root.innerHTML;
 
+      // Validate YouTube link
+      let youtubeLinkToSave = null;
+      if (video_url) {
+        youtubeLinkToSave = convertYoutubeLinkToEmbed(video_url);
+        if (!youtubeLinkToSave) {
+          alert("Invalid YouTube link. Please enter a valid link.");
+          setIsUploading(false);
+          return;
+        }
+      }
+
+      // Save chapter content
       const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
-        { theory_content: quillContent },
+        {
+          theory_content: quillContent,
+          youtube_link: youtubeLinkToSave, // Chỉ gửi YouTube link nếu có
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -63,13 +95,20 @@ function ChapterDetail() {
         }
       );
 
-      // Update state with the new theory content
-      setChapter({ ...chapter, theory_content: quillContent });
-      setIsEditing(false); // Exit edit mode
-      alert("Chapter theory updated successfully!");
+      // Update state with the new data to refresh UI
+      setChapter({
+        ...chapter,
+        theory_content: quillContent,
+        video_url: youtubeLinkToSave,
+      });
+
+      setIsEditing(false); // Exit editing mode
+      setIsUploading(false); // Stop loading state
+      alert("Chapter updated successfully!");
     } catch (error) {
-      console.error("Failed to update theory content:", error);
-      alert("Failed to update theory. Please try again.");
+      console.error("Failed to update chapter:", error);
+      alert("Failed to update chapter. Please try again.");
+      setIsUploading(false);
     }
   };
 
@@ -88,7 +127,7 @@ function ChapterDetail() {
       <div className="chapterDetail-editorContainer">
         {isEditing ? (
           <div>
-            {/* Use Quill editor when in editing mode */}
+            {/* Quill Editor for theory content */}
             <ReactQuill
               ref={quillRef}
               value={newTheoryContent}
@@ -96,12 +135,24 @@ function ChapterDetail() {
               theme="snow"
               className="chapterDetail-editor"
             />
+            {/* Add YouTube Link */}
+            <div className="chapterDetail-youtubeSection">
+              <label>YouTube Link:</label>
+              <input
+                type="text"
+                value={youtubeLink}
+                onChange={(e) => setYoutubeLink(e.target.value)}
+                placeholder="Enter YouTube link"
+              />
+            </div>
+            {/* Buttons */}
             <div className="chapterDetail-buttons">
               <button
                 className="chapterDetail-saveButton"
                 onClick={handleSaveTheory}
+                disabled={isUploading}
               >
-                Save
+                {isUploading ? "Saving..." : "Save"}
               </button>
               <button
                 className="chapterDetail-cancelButton"
@@ -113,16 +164,30 @@ function ChapterDetail() {
           </div>
         ) : (
           <div>
-            {/* Display the content when not editing */}
+            {/* Display Theory Content */}
             <div
               className="chapterDetail-content"
               dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
             />
+
+            {/* YouTube Link Preview */}
+            {chapter.video_url && (
+              <iframe
+                width="560"
+                height="315"
+                src={chapter.video_url} // Embed URL
+                title="YouTube video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="chapterDetail-iframe"
+              ></iframe>
+            )}
             <button
               className="chapterDetail-editButton"
               onClick={() => setIsEditing(true)}
             >
-              Edit Theory
+              Edit Chapter
             </button>
           </div>
         )}
