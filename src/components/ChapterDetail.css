@@ -1,111 +1,171 @@
-/* Main Container */
+/* Main Container - Full Width */
 .chapterDetail-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    padding-top: 60px ;
-  }
-  
-  /* Header */
-  .chapterDetail-container h2 {
-    text-align: center;
-    font-size: 24px;
-    color: #007bff;
-    margin-bottom: 15px;
-    margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  color: #333;
+}
+
+/* Title */
+.chapterDetail-title {
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* Editor and Media Container */
+.chapterDetail-editorContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+/* Theory Content (Left Side) */
+.chapterDetail-content {
+  flex: 2;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px; 
+  border: 1px solid #90caf9; 
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  overflow-x: auto;
+}
+
+/* Code Blocks */
+.chapterDetail-content pre {
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 12px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+/* Media Container (Right Side) */
+.chapterDetail-mediaContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px; 
+  border: 1px solid #90caf9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Video */
+.chapterDetail-iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+}
+
+/* Image */
+.chapterDetail-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Option Selector */
+.chapterDetail-mediaContainer label {
+  display: inline-block;
+  margin-right: 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.chapterDetail-mediaContainer input[type="radio"] {
+  margin-right: 5px;
+}
+
+/* Input Fields */
+.chapterDetail-mediaContainer input[type="text"],
+.chapterDetail-mediaContainer input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 2px solid #90caf9;
+  border-radius: 8px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #ffffff, #f3f8fc);
+  color: #1565c0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chapterDetail-mediaContainer input[type="text"]:focus,
+.chapterDetail-mediaContainer input[type="file"]:focus {
+  border-color: #42a5f5;
+  outline: none;
+  box-shadow: 0 0 6px rgba(66, 165, 245, 0.5);
+}
+
+/* Buttons */
+.chapterDetail-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center; 
+  width: 100%;
+}
+
+.chapterDetail-buttons button {
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
+  color: white;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 20px; /* Độ cong giống FullListTest */
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chapterDetail-buttons button:hover {
+  background: linear-gradient(90deg, #1565c0, #0d47a1);
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.chapterDetail-buttons .chapterDetail-cancelButton {
+  background-color: #ff0015;
+}
+
+.chapterDetail-buttons .chapterDetail-cancelButton:hover {
+  background-color: #f5c2c7;
+  color: #6a1b20;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .chapterDetail-editorContainer {
+    flex-direction: column;
   }
 
-  .chapterDetail-container h1 {
-    text-align: center;
-    font-size: 24px;
-    color: #f8282c;
-    margin-bottom: 20px;
+  .chapterDetail-content,
+  .chapterDetail-mediaContainer {
+    width: 100%;
   }
-  
-  /* Buttons */
-  .chapterDetail-container button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s;
+
+  .chapterDetail-buttons {
+    flex-direction: column;
+    align-items: center;
   }
-  
-  .chapterDetail-container button:hover {
-    background-color: #0056b3;
-  }
-  
-  .chapterDetail-container button:last-of-type {
-    background-color: #dc3545;
-  }
-  
-  .chapterDetail-container button:last-of-type:hover {
-    background-color: #c82333;
-  }
-  
-  /* Editor Container */
-  .chapterDetail-editorContainer {
-    margin-top: 20px;
-  }
-  
-  .chapterDetail-editorContainer .ql-container {
-    height: 200px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  /* Display Content */
-  .chapterDetail-content {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    word-wrap: break-word;
-  }
-  
-  .chapterDetail-content img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-  }
-  
-  .chapterDetail-content blockquote {
-    font-style: italic;
-    margin: 10px 0;
-    padding-left: 10px;
-    border-left: 3px solid #007bff;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 600px) {
-    .chapterDetail-container {
-      padding: 10px;
-    }
-  
-    .chapterDetail-container h2 {
-      font-size: 20px;
-    }
-  
-    .chapterDetail-container button {
-      font-size: 12px;
-      padding: 8px 12px;
-    }
-  
-    .chapterDetail-content {
-      font-size: 14px;
-    }
-  }
-  
+}

@@ -170,7 +170,7 @@
   justify-content: center;
   align-items: center;
   color: black; 
-  font-size: 2rem; 
+  font-size: 2.5rem; 
   border-radius: 12px; 
   margin-right: 5px;
   margin-left: 10px;
@@ -260,15 +260,12 @@
 
 /* "Delete" Button */
 .test-actions .delete {
-  background: red;
-  background-color: #ff0015; 
-  color: #ffffff; 
-  border: 1px solid #f5c2c7; 
+  background: linear-gradient(90deg, #ff0015, #dc3545);
+  color: white;
 }
 
 .test-actions .delete:hover {
-  background-color: #f5c2c7; 
-  color: #6a1b20;
+  background: linear-gradient(90deg, #dc3545, #c82333);
 }
 
 /* Button Icons */
