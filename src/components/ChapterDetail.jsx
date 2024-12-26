@@ -12,7 +12,9 @@ function ChapterDetail() {
   const [newTheoryContent, setNewTheoryContent] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
   const [videoFile, setVideoFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(""); // State for storing image URL
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedOption, setSelectedOption] = useState("youtube");
   const quillRef = useRef(null);
@@ -41,6 +43,7 @@ function ChapterDetail() {
           setChapter(body.data);
           setNewTheoryContent(body.data.theory_content);
           setYoutubeLink(body.data.video_url || "");
+          setImageUrl(body.data.image_url || ""); // Fetch image URL
         }
         setLoading(false);
       } catch (error) {
@@ -52,90 +55,71 @@ function ChapterDetail() {
     fetchChapterDetail();
   }, [chapterId, token]);
 
-  // Convert YouTube link to Embed URL
-  const convertYoutubeLinkToEmbed = (youtubeLink) => {
-    const regex =
-      /(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = youtubeLink.match(regex);
-    if (match && match[1]) {
-      return `https://www.youtube.com/embed/${match[1]}`;
-    }
-    return null;
-  };
+  // Convert file to Base64
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = (error) => reject(error);
+    });
 
-  // Upload video to S3 and get the URL
-  const handleVideoUpload = async () => {
-    if (!videoFile) {
-      alert("Please select a video file to upload.");
-      return;
-    }
-  
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("file", videoFile);
-    console.log("Uploading video:", videoFile);
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-video?file-name=${encodeURIComponent(videoFile.name)}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          onUploadProgress: (progressEvent) => {
-            const progress = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress(progress);
-          },
-        }
-      );
-      console.log("Response:", response);
-      const { url } = response.data;
-      setYoutubeLink(url); // Set video URL for preview
-      alert("Video uploaded successfully!");
-      return url; // Trả về URL video để dùng trong logic lưu
-    } catch (error) {
-      console.error("Failed to upload video:", error);
-      alert("Failed to upload video. Please try again.");
-      return null; // Trả về null nếu lỗi
-    } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
-    }
-  };  
-
-  // Save theory content and video/YouTube link
+  // Handle save functionality
   const handleSaveTheory = async () => {
     try {
       setIsUploading(true);
-  
+
+      // Prepare content to save
       const quillContent = quillRef.current.getEditor().root.innerHTML;
       let videoUrlToSave = chapter.video_url;
-  
+
+      // Handle video upload
       if (selectedOption === "youtube") {
-        videoUrlToSave = convertYoutubeLinkToEmbed(youtubeLink);
-        if (!videoUrlToSave) {
-          alert("Invalid YouTube link. Please enter a valid link.");
-          setIsUploading(false);
-          return;
-        }
+        videoUrlToSave = youtubeLink;
       } else if (selectedOption === "upload" && videoFile) {
-        // Tải video và lấy URL
-        const uploadedVideoUrl = await handleVideoUpload();
-        if (!uploadedVideoUrl) {
-          setIsUploading(false);
-          return; // Thoát nếu tải video thất bại
-        }
-        videoUrlToSave = uploadedVideoUrl;
+        const base64Video = await toBase64(videoFile);
+        const videoResponse = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-video`,
+          {
+            file: base64Video,
+            fileName: videoFile.name,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        videoUrlToSave = videoResponse.data.url;
       }
-  
-      // Lưu lý thuyết và video URL
-      await axios.put(
+
+      // Handle image upload
+      let imageUrlToSave = imageUrl;
+      if (imageFile) {
+        const base64Image = await toBase64(imageFile);
+        const imageResponse = await axios.put(
+          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-image`,
+          {
+            imageBase64: base64Image,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        imageUrlToSave = imageResponse.data.imageUrl;
+      }
+
+      // Save theory content, video, and image URL
+      const response = await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
         {
           theory_content: quillContent,
           video_url: videoUrlToSave,
+          image_url: imageUrlToSave,
         },
         {
           headers: {
@@ -144,15 +128,17 @@ function ChapterDetail() {
           },
         }
       );
-  
+
       setChapter({
         ...chapter,
         theory_content: quillContent,
         video_url: videoUrlToSave,
+        image_url: imageUrlToSave,
       });
-  
+
       setIsEditing(false);
       alert("Chapter updated successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Failed to update chapter:", error);
       alert("Failed to update chapter. Please try again.");
@@ -160,7 +146,6 @@ function ChapterDetail() {
       setIsUploading(false);
     }
   };
-  
 
   if (loading) return <p>Loading chapter details...</p>;
   if (!chapter) return <p>Chapter not found.</p>;
@@ -210,6 +195,14 @@ function ChapterDetail() {
                 {isUploading && <p>Uploading: {uploadProgress}%</p>}
               </div>
             )}
+            <div className="chapterDetail-imageSection">
+              <label>Upload Image:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files[0])}
+              />
+            </div>
             <div className="chapterDetail-buttons">
               <button
                 className="chapterDetail-saveButton"
@@ -232,29 +225,19 @@ function ChapterDetail() {
               className="chapterDetail-content"
               dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
             />
-            {chapter.video_url && selectedOption === "youtube" ? (
-            <iframe
-              width="560"
-              height="315"
-              src={chapter.video_url}
-              title="Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="chapterDetail-iframe"
-            ></iframe>
-          ) : (
-            <video
-              width="560"
-              height="315"
-              controls
-              className="chapterDetail-video"
-            >
-              <source src={chapter.video_url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
-
+            {chapter.video_url && (
+              <iframe
+                width="560"
+                height="315"
+                src={chapter.video_url}
+                title="Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="chapterDetail-iframe"
+              ></iframe>
+            )}
+            {imageUrl && <img src={imageUrl} alt="Chapter" className="chapterDetail-image" />}
             <button
               className="chapterDetail-editButton"
               onClick={() => setIsEditing(true)}
