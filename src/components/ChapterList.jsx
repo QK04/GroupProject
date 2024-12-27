@@ -121,9 +121,7 @@ function ChapterList() {
     return <p>Loading chapters...</p>;
   }
 
-  if (!chapters.length) {
-    return <p>No chapters found for this subject.</p>;
-  }
+
 
   return (
     <div className="chapterListContainer">
