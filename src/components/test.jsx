@@ -18,7 +18,7 @@ const MultipleChoiceLayout = () => {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(600); 
   const timerRef = useRef(null);
 
   // Toggle sidebar

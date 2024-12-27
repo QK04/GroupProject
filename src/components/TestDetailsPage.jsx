@@ -16,11 +16,11 @@ const TestDetailsPage = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-  const { testId } = useParams(); // Get the test ID from the route
-  const { user } = useAuth(); // Access the `user` object from AuthContext
-  const [testDetails, setTestDetails] = useState(null); // Store test details
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const { testId } = useParams(); 
+  const { user } = useAuth(); 
+  const [testDetails, setTestDetails] = useState(null); 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {

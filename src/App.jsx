@@ -39,9 +39,6 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        
-        
-        
         {/* Routes */}
         <Routes>
           <Route path="/login" element={<Login />} />

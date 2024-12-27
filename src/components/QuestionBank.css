@@ -1,139 +1,208 @@
-/* General styling */
-.question-bank-page{
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    height: 100vh; /* Full viewport height */
-    overflow: hidden;
-  }
-  .container{
-    width: 1250px;
-    height:88vh;
-    margin:auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
-    border-collapse: collapse;
-    margin-top: 80px;
-    margin-bottom: 80px;
-    flex-grow: 1; /* Ensures it takes up the rest of the space */
-    overflow-y: auto;
 
+/* Container Styling */
+.question-bank-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  overflow-y: auto;
+  margin-top: 80px;
+  height: auto;
+  max-height: calc(100vh - 150px);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.question-bank-container::-webkit-scrollbar{
+  display: none;
+}
+
+
+/* Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1565c0;
+}
+
+/* Create Button */
+.create-btn {
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.create-btn:hover {
+  background: linear-gradient(90deg, #1565c0, #0d47a1);
+  transform: scale(1.05);
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.filter-dropdown {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 2px solid #90caf9;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff, #f3f8fc);
+  color: #1565c0;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-dropdown:focus {
+  border-color: #42a5f5;
+  outline: none;
+  box-shadow: 0 0 6px rgba(66, 165, 245, 0.5);
+}
+
+/* Table Styling */
+.table-container {
+  margin-top: 20px;
+  border-radius: 16px;
+  overflow-x: auto;
+}
+
+.question-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+thead th {
+  background-color: #1565c0;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+tbody td {
+  padding: 15px;
+  text-align: center;
+  color: #333;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.no-data {
+  color: #777;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.action-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease-in-out;
+}
+
+.action-btn.edit-btn {
+  color: #4caf50;
+}
+
+.action-btn.delete-btn {
+  color: #f44336;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Scrollbar Styling */
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #d1d1d1;
+  border-radius: 4px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #90caf9;
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  color: #1565c0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button:hover {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5); 
+  color: #ffffff;
+}
+
+.pagination button.active-page {
+  background: linear-gradient(135deg, #1e88e5, #1565c0); 
+  color: #ffffff;
+  border-color: #1565c0;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.5rem;
   }
-  
-  .question-table {
-    width: auto;
-    height:fit-content;
-    max-height: 80vh;
-    padding: 20px;
-    margin: auto;
-    margin-bottom: auto;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    overflow-y:auto;
-    border-collapse: collapse;
+
+  .create-btn {
+    font-size: 0.95rem;
+    padding: 10px 15px;
   }
-  .question-table::-webkit-scrollbar-thumb {
-    background-color: #d1d1d1;
-    border-radius: 4px;
-    
-  }
-  .question-table::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  /* Button styles */
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Table styling */
-  table {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    table-layout: fixed;
-    border-radius: 20%;
-  }
-  
-  thead th {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    text-align: left;
-    text-align: center;
-  }
-  
+
+  thead th,
   tbody td {
-    padding: 10px; /* Add padding for better spacing */
-    text-align: center;
-    color: #000000;
-    vertical-align: top; /* Align content to the top */
-    word-wrap: break-word;
+    font-size: 0.95rem;
   }
-  
-  /* Empty table message */
-  tbody td[colspan] {
-    text-align: center;
-    color: #777;
-  }
-  tbody tr:nth-child(even){background-color: #f2f2f2;}
-  tbody tr:hover {background-color: #ddd;}
-  
-  /* Action buttons */
-  td button {
-    margin: 0 15px; /* Add horizontal spacing between buttons */
-    padding: 0; /* Remove any default padding for consistency */
-    background: none; /* Remove background for a cleaner look */
-    border: none; /* Remove border for a cleaner look */
-    border-radius: 50%;
-  }
-  td button img {
-
-    vertical-align: middle;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-  }
-  
-  td button img:hover {
-    transform: scale(1.1);
-    background-color:#d1d1d1;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .question-table {
-      padding: 10px;
-    }
-  
-    button {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  
-    table {
-      font-size: 14px;
-    }
-  
-    thead th, tbody td {
-      padding: 8px;
-    }
-  }
-  
+}
