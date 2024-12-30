@@ -12,7 +12,6 @@ import "./App.css";
 import UserProfile from "./components/UserProfile.jsx";
 import ChapterList from "./components/ChapterList.jsx";
 import ChapterDetail from "./components/ChapterDetail.jsx";
-
 import FullListTest from './components/FullListTest';
 import ViewTest from './components/ViewTest';
 import TestCreationOptions from './components/TestCreationOptions';
@@ -25,6 +24,7 @@ import TestDetailsPage from './components/TestDetailsPage';
 import StudentTheory from './components/studentTheory';
 import ChapterListStudent from './components/ChapterListStudent';
 import ResultPage from './components/ResultPage.jsx';
+import SubjectMainPage from './components/SubjectMainPage';
 
 import './App.css';
 import ChapterDetailStudent from './components/ChapterDetailStudent.jsx';
@@ -78,6 +78,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/results/:testId" element={<ResultPage />} />
           <Route path='/theory' element={<StudentTheory/>}/>
+          <Route path="/subjectpage" element={<SubjectMainPage />} />
           <Route
             path="/subject/:subjectId"
             element={

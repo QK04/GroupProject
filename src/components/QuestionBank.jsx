@@ -9,7 +9,9 @@ const QuestionBank = () => {
   const [questions, setQuestions] = useState([]);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showCreateQuestion, setShowCreateQuestion] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(false); // Error state
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
@@ -18,6 +20,8 @@ const QuestionBank = () => {
   // Fetch questions from the API
   useEffect(() => {
     const fetchQuestions = async () => {
+      setLoading(true);
+      setError(false);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions`,
@@ -34,9 +38,13 @@ const QuestionBank = () => {
           setQuestions(questionsData);
         } else {
           console.error("Failed to fetch questions");
+          setError(true);
         }
       } catch (error) {
         console.error("Error fetching questions:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -119,59 +127,68 @@ const QuestionBank = () => {
   };
 
   return (
-    <div className="container">
-      <TopBar toggleSidebar={toggleSidebar} />
+    <div className="question-bank-page">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <button onClick={toggleCreateQuestion} style={{ marginBottom: "20px" }}>
-        {showCreateQuestion ? "Cancel" : "Create Question"}
-      </button>
+      <div className="container">
+        <TopBar toggleSidebar={toggleSidebar} />
 
-      {showCreateQuestion && (
-        <CreateQuestion
-          addNewQuestion={addNewQuestion}
-          editingQuestion={editingQuestion}
-          saveEditedQuestion={saveEditedQuestion}
-        />
-      )}
+        <button onClick={toggleCreateQuestion} style={{ marginBottom: "20px" }}>
+          {showCreateQuestion ? "Cancel" : "Create Question"}
+        </button>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Content</th>
-            <th>Subject</th>
-            <th>Chapter</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {questions.length === 0 ? (
-            <tr>
-              <td colSpan="5" style={{ textAlign: "center" }}>
-                No questions available
-              </td>
-            </tr>
-          ) : (
-            questions.map((question) => (
-              <tr key={question.quiz_id}>
-                <td>{question.quiz_id}</td>
-                <td>{question.question_text}</td>
-                <td>{question.subject_name}</td>
-                <td>{question.chapter_name}</td>
-                <td>
-                  <button onClick={() => deleteQuestion(question.quiz_id)}>
-                    <img src="src/assets/delete.png" alt="Delete" />
-                  </button>
-                  <button onClick={() => editQuestion(question)}>
-                    <img src="src/assets/edit.png" alt="Edit" />
-                  </button>
-                </td>
+        {showCreateQuestion && (
+          <CreateQuestion
+            addNewQuestion={addNewQuestion}
+            editingQuestion={editingQuestion}
+            saveEditedQuestion={saveEditedQuestion}
+          />
+        )}
+
+        {loading ? (
+          <p>Loading questions...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>Failed to load questions. Please try again later.</p>
+        ) : (
+          <table border="1">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Content</th>
+                <th>Subject</th>
+                <th>Chapter</th>
+                <th>Action</th>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {questions.length === 0 ? (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: "center" }}>
+                    No questions available
+                  </td>
+                </tr>
+              ) : (
+                questions.map((question) => (
+                  <tr key={question.quiz_id}>
+                    <td>{question.quiz_id}</td>
+                    <td>{question.question_text}</td>
+                    <td>{question.subject_name}</td>
+                    <td>{question.chapter_name}</td>
+                    <td>
+                      <button onClick={() => deleteQuestion(question.quiz_id)}>
+                        <img src="src/assets/delete.png" alt="Delete" />
+                      </button>
+                      <button onClick={() => editQuestion(question)}>
+                        <img src="src/assets/edit.png" alt="Edit" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,111 +1,192 @@
 /* Main Container */
+.chapterdetail-page {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh; /* Use min-height instead of height */
+}
+
+.content-wrapper {
+  overflow-y: auto;
+  height: 100vh;
+  flex-grow: 1;
+}
+
 .chapterDetail-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-    color: #333;
-    padding-top: 60px ;
-  }
-  
-  /* Header */
-  .chapterDetail-container h2 {
-    text-align: center;
-    font-size: 24px;
-    color: #007bff;
-    margin-bottom: 15px;
-    margin-top: 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  padding-top: 60px;
+  /* Remove height: 100vh; and let it adjust to content */
+  overflow: auto; /* Keep overflow: auto; for scrolling */
+}
+
+/* Header */
+.chapterDetail-container h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #007bff;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.chapterDetail-container h1 {
+  text-align: center;
+  font-size: 24px;
+  color: #f8282c;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+.chapterDetail-container button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s;
+}
+
+.chapterDetail-container button:hover {
+  background-color: #0056b3;
+}
+
+/* Editor Container */
+.chapterDetail-editorContainer {
+  margin-top: 20px;
+}
+
+.chapterDetail-editorContainer .ql-container {
+  height: 200px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Display Content */
+.chapterDetail-content {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+.chapterDetail-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
+
+.chapterDetail-content blockquote {
+  font-style: italic;
+  margin: 10px 0;
+  padding-left: 10px;
+  border-left: 3px solid #007bff;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .chapterDetail-container {
+    padding: 10px;
   }
 
-  .chapterDetail-container h1 {
-    text-align: center;
-    font-size: 24px;
-    color: #f8282c;
-    margin-bottom: 20px;
+  .chapterDetail-container h2 {
+    font-size: 20px;
   }
-  
-  /* Buttons */
+
   .chapterDetail-container button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s;
+    font-size: 12px;
+    padding: 8px 12px;
   }
-  
-  .chapterDetail-container button:hover {
-    background-color: #0056b3;
-  }
-  
-  .chapterDetail-container button:last-of-type {
-    background-color: #dc3545;
-  }
-  
-  .chapterDetail-container button:last-of-type:hover {
-    background-color: #c82333;
-  }
-  
-  /* Editor Container */
-  .chapterDetail-editorContainer {
-    margin-top: 20px;
-  }
-  
-  .chapterDetail-editorContainer .ql-container {
-    height: 200px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  /* Display Content */
+
   .chapterDetail-content {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-    word-wrap: break-word;
+    font-size: 14px;
   }
-  
-  .chapterDetail-content img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-  }
-  
-  .chapterDetail-content blockquote {
-    font-style: italic;
-    margin: 10px 0;
-    padding-left: 10px;
-    border-left: 3px solid #007bff;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 600px) {
-    .chapterDetail-container {
-      padding: 10px;
-    }
-  
-    .chapterDetail-container h2 {
-      font-size: 20px;
-    }
-  
-    .chapterDetail-container button {
-      font-size: 12px;
-      padding: 8px 12px;
-    }
-  
-    .chapterDetail-content {
-      font-size: 14px;
-    }
-  }
-  
+}
+
+/* Quiz Section */
+.quiz-section {
+  /* Remove display: flex; */
+  position: relative;
+  margin-top: 30px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.quiz-section h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.question {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Options (Use .options instead of .choices) */
+.options {
+  list-style: none;
+  padding: 0;
+}
+
+.option-label {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.option-label:hover {
+  background-color: #e0e0e0;
+}
+
+.option-label.correct {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+  font-weight: bold;
+}
+
+.option-label.incorrect {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+  font-weight: bold;
+}
+
+/* Radio Button Styling */
+.options input[type="radio"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 50%; /* Make it round */
+  outline: none;
+  transition: 0.2s;
+}
+
+.options input[type="radio"]:checked {
+  border-color: #007bff;  
+  background-color: #007bff; 
+}
+
+
+
+.feedback {
+  margin-top: 15px;
+}

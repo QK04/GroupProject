@@ -25,7 +25,13 @@ const MultipleChoiceLayout = () => {
   const { user } = useAuth(); // Access the `user` object from AuthContext
   const [score, setScore] = useState(null);
 
-
+  const handleViewResults = () => {
+    navigate(`/results/${testId}`, {
+      state: {
+        userId: user.user_id,
+      },
+    });
+  };
   // Fetch questions for the specific test
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -121,7 +127,7 @@ const MultipleChoiceLayout = () => {
       
       const testScore = responseBody.test_point;
       setScore(testScore); // Update the score state
-
+      handleViewResults();
       alert("Your answers have been submitted!");
     } catch (err) {
       console.error("Failed to submit answers:", err);
@@ -133,11 +139,12 @@ const MultipleChoiceLayout = () => {
   if (error) return <p>{error}</p>;
 
   return (
+    <div className="test-content">
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    
     <div className="test-container">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      {/* navigation */}
       <div className="test-sidebar">
         <h4>Quiz Navigation</h4>
         <div className="navigation-buttons">
@@ -201,6 +208,7 @@ const MultipleChoiceLayout = () => {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 };

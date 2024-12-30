@@ -7,7 +7,7 @@ import StudentSubjectCard from './studentSubjectCard';
 
 const StudentTheory = () => {
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -21,12 +21,15 @@ const StudentTheory = () => {
   return (
     <div className="student-theory">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-      
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      
-      {/* Main Content */}
-      <div className="student-dashboard-content">
-        <StudentSubjectCard /> 
+
+      <div className={`student-dashboard-content ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        </div>
+
+        <div className="student-card-container">
+          <StudentSubjectCard />
+        </div>
       </div>
     </div>
   );

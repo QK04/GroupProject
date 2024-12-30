@@ -1,5 +1,6 @@
 .student-card-container {
     display: flex;
+    position: relative;
     max-width: 1000px;
     flex-wrap: wrap;
     gap: 20px;

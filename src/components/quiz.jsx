@@ -6,7 +6,7 @@ import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
 
 const QuizPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -20,7 +20,7 @@ const QuizPage = () => {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const questionsPerPage = 8;
+  const questionsPerPage = 10;
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -60,10 +60,14 @@ const QuizPage = () => {
   };
 
   return (
-    <>
+    <div className="quiz-page">
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        </div>
+      <div className="quiz-content">
       <div className="quiz-container">
         <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+        
         {displayedQuestions.map((question) => (
           <button
             key={question.id}
@@ -110,7 +114,8 @@ const QuizPage = () => {
           »
         </a>
       </div>
-    </>
+      </div>
+    </div>
   );
 };
 

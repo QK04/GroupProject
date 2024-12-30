@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/authContext";
 import "./ResultPage.css";
@@ -7,24 +7,25 @@ import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
 
 const ResultPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State for sidebar visibility
+  const { testId } = useParams();
+  const { state } = useLocation();
+  const { user } = useAuth();
+  const [testResult, setTestResult] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const toggleSidebar = () => {
+  const questionRefs = useRef([]);
+
+  const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-  const { testId } = useParams(); // Get test ID from route
-  const { state } = useLocation(); // Get userId from state passed in TestDetailsPage
-  const { user } = useAuth(); // Access user info from AuthContext
-  const [testResult, setTestResult] = useState(null); // Store test result
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-
-  // Create a ref for each question to allow scrolling
-  const questionRefs = useRef([]);
 
   useEffect(() => {
     const fetchTestResult = async () => {
@@ -38,7 +39,7 @@ const ResultPage = () => {
 
       try {
         const response = await axios.get(
-          `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}/student/${userId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -48,18 +49,16 @@ const ResultPage = () => {
         );
 
         const responseBody = JSON.parse(response.data.body);
-        console.log("Test Result Response:", responseBody);
 
         if (responseBody.message === "You have already completed this test.") {
           setTestResult(responseBody.testResult);
         } else {
           setError("Test result not found.");
         }
-
-        setLoading(false);
       } catch (err) {
         console.error("Failed to fetch test result:", err);
         setError("Failed to load test result. Please try again later.");
+      } finally {
         setLoading(false);
       }
     };
@@ -67,14 +66,6 @@ const ResultPage = () => {
     fetchTestResult();
   }, [testId, state, user]);
 
-  if (loading) return <p>Loading test results...</p>;
-  if (error) return <p>{error}</p>;
-
-  if (!testResult || !testResult.answers) {
-    return <p>No results available for this test.</p>;
-  }
-
-  // Scroll to the question when clicking on a navigation item
   const scrollToQuestion = (index) => {
     questionRefs.current[index]?.scrollIntoView({
       behavior: "smooth",
@@ -83,68 +74,85 @@ const ResultPage = () => {
   };
 
   return (
-    <div className="result-page">
-    <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-    <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-    <div className="result-page-container">
-      {/* Left Navigation Bar */}
-      <div className="result-page-nav">
-        <h3>Questions</h3>
-        <div className="result-page-grid">
-          {testResult.answers.map((answer, index) => (
-            <div
-              key={index}
-              className={`result-page-nav-item ${
-                answer.is_correct ? "correct" : "incorrect"
-              }`}
-              onClick={() => scrollToQuestion(index)}
-            >
-              {index + 1}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="result-page-content">
-        <h2>Test Results</h2>
-        <p>
-          <strong>Score:</strong> {testResult.test_point} / {testResult.answers.length}
-        </p>
-
-        <div className="result-page-questions">
-          {testResult.answers.map((answer, index) => (
-            <div
-              key={index}
-              ref={(el) => (questionRefs.current[index] = el)} // Assign each question a ref
-              className="result-page-question-card"
-            >
-              <p>
-                <strong>Question {index + 1}:</strong> {answer.question_text}
-              </p>
-              <div className="result-page-options">
-                {answer.choices.map((choice) => (
-                  <p
-                    key={choice.choice_id}
-                    className={`result-page-option ${
-                      choice.choice_id === parseInt(answer.submitted_answer)
-                        ? answer.is_correct
-                          ? "correct"
-                          : "incorrect"
-                        : choice.is_correct
-                        ? "correct"
-                        : ""
+    <div className="result-content">
+      <Sidebar isOpen={isSidebarOpen} /><TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+      <div
+        className={`result-page-container ${
+          isSidebarOpen ? "" : "sidebar-closed"
+        }`}
+      >
+        
+        {loading ? (
+          <p>Loading test results...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : testResult && testResult.answers ? (
+          <>
+            {/* Left Navigation Bar */}
+            <div className="result-page-nav">
+              <h3>Questions</h3>
+              <div className="result-page-grid">
+                {testResult.answers.map((answer, index) => (
+                  <div
+                    key={index}
+                    className={`result-page-nav-item ${
+                      answer.is_correct ? "correct" : "incorrect"
                     }`}
+                    onClick={() => scrollToQuestion(index)}
                   >
-                    {choice.choice_id}. {choice.choice_text}
-                  </p>
+                    {index + 1}
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Main Content Area */}
+            <div className="result-page-content">
+              <h2 style={{ marginBottom: '0px' }}>Test Results</h2>
+              <p>
+                <strong>Score:</strong> {testResult.test_point} /{" "}
+                {testResult.answers.length}
+              </p>
+
+              <div className="result-page-questions">
+                {testResult.answers.map((answer, index) => (
+                  <div
+                    key={index}
+                    ref={(el) => (questionRefs.current[index] = el)}
+                    className="result-page-question-card"
+                  >
+                    <p>
+                      <strong>Question {index + 1}:</strong>{" "}
+                      {answer.question_text}
+                    </p>
+                    <div className="result-page-options">
+                      {answer.choices.map((choice) => (
+                        <p
+                          key={choice.choice_id}
+                          className={`result-page-option ${
+                            choice.choice_id ===
+                            parseInt(answer.submitted_answer)
+                              ? answer.is_correct
+                                ? "correct"
+                                : "incorrect"
+                              : choice.is_correct
+                              ? "correct"
+                              : ""
+                          }`}
+                        >
+                          {choice.choice_id}. {choice.choice_text}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <p>No results available for this test.</p>
+        )}
       </div>
-    </div>
     </div>
   );
 };

@@ -10,10 +10,15 @@
   margin-top: 100px;
   font-family: Arial, sans-serif;
 }
+.test-content{
+  display: flex;
+  direction: column;
+}
 
 /* Sidebar for question navigation */
 .test-sidebar {
   width: 30%;
+  height: fit-content;
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -77,6 +82,7 @@
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   justify-content: space-between;
+  height: fit-content;
 }
 
 .question-section h4 {
@@ -146,4 +152,17 @@
   margin-top: 100px;
   font-family: Arial, sans-serif;
   color: black;
+}
+
+.sidebar {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #ccc;
+}
+
+.sidebar.open {
+  width: 250px; /* Width when open */
 }

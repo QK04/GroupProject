@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import Modal from '../Modal'; // Ensure you have the Modal component
 import './Setting.css';
 
 function Setting({ closeSettings }) {
   const [isAlwaysShowCode, setIsAlwaysShowCode] = useState(false);
   const [isLightTheme, setIsLightTheme] = useState(true);
-  const settingsRef = useRef(null);
 
   const handleToggle = () => {
     setIsAlwaysShowCode(!isAlwaysShowCode);
@@ -14,22 +14,9 @@ function Setting({ closeSettings }) {
     setIsLightTheme(!isLightTheme);
   };
 
-  {/* Close when clicking outside */}
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
-        closeSettings();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [closeSettings]);
-
   return (
-    <div className="overlay">
-      <div className="settings-container" ref={settingsRef}>
+    <Modal isOpen={true} onClose={closeSettings}>
+      <div className="settings-container">
         <div className="settings-header">
           <h2>Settings</h2>
           <button className="close-button" onClick={closeSettings}>
@@ -37,6 +24,7 @@ function Setting({ closeSettings }) {
           </button>
         </div>
         <div className="settings-content">
+          {/* Theme Toggle */}
           <div className="settings-item">
             <span>Theme</span>
             <div className="toggle-container">
@@ -50,6 +38,7 @@ function Setting({ closeSettings }) {
           </div>
           <hr />
 
+          {/* Always Show Code Toggle */}
           <div className="settings-item">
             <span>Always show code when using data analyst</span>
             <div className="toggle-container">
@@ -62,6 +51,7 @@ function Setting({ closeSettings }) {
             </div>
           </div>
 
+          {/* Language Dropdown */}
           <div className="settings-item">
             <span>Language</span>
             <select className="dropdown">
@@ -71,23 +61,26 @@ function Setting({ closeSettings }) {
             </select>
           </div>
 
+          {/* Archived Chats */}
           <div className="settings-item">
             <span>Archived chats</span>
             <button className="manage-button">Manage</button>
           </div>
 
+          {/* Archive All Chats */}
           <div className="settings-item">
             <span>Archive all chats</span>
             <button className="action-button">Archive all</button>
           </div>
 
+          {/* Delete All Chats */}
           <div className="settings-item">
             <span>Delete all chats</span>
             <button className="action-button delete">Delete all</button>
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 

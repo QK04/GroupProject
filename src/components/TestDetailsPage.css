@@ -1,6 +1,7 @@
 .test-details-container {
   
   max-width: 600px;
+  height: fit-content;
   margin: 0 auto;
   margin-top: 100px;
   text-align: center;
@@ -10,6 +11,10 @@
   background: #f9f9f9;
   color: black;
   overflow-y: hidden;
+}
+.test-details-content{
+  display: flex;
+  direction: column;
 }
 
 .test-details-container h2 {

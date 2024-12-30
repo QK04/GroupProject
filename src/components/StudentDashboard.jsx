@@ -6,13 +6,12 @@ import History from './SidebarItem/History';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import './StudentDashboard.css';
-import HistoryLogo from '../assets/history.png';
-import transparentLogo from '../assets/transparent.png';
+
 import { Outlet } from "react-router-dom";
 
 const StudentDashboard = () => {
   const { user, logout } = useAuth();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [currentChat, setCurrentChat] = useState('Chat 1');
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [chatHistories, setChatHistories] = useState({
@@ -72,13 +71,14 @@ const StudentDashboard = () => {
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <Outlet context={{ toggleSidebar, handleLogout }} />
-        <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect}/>
+        
         <ChatArea
           isOpen={isHistoryOpen}
           currentChat={currentChat}
           messages={chatHistories[currentChat]}
           onSendMessage={handleSendMessage}
         />
+        <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect}/>
         
       </div>
     </div>
