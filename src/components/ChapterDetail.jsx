@@ -162,7 +162,7 @@ function ChapterDetail() {
                   [{ list: "ordered" }, { list: "bullet" }],
                   ["bold", "italic", "underline"],
                   ["link"],
-                  ["blockquote"],
+                  ["blockquote", "code-block"],
                   [{ align: [] }],
                   ["image"],
                 ],

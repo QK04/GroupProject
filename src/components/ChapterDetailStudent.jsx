@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import "./ChapterDetail.css"; 
+import "./ChapterDetail.css";
 import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
 import { useNavigate } from "react-router-dom";
 
 function ChapterDetailStudent() {
-    const navigate = useNavigate();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
-    const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/login');
-    };
-    
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -66,16 +66,42 @@ function ChapterDetailStudent() {
 
   return (
     <div className="chapterDetail-container">
-        <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-        <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+
       <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
 
       <div className="chapterDetail-editorContainer">
-        {/* Display the content for students */}
-        <div
-          className="chapterDetail-content"
-          dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
-        />
+        {/* Theory Content (Left Side) */}
+        <div className="chapterDetail-content">
+          <div
+            dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
+          />
+        </div>
+
+        {/* Media (Right Side) */}
+        <div className="chapterDetail-mediaContainer">
+          {/* Video Content */}
+          {chapter.video_url && (
+            <iframe
+              src={chapter.video_url}
+              title="Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="chapterDetail-iframe"
+            ></iframe>
+          )}
+
+          {/* Image Content */}
+          {chapter.image_url && (
+            <img
+              src={chapter.image_url}
+              alt="Chapter"
+              className="chapterDetail-image"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
