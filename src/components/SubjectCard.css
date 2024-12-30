@@ -1,17 +1,14 @@
-.main{
-  display: flex;
-  margin-top: 80px;
-  margin-left: 80px;
-}
 .cardContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
   width: 100%;
-  max-height: 88vh; /* Define a fixed height to trigger the scrollbar */
-  overflow-y: auto; /* Enable vertical scrolling if content exceeds the container */
+  max-height: 88vh; 
+  overflow-y: auto; 
   padding-right: 10px;
+  margin-top: 80px;
+  margin-left: 80px;
 }
 
 .subjectCard {
