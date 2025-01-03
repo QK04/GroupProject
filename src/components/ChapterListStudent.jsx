@@ -75,6 +75,9 @@ function StudentChapterList() {
       <div className="student-chapter-list">
         {chapters.map((chapter) => (
           <div key={chapter.chapter_id} className="student-chapter-card">
+            <div className="test-icon">
+                <i class="fa-solid fa-file"></i>
+              </div>
             <h3>
               <Link to={`/chapter/${chapter.chapter_id}`}>{chapter.chapter_name}</Link>
             </h3>

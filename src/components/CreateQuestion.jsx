@@ -84,6 +84,7 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
             );
             if (response.status === 200) {
               const data = JSON.parse(response.data.body);
+              console.log("Chapters: ", data);
               setChapters(data || []);
             }
           } catch (error) {
@@ -204,14 +205,18 @@ const CreateQuestion = ({ addNewQuestion, editingQuestion, saveEditedQuestion })
             name="chapter"
             value={newQuestion.chapter}
             onChange={handleInputChange}
+            disabled={chapters.length === 0}
           >
             <option value="">-- Select Chapter --</option>
-            {chapters.map((chapter) => (
+            {Array.isArray(chapters) && chapters.map((chapter) => (
               <option key={chapter.chapter_id} value={chapter.chapter_name}>
                 {chapter.chapter_name}
               </option>
             ))}
           </select>
+          {chapters.length === 0 && newQuestion.subject && (
+            <p className="error-message">No chapters available for the selected subject.</p>
+          )}
         </div>
 
         <div className="form-group">

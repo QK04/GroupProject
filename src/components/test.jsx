@@ -21,7 +21,6 @@ const MultipleChoiceLayout = () => {
   const [timeLeft, setTimeLeft] = useState(600); 
   const timerRef = useRef(null);
 
-  // Toggle sidebar
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleLogout = () => {
@@ -29,7 +28,33 @@ const MultipleChoiceLayout = () => {
     navigate("/login");
   };
 
-  // Fetch questions
+  useEffect(() => {
+    const fetchTestStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${user.user_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        const responseBody = JSON.parse(response.data.body);
+        console.log("Response body: ", responseBody);
+        if (responseBody.status === "Completed") {
+          alert("You have already completed this test.");
+          navigate(`/test/${testId}/details`);
+        }
+      } catch (err) {
+        console.error("Failed to fetch test status:", err);
+        navigate("/dashboard");
+      }
+    };
+
+    fetchTestStatus();
+  }, [testId, user, navigate]);
+
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
@@ -52,7 +77,6 @@ const MultipleChoiceLayout = () => {
     fetchQuestions();
   }, [testId, user]);
 
-  // Timer countdown
   useEffect(() => {
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -68,33 +92,9 @@ const MultipleChoiceLayout = () => {
   }, []);
 
   useEffect(() => {
-    const handleTabSwitch = () => {
-      if (document.hidden) {
-        const confirmed = window.confirm(
-          "You have switched tabs! Switching tabs is not allowed during the test. Click OK to submit your test now."
-        );
-  
-        if (confirmed) {
-          handleSubmit();
-        } else {
-          confirm("You have switched tabs! Switching tabs is not allowed during the test. Click OK to submit your test now.");
-          handleSubmit();
-        }
-      }
-    };
-  
-    document.addEventListener("visibilitychange", handleTabSwitch);
-  
-    return () => document.removeEventListener("visibilitychange", handleTabSwitch);
-  }, []);
-  
-
-  // Save progress to localStorage
-  useEffect(() => {
     localStorage.setItem(`answers_${testId}`, JSON.stringify(answers));
   }, [answers, testId]);
 
-  // Submit answers
   const handleSubmit = async () => {
     clearInterval(timerRef.current);
 
@@ -105,7 +105,7 @@ const MultipleChoiceLayout = () => {
           question_id: qId,
           answer: answer.toString(),
         })),
-        time_limit: 600 - timeLeft, // Time spent
+        time_limit: 600 - timeLeft,
       };
 
       await axios.post(
@@ -113,6 +113,8 @@ const MultipleChoiceLayout = () => {
         payload,
         { headers: { Authorization: `Bearer ${user.access_token}` } }
       );
+
+      localStorage.setItem(`test_status_${testId}`, "completed");
 
       alert("Your test has been submitted successfully.");
       navigate(`/test/${testId}/details`);
@@ -138,7 +140,6 @@ const MultipleChoiceLayout = () => {
     <div className="test-container">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
       <div className="test-sidebar">
         <h4>Quiz Navigation</h4>
         <div className="navigation-buttons">

@@ -13,6 +13,7 @@ function SubjectCard() {
   const [activeCardId, setActiveCardId] = useState(null); // Track which card's dropdown is open
   const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
   const teacher_id = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user_id : null;
+  const role = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : null;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     
   const fetchSubjects = async () => {
@@ -26,9 +27,12 @@ function SubjectCard() {
             },
           }
         );
+        console.log("Response: ", response);
         const subjects = JSON.parse(response.data.body).subjects || [];
+
+        const filteredSubjects = role?.toLowerCase() === "teacher" ? subjects.filter((subject) => subject.teacher_id === teacher_id) : subjects;
         console.log("Display: ", subjects);
-        const formattedSubjects = subjects.map((subjects) => ({
+        const formattedSubjects = filteredSubjects.map((subjects) => ({
           id: subjects.subject_id, // Generate an ID based on index
           title: subjects.subject_name,
         }));
