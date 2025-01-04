@@ -32,6 +32,7 @@
   flex-direction: column;
   gap: 1px;
   padding: 10px;
+  padding-left: 0px;
 }
 
 .sidebar-item {
@@ -44,8 +45,9 @@
 }
 
 .sidebar-item:hover {
-  background-color: #dfdfdf;
-  border-radius: 12px;
+  background-color: #f0f0f0;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
 }
 
 .sidebar-icon {
@@ -66,6 +68,7 @@
 
 .sidebar-logout:hover {
   background-color: #f4b4b4;
+
 }
 
 .sidebar-submenu {
@@ -76,13 +79,17 @@
 .sidebar-subitem {
   padding: 10px;
   cursor: pointer;
+  border-left: 1px solid black;
+
 }
 
 .sidebar-subitem:hover {
-  background-color: #dfdfdf;
-  border-radius: 12px;
+  background-color: #f0f0f0;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
 }
 .sidebar-item.active {
-  background-color: #cbe3fb; /* Active color */
-  border-radius: 12px;
+  background-color: #e0e8f8; /* Active color */
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
 }

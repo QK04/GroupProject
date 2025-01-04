@@ -2,7 +2,7 @@ import React from 'react';
 import menuIcon from '../assets/menu.png';
 import logoIcon from '../assets/usthlogo.png';
 import sidebarRightIcon from '../assets/sidebar-right.png';
-import './teacherTopBar.css';
+import './teacherTopbar.css';
 
 const TopBar = ({ toggleSidebar, toggleHistory }) => {
   return (

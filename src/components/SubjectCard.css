@@ -1,6 +1,10 @@
 .teacher-subject-main{
   display: flex;
-  
+
+.contentContainer{
+  margin-right: auto;
+  margin-left: auto;
+}
 }
 .cardContainer {
   display: flex;
@@ -15,6 +19,7 @@
 }
 
 .subjectCard {
+  position: relative;
   margin: 10px;
   display: flex;
   flex-direction: column;
@@ -22,7 +27,7 @@
   align-items: center;
   width: 250px;
   height: 250px;
-  background-color: #00a1f5; /* Use the cardTheme color */
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
   border-radius: 22.5px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -68,6 +73,7 @@
 .dropdownMenu button:hover {
   background-color: #f5f5f5;
 }
+
 .moreCardImageButton {
   transform: translateX(-50%); /* Adjust for natural width offset */
   display: flex;
@@ -84,9 +90,7 @@
 .moreCardImageButton:hover {
   opacity: 0.8; /* Optional: Add hover effect */
 }
-.deleteCardButton:hover {
-  background-color: #707070;
-}
+
 .addCardButton{
       margin-top: 10px;
       width: 250px;
@@ -98,5 +102,4 @@
 }
 .addCardButton:hover {
   transform: translateY(-5px);
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
 }

@@ -26,7 +26,7 @@ const QuizPage = () => {
     const fetchQuestions = async () => {
       try {
         const response = await axios.get(
-          "https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test"
+          `${import.meta.env.VITE_API_BASE_URL}/test`
         );
 
         const data = JSON.parse(response.data.body);
@@ -51,6 +51,14 @@ const QuizPage = () => {
     currentPage * questionsPerPage
   );
 
+  const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+  const getPaginationGroup = () => {
+    const startPage = Math.max(currentPage - 1, 1);
+    const endPage = Math.min(startPage + 2, totalPages);
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  };
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -74,45 +82,48 @@ const QuizPage = () => {
             className="quiz-card"
             onClick={() => goToTestDetail(question.id)}
           >
-            <div className="quiz-number">
-              Test {question.testNumber}
-            </div>
+            <div className="quiz-number">Test {question.testNumber}</div>
           </button>
         ))}
       </div>
       <div className="quiz-pagination">
-        <a
-          href="#"
-          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+        <button
+          onClick={() => handlePageChange(1)}
+          disabled={currentPage === 1}
+          className="pagination-arrow"
         >
           «
-        </a>
-        {Array.from(
-          { length: Math.ceil(questions.length / questionsPerPage) },
-          (_, i) => (
-            <a
-              key={i}
-              href="#"
-              onClick={() => handlePageChange(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </a>
-          )
-        )}
-        <a
-          href="#"
-          onClick={() =>
-            handlePageChange(
-              Math.min(
-                currentPage + 1,
-                Math.ceil(questions.length / questionsPerPage)
-              )
-            )
-          }
+        </button>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="pagination-arrow"
+        >
+          ‹
+        </button>
+        {getPaginationGroup().map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() => handlePageChange(pageNumber)}
+            className={currentPage === pageNumber ? "active-page" : ""}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="pagination-arrow"
+        >
+          ›
+        </button>
+        <button
+          onClick={() => handlePageChange(totalPages)}
+          disabled={currentPage === totalPages}
+          className="pagination-arrow"
         >
           »
-        </a>
+        </button>
       </div>
       </div>
     </div>

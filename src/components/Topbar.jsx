@@ -2,7 +2,7 @@ import React from "react";
 import menuIcon from "../assets/menu.png";
 import logoIcon from "../assets/usthlogo.png";
 import historyIcon from "../assets/history.png";
-import "./TopBar.css";
+import "./Topbar.css";
 
 const TopBar = ({ toggleSidebar, toggleHistory }) => {
   

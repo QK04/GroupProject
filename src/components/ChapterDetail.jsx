@@ -1,24 +1,33 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Import Quill's styles
+import "react-quill/dist/quill.snow.css";
 import { useParams } from "react-router-dom";
-import "./ChapterDetail.css"; // Import the scoped CSS
+import "./ChapterDetail.css";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 function ChapterDetail() {
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Add error state
   const [isEditing, setIsEditing] = useState(false);
   const [newTheoryContent, setNewTheoryContent] = useState("");
-  const quillRef = useRef(null); // Reference for the Quill editor
+  const quillRef = useRef(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const { chapterId } = useParams(); // Get chapterId from URL
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const { chapterId } = useParams();
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
-  // Fetch chapter detail when the component mounts
   const fetchChapterDetail = async () => {
+    setLoading(true);
+    setError(null); // Reset error state
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
@@ -30,26 +39,25 @@ function ChapterDetail() {
         }
       );
 
-      const body = JSON.parse(response.data.body); // Parse the body field
+      const body = JSON.parse(response.data.body);
       if (body && body.data) {
-        setChapter(body.data); // Set the data object from the response
-        setNewTheoryContent(body.data.theory_content); // Set initial theory content
+        setChapter(body.data);
+        setNewTheoryContent(body.data.theory_content);
       }
-
-      setLoading(false);
     } catch (error) {
       console.error("Failed to fetch chapter detail:", error);
+      setError(error); // Set error state
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchChapterDetail(); // Fetch chapter details when component mounts
+    fetchChapterDetail();
   }, [chapterId, token]);
 
   const handleSaveTheory = async () => {
     try {
-      // Get the content from the Quill editor as HTML
       const quillContent = quillRef.current.getEditor().root.innerHTML;
 
       const response = await axios.put(
@@ -63,9 +71,8 @@ function ChapterDetail() {
         }
       );
 
-      // Update state with the new theory content
       setChapter({ ...chapter, theory_content: quillContent });
-      setIsEditing(false); // Exit edit mode
+      setIsEditing(false);
       alert("Chapter theory updated successfully!");
     } catch (error) {
       console.error("Failed to update theory content:", error);
@@ -73,58 +80,61 @@ function ChapterDetail() {
     }
   };
 
-  if (loading) {
-    return <p>Loading chapter details...</p>;
-  }
-
-  if (!chapter) {
-    return <p>Chapter not found.</p>;
-  }
-
   return (
-    <div className="chapterDetail-container">
-      <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
-
-      <div className="chapterDetail-editorContainer">
-        {isEditing ? (
-          <div>
-            {/* Use Quill editor when in editing mode */}
-            <ReactQuill
-              ref={quillRef}
-              value={newTheoryContent}
-              onChange={setNewTheoryContent}
-              theme="snow"
-              className="chapterDetail-editor"
-            />
-            <div className="chapterDetail-buttons">
-              <button
-                className="chapterDetail-saveButton"
-                onClick={handleSaveTheory}
-              >
-                Save
-              </button>
-              <button
-                className="chapterDetail-cancelButton"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
+    <div className="chapterDetail-teacher-container">
+      <TopBar toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="chapterDetail-container">
+        {loading ? (
+          <p>Loading chapter details...</p>
+        ) : error ? (
+          <p>Error loading chapter details: {error.message}</p>
+        ) : chapter ? (
+          <>
+            <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
+            <div className="chapterDetail-editorContainer">
+              {isEditing ? (
+                <div>
+                  <ReactQuill
+                    ref={quillRef}
+                    value={newTheoryContent}
+                    onChange={setNewTheoryContent}
+                    theme="snow"
+                    className="chapterDetail-editor"
+                  />
+                  <div className="chapterDetail-buttons">
+                    <button
+                      className="chapterDetail-saveButton"
+                      onClick={handleSaveTheory}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="chapterDetail-cancelButton"
+                      onClick={() => setIsEditing(false)}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div
+                    className="chapterDetail-content"
+                    dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
+                  />
+                  <button
+                    className="chapterDetail-editButton"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit Theory
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
+          </>
         ) : (
-          <div>
-            {/* Display the content when not editing */}
-            <div
-              className="chapterDetail-content"
-              dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
-            />
-            <button
-              className="chapterDetail-editButton"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit Theory
-            </button>
-          </div>
+          <p>Chapter not found.</p>
         )}
       </div>
     </div>

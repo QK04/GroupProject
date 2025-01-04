@@ -17,9 +17,12 @@ export default function Sidebar({ isOpen }) {
   const [showSubjectsDropdown, setShowSubjectsDropdown] = useState(false);
   const [subjects, setSubjects] = useState([]);
   const [isLoadingSubjects, setIsLoadingSubjects] = useState(false);
+  const [error, setError] = useState(null); // Add error state
   const navigate = useNavigate();
   const location = useLocation();
-  const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
+  const token = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user')).access_token
+    : null;
 
   const mainMenuItems = [
     { text: 'Chat Bot', icon: addChatIcon, path: '/student-dashboard' },
@@ -33,30 +36,36 @@ export default function Sidebar({ isOpen }) {
   useEffect(() => {
     const fetchSubjects = async () => {
       setIsLoadingSubjects(true);
+      setError(null); // Clear previous errors
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/subject`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
           }
         );
         const subjectsData = JSON.parse(response.data.body).subjects || [];
         setSubjects(subjectsData);
       } catch (error) {
-        console.error("Failed to fetch subjects:", error);
+        console.error('Failed to fetch subjects:', error);
+        setError(error); // Set error state
       } finally {
         setIsLoadingSubjects(false);
       }
     };
 
-    fetchSubjects();
-  }, [token]);
+    // Only fetch subjects if on the /subject page or its subpages
+    if (location.pathname.startsWith('/subject')) {
+      fetchSubjects();
+    }
+  }, [token, location.pathname]); // Update dependency array
 
   useEffect(() => {
-    if (location.pathname.startsWith('/subject/')) {
+    // Always show the dropdown on /subject and its subpages
+    if (location.pathname.startsWith('/subject')) {
       setShowSubjectsDropdown(true);
     } else {
       setShowSubjectsDropdown(false);
@@ -64,7 +73,8 @@ export default function Sidebar({ isOpen }) {
   }, [location]);
 
   const handleMainMenuClick = (path) => {
-    if (path !== '/subject') {
+    // Only close the dropdown if navigating to a page outside of /subject
+    if (!location.pathname.startsWith('/subject')) {
       setShowSubjectsDropdown(false);
     }
     navigate(path);
@@ -75,7 +85,11 @@ export default function Sidebar({ isOpen }) {
   };
 
   const handleSubjectsMenuClick = () => {
-    setShowSubjectsDropdown(!showSubjectsDropdown);
+    // Toggle the dropdown only if on the main /subject page
+    if (location.pathname === '/subject') {
+      setShowSubjectsDropdown(!showSubjectsDropdown);
+    }
+    navigate('/subject'); // Always navigate to the main /subject page
   };
 
   const handleSettings = () => {
@@ -100,7 +114,8 @@ export default function Sidebar({ isOpen }) {
             <div
               className={`sidebar-item ${
                 location.pathname === item.path ||
-                (item.text === 'Subjects' && location.pathname.startsWith('/subject/')) ||
+                (item.text === 'Subjects' &&
+                  location.pathname.startsWith('/subject')) ||
                 (item.text === 'Setting' && showSettings)
                   ? 'active'
                   : ''
@@ -109,7 +124,7 @@ export default function Sidebar({ isOpen }) {
                 item.text === 'Subjects'
                   ? handleSubjectsMenuClick
                   : item.text === 'Setting'
-                  ? handleSettings // Call handleSettings for "Setting"
+                  ? handleSettings
                   : () => handleMainMenuClick(item.path)
               }
             >
@@ -122,12 +137,20 @@ export default function Sidebar({ isOpen }) {
               <div className="sidebar-submenu">
                 {isLoadingSubjects ? (
                   <div className="sidebar-subitem loading">Loading...</div>
+                ) : error ? (
+                  <div className="sidebar-subitem error">
+                    Error: {error.message}
+                  </div>
+                ) : subjects.length === 0 ? (
+                  <div className="sidebar-subitem">No subjects found.</div>
                 ) : (
                   subjects.map((subject) => (
                     <div
                       key={subject.subject_id}
                       className={`sidebar-subitem ${
-                        location.pathname === `/subject/${subject.subject_id}` ? 'active' : ''
+                        location.pathname === `/subject/${subject.subject_id}`
+                          ? 'active'
+                          : ''
                       }`}
                       onClick={() => handleSubjectClick(subject.subject_id)}
                     >

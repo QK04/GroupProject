@@ -2,7 +2,11 @@
 .chapterdetail-page {
   display: flex;
   flex-direction: row;
-  min-height: 100vh; /* Use min-height instead of height */
+  min-height: 100vh;
+}
+.chapterDetail-teacher-container{
+  display: flex;
+  height: 100vh;
 }
 
 .content-wrapper {
@@ -12,7 +16,7 @@
 }
 
 .chapterDetail-container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   background-color: #ffffff;
@@ -21,8 +25,8 @@
   font-family: 'Arial', sans-serif;
   color: #333;
   padding-top: 60px;
-  /* Remove height: 100vh; and let it adjust to content */
-  overflow: auto; /* Keep overflow: auto; for scrolling */
+  
+  overflow: auto; 
 }
 
 /* Header */
@@ -53,6 +57,9 @@
   margin-right: 10px;
   transition: background-color 0.3s;
 }
+.chapterDetail-buttons{
+  margin-top: 10px;
+}
 
 .chapterDetail-container button:hover {
   background-color: #0056b3;
@@ -64,7 +71,6 @@
 }
 
 .chapterDetail-editorContainer .ql-container {
-  height: 200px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }

@@ -34,7 +34,7 @@ const TestDetailsPage = () => {
 
       try {
         const response = await axios.get(
-          `https://1u5xjkwdlg.execute-api.us-east-1.amazonaws.com/prod/test/${testId}/student/${user.user_id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${user.user_id}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

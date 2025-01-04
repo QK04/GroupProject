@@ -153,7 +153,7 @@ function SubjectCard() {
 
       <div className="contentContainer">
         <TopBar toggleSidebar={toggleSidebar} />
-
+        
         <div className="mainContent">
           {loading && <p>Loading subjects...</p>}
           {error && <p>Failed to load subjects. Please try again later.</p>}
@@ -178,11 +178,15 @@ function SubjectCard() {
                       e.stopPropagation();
                       toggleDropdown(card.id);
                     }}
-                  />
-                  {activeCardId === card.id && (
-                    <div ref={dropdownRef} className="dropdownMenu">
-                      <button onClick={() => handleEditCard(card.id)}>Edit</button>
-                      <button onClick={() => handleDeleteCard(card.id)}>Delete</button>
+                />
+                {/* Conditional rendering of dropdown */}
+                {activeCardId === card.id && (
+                    <div
+                        ref={dropdownRef} // Reference to the dropdown menu
+                        className="dropdownMenu"
+                    >
+                        <button className="Edit" onClick={() => handleEditCard(card.id)}>Edit</button>
+                        <button className="Delete" onClick={() => handleDeleteCard(card.id)}>Delete</button>
                     </div>
                   )}
                 </div>

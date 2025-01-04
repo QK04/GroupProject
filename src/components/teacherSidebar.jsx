@@ -19,12 +19,31 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { text: 'Subjects', icon: subjectIcon, path: '/SubjectCard' }, // No dropdown needed
     { text: 'Question Bank', icon: questionbankIcon, path: '/QuestionBank' },
     { text: 'Tests', icon: testIcon, path: '/FullListTest' },
-    { text: 'Profile', icon: profileIcon, path: '/UserProfile' },
+    { text: 'Profile', icon: profileIcon, path: '/user_profile' },
     { text: 'Setting', icon: settingIcon, path: '/Setting' },
   ];
 
-  const handleMainMenuClick = (path) => {
-    navigate(path);
+  const handleMainMenuClick = (menuItemText) => {
+    switch (menuItemText) {
+      case 'Subjects':
+        navigate('/SubjectCard');
+        break; 
+      case 'Tests':
+        navigate('/FullListTest');
+        break;
+      case 'Question Bank':
+        navigate('/QuestionBank');
+        break;
+      case 'Profile':
+        navigate('/user_profile');
+        break;
+      case 'Setting':
+        handleSettings();
+        break;
+      default:
+        break;
+    }
+    toggleSidebar();
   };
 
   const handleSettings = () => {
@@ -57,7 +76,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             onClick={
               item.text === 'Setting'
                 ? handleSettings
-                : () => handleMainMenuClick(item.path)
+                : () => handleMainMenuClick(item.text)
             }
           >
             <img src={item.icon} alt={item.text} className="sidebar-icon" />

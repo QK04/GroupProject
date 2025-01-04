@@ -28,6 +28,7 @@ import SubjectMainPage from './components/SubjectMainPage';
 
 import './App.css';
 import ChapterDetailStudent from './components/ChapterDetailStudent.jsx';
+import StudentSubjectCard from './components/studentSubjectCard.jsx';
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -71,7 +72,7 @@ const App = () => {
             element={<SubjectCard />}
           />
           <Route path="/quiz" element={<QuizPage  />} />
-          <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />4
+          <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />
           <Route path="/test/:testId/details" element={<TestDetailsPage />} />
           <Route path="/test/:testId" element={<MultipleChoiceLayout />}/>
           <Route path="/user_profile" element={<UserProfile />} />
@@ -79,6 +80,7 @@ const App = () => {
           <Route path="/results/:testId" element={<ResultPage />} />
           <Route path='/theory' element={<StudentTheory/>}/>
           <Route path="/subjectpage" element={<SubjectMainPage />} />
+          <Route path="/subject" element={<StudentSubjectCard />} />
           <Route
             path="/subject/:subjectId"
             element={

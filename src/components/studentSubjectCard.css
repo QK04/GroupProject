@@ -5,8 +5,16 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: flex-start;
+    margin-top: 70px;
+    overflow-y: auto;
   }
   
+  .student-subject-card-page{
+    display: flex;
+    height: 100vh;
+
+  }
+
   .student-subject-card {
     display: flex;
     flex-direction: column;
