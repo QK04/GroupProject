@@ -4,6 +4,7 @@
     align-items: center;
     height: 100vh;
     background: #e6f1f8;
+    overflow: hidden;
   }
   
   .user_container {

@@ -13,34 +13,37 @@ function SubjectCard() {
   const [activeCardId, setActiveCardId] = useState(null); 
   const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
   const teacher_id = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user_id : null;
+  const role = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : null;
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+    
   const fetchSubjects = async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/subject`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const subjects = JSON.parse(response.data.body).subjects || [];
-      const formattedSubjects = subjects.map((subject) => ({
-        id: subject.subject_id,
-        title: subject.subject_name,
-      }));
-      setCards(formattedSubjects);
-    } catch (error) {
-      console.error("Failed to fetch subjects:", error);
-      setError(true);
-    } finally {
-      setLoading(false);
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/subject`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Response: ", response);
+        const subjects = JSON.parse(response.data.body).subjects || [];
+
+        const filteredSubjects = role?.toLowerCase() === "teacher" ? subjects.filter((subject) => subject.teacher_id === teacher_id) : subjects;
+        console.log("Display: ", subjects);
+        const formattedSubjects = filteredSubjects.map((subjects) => ({
+          id: subjects.subject_id, // Generate an ID based on index
+          title: subjects.subject_name,
+        }));
+        setCards(formattedSubjects); // Assume API returns an array of subjects
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch subjects:", error);
+        setLoading(false);
+      }  
     }
-  };
+
 
   useEffect(() => {
     fetchSubjects();
@@ -200,6 +203,6 @@ function SubjectCard() {
       </div>
     </div>
   );
-}
+};
 
 export default SubjectCard;

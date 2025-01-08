@@ -62,7 +62,7 @@ function ChapterList() {
     };
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/subject/${subjectId}`,
         newChapter,
         {
@@ -84,9 +84,8 @@ function ChapterList() {
 
   // Handle edit chapter name
   const handleEditChapterName = async (chapterId, newChapterName) => {
-    console.log("Editing Chapter ID:", chapterId, "New Chapter Name:", newChapterName);
     try {
-      const response = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/name`,
         { chapter_name: newChapterName },
         {
@@ -97,7 +96,7 @@ function ChapterList() {
         }
       );
       fetchChapters();
-      setEditingChapterId(null);  // Close the edit form after successful update
+      setEditingChapterId(null);
     } catch (error) {
       console.error("Error editing chapter name:", error);
     }
@@ -107,15 +106,12 @@ function ChapterList() {
   const handleDeleteChapter = async (chapterId) => {
     if (window.confirm("Are you sure you want to delete this chapter?")) {
       try {
-        const response = await axios.delete(
-          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
         fetchChapters();
       } catch (error) {
         console.error("Error deleting chapter:", error);
@@ -129,25 +125,24 @@ function ChapterList() {
 
 
 
+
   return (
     <div className="chapterListPage">
       <TopBar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     
     <div className="chapterListContainer">
-      <h2>Chapters for Subject: {subjectName}</h2>
+      <h2 className="chapterListTitle">Chapters for Subject: {subjectName}</h2>
 
-      {/* Nút Create Chapter */}
       <div className="createChapterContainer">
         <button
           className="createChapterButton"
           onClick={() => setShowForm(!showForm)}
         >
-          {showForm ? "Cancel" : "Create Chapter"}
+          {showForm ? "Cancel" : "+ Create Chapter"}
         </button>
       </div>
 
-      {/* Form tạo chapter */}
       {showForm && (
         <div className="createChapterForm">
           <form className="createChapterTable" onSubmit={handleCreateChapter}>
@@ -178,57 +173,83 @@ function ChapterList() {
                   ],
                 }}
                 formats={[
-                  "header", "font", "list", "bold", "italic", "underline", "link", "blockquote", "image", "align",
+                  "header",
+                  "font",
+                  "list",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "link",
+                  "blockquote",
+                  "image",
+                  "align",
                 ]}
                 required
               />
             </div>
-            <button type="submit">Create Chapter</button>
+            <button type="submit" className="createChapterSubmit">
+              Create Chapter
+            </button>
           </form>
         </div>
       )}
 
-      {/* Hiển thị danh sách các chương */}
       <div className="chapterList">
         {chapters.map((chapter) => (
           <div key={chapter.chapter_id} className="chapterCard">
-            <h3>
-              <Link to={`/chapter/${chapter.chapter_id}`}>{chapter.chapter_name}</Link>
-            </h3>
-
-            {/* Nút Edit */}
-            {editingChapterId === chapter.chapter_id ? (
-              <div>
-                <input
-                  type="text"
-                  value={chapterName}
-                  onChange={(e) => setChapterName(e.target.value)}
-                  required
-                />
-                <button
-                  onClick={() =>
-                    handleEditChapterName(chapter.chapter_id, chapterName)
-                  }
-                >
-                  Save
-                </button>
-                <button onClick={() => setEditingChapterId(null)}>Cancel</button>
+            <div className="test-icon">
+                <i class="fa-solid fa-file"></i>
               </div>
-            ) : (
-              <button
-                onClick={() => {
-                  setEditingChapterId(chapter.chapter_id); // Đặt trạng thái chỉnh sửa
-                  setChapterName(chapter.chapter_name); // Cập nhật tên chương hiện tại vào state
-                }}
-              >
-                Edit Name
-              </button>
-            )}
 
-            {/* Nút Delete */}
-            <button onClick={() => handleDeleteChapter(chapter.chapter_id)}>
-              Delete
-            </button>
+            <div className="chapterCardContent">
+              <h3>
+                <Link to={`/chapter/${chapter.chapter_id}`}>
+                  {chapter.chapter_name}
+                </Link>
+              </h3>
+            </div>
+            <div className="chapterCardActions">
+              {editingChapterId === chapter.chapter_id ? (
+                <>
+                  <input
+                    type="text"
+                    value={chapterName}
+                    onChange={(e) => setChapterName(e.target.value)}
+                    required
+                  />
+                  <button
+                    className="saveButton"
+                    onClick={() =>
+                      handleEditChapterName(chapter.chapter_id, chapterName)
+                    }
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="cancelButton"
+                    onClick={() => setEditingChapterId(null)}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="editButton"
+                    onClick={() => {
+                      setEditingChapterId(chapter.chapter_id);
+                      setChapterName(chapter.chapter_name);
+                    }}
+                  ><i class="fa-solid fa-pen-to-square"></i> Edit Name
+                  </button>
+                  <button
+                    className="deleteButton"
+                    onClick={() => handleDeleteChapter(chapter.chapter_id)}
+                  ><i className="fas fa-trash-alt"></i> Delete
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>

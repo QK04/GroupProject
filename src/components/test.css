@@ -10,7 +10,9 @@
   margin-top: 100px;
   font-family: Arial, sans-serif;
 }
-.test-content{
+.student-test-content{
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   direction: column;
 }
