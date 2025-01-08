@@ -1,77 +1,96 @@
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Sidebar.css';
-import { useNavigate } from 'react-router-dom';
 import addChatIcon from '../assets/add_note.png';
 import awardIcon from '../assets/award.png';
-import historyIcon from '../assets/history.png';
 import logoutIcon from '../assets/logout.png';
 import quizIcon from '../assets/quiz.png';
 import settingIcon from '../assets/settings.png';
 import usthLogo from '../assets/usthlogo.png';
-import Setting from './SidebarItem/Setting';
 import profileIcon from '../assets/profile.png';
 import theoryIcon from '../assets/theory.png';
+import Setting from './SidebarItem/Setting';
+import axios from 'axios';
 
-
-export default function Sidebar({ isOpen, toggleSidebar }) {
+export default function Sidebar({ isOpen }) {
   const [showSettings, setShowSettings] = useState(false);
+  const [showSubjectsDropdown, setShowSubjectsDropdown] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const [isLoadingSubjects, setIsLoadingSubjects] = useState(false);
+  const [error, setError] = useState(null); // Add error state
   const navigate = useNavigate();
+  const location = useLocation();
+  const token = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user')).access_token
+    : null;
 
   const mainMenuItems = [
-    
-    { text: 'Chat Bot', icon: addChatIcon },
-    { text: 'Theories', icon: theoryIcon},
-    { text: 'Excercise', icon: quizIcon },
-    { text: 'Tests', icon: quizIcon },
-    { text: 'Rankings', icon: awardIcon },
-    { text: 'User', icon: profileIcon },
-    { text: 'Setting', icon: settingIcon }
+    { text: 'Chat Bot', icon: addChatIcon, path: '/student-dashboard' },
+    { text: 'Subjects', icon: theoryIcon, path: '/subject', dropdown: true },
+    { text: 'Tests', icon: quizIcon, path: '/quiz' },
+    { text: 'Rankings', icon: awardIcon, path: '/Ranking' },
+    { text: 'User', icon: profileIcon, path: '/user_profile' },
+    { text: 'Setting', icon: settingIcon, path: '/Setting' },
   ];
 
-  const handleMainMenuClick = (menuItem) => {
-    switch (menuItem) {
-      
-      case 'Chat Bot':
-        toggleSidebar();
-        navigate('/student-dashboard');
-        break;
-      case 'Theories':
-        toggleSidebar();
-        navigate('/theory');
-        break;
-      case 'Excercise':
-        toggleSidebar();
-        console.log('Excercise');
-        break;
-      case 'Tests':
-        toggleSidebar();
-        navigate('/quiz')
-        break;
-      case 'Rankings':
-        toggleSidebar();
-        navigate('/Ranking');
-        break;
-      case 'User':
-        toggleSidebar();
-        navigate('/user_profile');
-        break;
-      case 'Setting':
-        toggleSidebar();
-        handleSettings();
-        break;
-      default:
-        break;
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      setIsLoadingSubjects(true);
+      setError(null); // Clear previous errors
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/subject`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const subjectsData = JSON.parse(response.data.body).subjects || [];
+        setSubjects(subjectsData);
+      } catch (error) {
+        console.error('Failed to fetch subjects:', error);
+        setError(error); // Set error state
+      } finally {
+        setIsLoadingSubjects(false);
+      }
+    };
+
+    // Only fetch subjects if on the /subject page or its subpages
+    if (location.pathname.startsWith('/subject')) {
+      fetchSubjects();
     }
+  }, [token, location.pathname]); // Update dependency array
+
+  useEffect(() => {
+    // Always show the dropdown on /subject and its subpages
+    if (location.pathname.startsWith('/subject')) {
+      setShowSubjectsDropdown(true);
+    } else {
+      setShowSubjectsDropdown(false);
+    }
+  }, [location]);
+
+  const handleMainMenuClick = (path) => {
+    // Only close the dropdown if navigating to a page outside of /subject
+    if (!location.pathname.startsWith('/subject')) {
+      setShowSubjectsDropdown(false);
+    }
+    navigate(path);
   };
 
+  const handleSubjectClick = (subjectId) => {
+    navigate(`/subject/${subjectId}`);
+  };
+
+  const handleSubjectsMenuClick = () => {
+    // Toggle the dropdown only if on the main /subject page
+    if (location.pathname === '/subject') {
+      setShowSubjectsDropdown(!showSubjectsDropdown);
+    }
+    navigate('/subject'); // Always navigate to the main /subject page
+  };
 
   const handleSettings = () => {
     setShowSettings(true);
@@ -79,55 +98,79 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
   const handleLogout = () => {
     console.log('Logging out...');
-    localStorage.removeItem('user'); // Xóa thông tin người dùng khỏi localStorage
-    const userAfterLogout = localStorage.getItem('user');
-    console.log('Token after logout:', userAfterLogout); // Log token sau khi xóa (nên là null)
-  
-    toggleSidebar(); // Đóng Sidebar
-    navigate('/login'); // Chuyển hướng về trang login
-  }
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
 
   return (
-    <>
-      <Drawer open={isOpen} onClose={toggleSidebar} anchor="right">
-        <Box className="sidebar-container" role="presentation">
-          <List>
-            <img src={usthLogo} alt="USTH Logo" className="usthlogo" />
-          </List>
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-header">
+        <img src={usthLogo} alt="USTH Logo" className="usthlogo" />
+      </div>
 
-          <Divider className="divider" />
+      <div className="sidebar-menu">
+        {mainMenuItems.map((item) => (
+          <React.Fragment key={item.text}>
+            <div
+              className={`sidebar-item ${
+                location.pathname === item.path ||
+                (item.text === 'Subjects' &&
+                  location.pathname.startsWith('/subject')) ||
+                (item.text === 'Setting' && showSettings)
+                  ? 'active'
+                  : ''
+              }`}
+              onClick={
+                item.text === 'Subjects'
+                  ? handleSubjectsMenuClick
+                  : item.text === 'Setting'
+                  ? handleSettings
+                  : () => handleMainMenuClick(item.path)
+              }
+            >
+              <img src={item.icon} alt={item.text} className="sidebar-icon" />
+              <span>{item.text}</span>
+            </div>
 
-          {/* Main Menu Items */}
-          <List>
-            {mainMenuItems.map((item) => (
-              <ListItem key={item.text} disablePadding>
-                <ListItemButton onClick={() => handleMainMenuClick(item.text)}>
-                  <ListItemIcon>
-                    <img src={item.icon} alt={item.text} style={{ width: 24, height: 24 }} />
-                  </ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+            {/* Submenu for Subjects */}
+            {item.dropdown && showSubjectsDropdown && (
+              <div className="sidebar-submenu">
+                {isLoadingSubjects ? (
+                  <div className="sidebar-subitem loading">Loading...</div>
+                ) : error ? (
+                  <div className="sidebar-subitem error">
+                    Error: {error.message}
+                  </div>
+                ) : subjects.length === 0 ? (
+                  <div className="sidebar-subitem">No subjects found.</div>
+                ) : (
+                  subjects.map((subject) => (
+                    <div
+                      key={subject.subject_id}
+                      className={`sidebar-subitem ${
+                        location.pathname === `/subject/${subject.subject_id}`
+                          ? 'active'
+                          : ''
+                      }`}
+                      onClick={() => handleSubjectClick(subject.subject_id)}
+                    >
+                      <span>{subject.subject_name}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
 
-          <Divider className="divider" />
+      <div className="sidebar-logout" onClick={handleLogout}>
+        <img src={logoutIcon} alt="Logout" className="sidebar-icon" />
+        <span>Logout</span>
+      </div>
 
-          {/*Logout Section */}
-          <div className="logout-section">
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleLogout}>
-                <ListItemIcon>
-                  <img src={logoutIcon} alt="Logout" style={{ width: 24, height: 24 }} />
-                </ListItemIcon>
-                <ListItemText primary="Logout" />
-              </ListItemButton>
-            </ListItem>
-          </div>
-        </Box>
-      </Drawer>
-
+      {/* Setting Modal */}
       {showSettings && <Setting closeSettings={() => setShowSettings(false)} />}
-    </>
+    </div>
   );
 }

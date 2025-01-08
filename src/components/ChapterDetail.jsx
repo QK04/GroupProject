@@ -4,10 +4,13 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useParams } from "react-router-dom";
 import "./ChapterDetail.css";
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 function ChapterDetail() {
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // Add error state
   const [isEditing, setIsEditing] = useState(false);
   const [newTheoryContent, setNewTheoryContent] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
@@ -17,6 +20,11 @@ function ChapterDetail() {
   const [imageUrl, setImageUrl] = useState("");
   const [selectedOption, setSelectedOption] = useState("youtube");
   const quillRef = useRef(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const { chapterId } = useParams();
   const token = localStorage.getItem("user")
@@ -25,6 +33,8 @@ function ChapterDetail() {
 
   useEffect(() => {
     const fetchChapterDetail = async () => {
+      setLoading(true); // Start loading
+      setError(null); // Clear previous errors
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
@@ -37,17 +47,19 @@ function ChapterDetail() {
         );
 
         const body = JSON.parse(response.data.body);
-        console.log("body", body);
         if (body && body.data) {
           setChapter(body.data);
           setNewTheoryContent(body.data.theory_content);
           setYoutubeLink(body.data.video_url || "");
           setImageUrl(body.data.image_url || "");
+        } else {
+          setError(new Error("Chapter data not found")); // Set error if data is missing
         }
-        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch chapter detail:", error);
-        setLoading(false);
+        setError(error); // Set error state
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
@@ -74,7 +86,9 @@ function ChapterDetail() {
       } else if (selectedOption === "upload" && videoFile) {
         const base64Video = await toBase64(videoFile);
         const videoResponse = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-video`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/chapter/${chapterId}/upload-video`,
           {
             file: base64Video,
             fileName: videoFile.name,
@@ -93,7 +107,9 @@ function ChapterDetail() {
       if (imageFile) {
         const base64Image = await toBase64(imageFile);
         const imageResponse = await axios.put(
-          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-image`,
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/chapter/${chapterId}/upload-image`,
           {
             imageBase64: base64Image,
           },
@@ -140,154 +156,181 @@ function ChapterDetail() {
     }
   };
 
-  if (loading) return <p>Loading chapter details...</p>;
-  if (!chapter) return <p>Chapter not found.</p>;
-
   return (
-    <div className="chapterDetail-container">
-      <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
+    <div className="chapterDetail-teacher-container">
+      <TopBar toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className="chapterDetail-editorContainer">
-        {/* Theory Content (Left Side) */}
-        <div className="chapterDetail-content">
-          {isEditing ? (
-            <ReactQuill
-              ref={quillRef}
-              value={newTheoryContent}
-              onChange={setNewTheoryContent}
-              theme="snow"
-              modules={{
-                toolbar: [
-                  [{ header: "1" }, { header: "2" }, { font: [] }],
-                  [{ list: "ordered" }, { list: "bullet" }],
-                  ["bold", "italic", "underline"],
-                  ["link"],
-                  ["blockquote", "code-block"],
-                  [{ align: [] }],
-                  ["image"],
-                ],
-              }}
-              formats={[
-                "header", "font", "list", "bold", "italic", "underline", "link", "blockquote","code-block", "image", "align",
-              ]}
-              required
-            />
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: chapter.theory_content }} />
-          )}
-        </div>
+      <div className="teacher-chapterDetail-container">
+        {/* Loading and Error Handling */}
+        {loading ? (
+          <p>Loading chapter details...</p>
+        ) : error ? (
+          <p>Error loading chapter details: {error.message}</p>
+        ) : chapter ? (
+          <>
+            <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
 
-        {/* Media (Right Side) */}
-        <div className="chapterDetail-mediaContainer">
-          {isEditing ? (
-            <div>
-              {/* Option Selector */}
-              <div style={{ marginBottom: "20px" }}>
-                <label>
-                  <input
-                    type="radio"
-                    name="videoOption"
-                    value="youtube"
-                    checked={selectedOption === "youtube"}
-                    onChange={() => setSelectedOption("youtube")}
+            <div className="chapterDetail-editorContainer">
+              {/* Theory Content (Left Side) */}
+              <div className="chapterDetail-content">
+                {isEditing ? (
+                  <ReactQuill
+                    ref={quillRef}
+                    value={newTheoryContent}
+                    onChange={setNewTheoryContent}
+                    theme="snow"
+                    modules={{
+                      toolbar: [
+                        [{ header: "1" }, { header: "2" }, { font: [] }],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        ["bold", "italic", "underline"],
+                        ["link"],
+                        ["blockquote", "code-block"],
+                        [{ align: [] }],
+                        ["image"],
+                      ],
+                    }}
+                    formats={[
+                      "header",
+                      "font",
+                      "list",
+                      "bold",
+                      "italic",
+                      "underline",
+                      "link",
+                      "blockquote",
+                      "code-block",
+                      "image",
+                      "align",
+                    ]}
+                    required
                   />
-                  YouTube Link
-                </label>
-                <label style={{ marginLeft: "20px" }}>
-                  <input
-                    type="radio"
-                    name="videoOption"
-                    value="upload"
-                    checked={selectedOption === "upload"}
-                    onChange={() => setSelectedOption("upload")}
+                ) : (
+                  <div
+                    dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
                   />
-                  Upload Video
-                </label>
+                )}
               </div>
 
-              {/* YouTube Link */}
-              {selectedOption === "youtube" && (
-                <div>
-                  <label>YouTube Link:</label>
-                  <input
-                    type="text"
-                    value={youtubeLink}
-                    onChange={(e) => setYoutubeLink(e.target.value)}
-                    placeholder="Enter YouTube link"
-                    style={{ width: "100%", padding: "8px", marginTop: "8px" }}
-                  />
-                </div>
-              )}
+              {/* Media (Right Side) */}
+              <div className="chapterDetail-mediaContainer">
+                {isEditing ? (
+                  <div>
+                    {/* Option Selector */}
+                    <div style={{ marginBottom: "20px" }}>
+                      <label>
+                        <input
+                          type="radio"
+                          name="videoOption"
+                          value="youtube"
+                          checked={selectedOption === "youtube"}
+                          onChange={() => setSelectedOption("youtube")}
+                        />
+                        YouTube Link
+                      </label>
+                      <label style={{ marginLeft: "20px" }}>
+                        <input
+                          type="radio"
+                          name="videoOption"
+                          value="upload"
+                          checked={selectedOption === "upload"}
+                          onChange={() => setSelectedOption("upload")}
+                        />
+                        Upload Video
+                      </label>
+                    </div>
 
-              {/* Upload Video */}
-              {selectedOption === "upload" && (
-                <div>
-                  <label>Upload Video:</label>
-                  <input
-                    type="file"
-                    accept="video/*"
-                    onChange={(e) => setVideoFile(e.target.files[0])}
-                    style={{ marginTop: "8px" }}
-                  />
-                </div>
-              )}
+                    {/* YouTube Link */}
+                    {selectedOption === "youtube" && (
+                      <div>
+                        <label>YouTube Link:</label>
+                        <input
+                          type="text"
+                          value={youtubeLink}
+                          onChange={(e) => setYoutubeLink(e.target.value)}
+                          placeholder="Enter YouTube link"
+                          style={{
+                            width: "100%",
+                            padding: "8px",
+                            marginTop: "8px",
+                          }}
+                        />
+                      </div>
+                    )}
 
-              {/* Upload Image */}
-              <div style={{ marginTop: "20px" }}>
-                <label>Upload Image:</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setImageFile(e.target.files[0])}
-                  style={{ marginTop: "8px" }}
-                />
+                    {/* Upload Video */}
+                    {selectedOption === "upload" && (
+                      <div>
+                        <label>Upload Video:</label>
+                        <input
+                          type="file"
+                          accept="video/*"
+                          onChange={(e) => setVideoFile(e.target.files[0])}
+                          style={{ marginTop: "8px" }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Upload Image */}
+                    <div style={{ marginTop: "20px" }}>
+                      <label>Upload Image:</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setImageFile(e.target.files[0])}
+                        style={{ marginTop: "8px" }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {chapter.video_url && (
+                      <iframe
+                        src={chapter.video_url}
+                        title="Video"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="chapterDetail-iframe"
+                      ></iframe>
+                    )}
+                    {imageUrl && (
+                      <img
+                        src={imageUrl}
+                        alt="Chapter"
+                        className="chapterDetail-image"
+                      />
+                    )}
+                  </>
+                )}
+
+                {/* Buttons */}
+                <div className="chapterDetail-buttons">
+                  {isEditing ? (
+                    <>
+                      <button onClick={handleSaveTheory} disabled={isUploading}>
+                        {isUploading ? "Saving..." : "Save"}
+                      </button>
+                      <button
+                        className="chapterDetail-cancelButton"
+                        onClick={() => setIsEditing(false)}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => setIsEditing(true)}>
+                      Edit Chapter
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          ) : (
-            <>
-              {chapter.video_url && (
-                <iframe
-                  src={chapter.video_url}
-                  title="Video"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="chapterDetail-iframe"
-                ></iframe>
-              )}
-              {imageUrl && (
-                <img
-                  src={imageUrl}
-                  alt="Chapter"
-                  className="chapterDetail-image"
-                />
-              )}
-            </>
-          )}
-
-          {/* Buttons */}
-          <div className="chapterDetail-buttons">
-            {isEditing ? (
-              <>
-                <button onClick={handleSaveTheory} disabled={isUploading}>
-                  {isUploading ? "Saving..." : "Save"}
-                </button>
-                <button
-                  className="chapterDetail-cancelButton"
-                  onClick={() => setIsEditing(false)}
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button onClick={() => setIsEditing(true)}>Edit Chapter</button>
-            )}
-          </div>
-        </div>
+          </>
+        ) : null}
       </div>
     </div>
-
-
   );
 }
 

@@ -1,9 +1,30 @@
-/* Main Container - Full Width */
-.chapterDetail-container {
+/* Main Container */
+.chapterdetail-page {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  min-height: 100vh;
+}
+.chapterDetail-teacher-container{
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  overflow-y: auto;
+  height: 100vh;
+  flex-grow: 1;
+}
+
+.teacher-chapterDetail-container {
+  height: 100vh;
+  overflow: auto;
+  width: 100%;
+  padding: 20px;
+  color: #333;
+}
+
+.chapterDetail-container {
   width: 100%;
   padding: 20px;
   color: #333;
@@ -65,6 +86,7 @@
   border-radius: 16px; 
   border: 1px solid #90caf9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 /* Video */
@@ -154,7 +176,6 @@
 }
 
 .download-button {
-  margin-left: 100px;
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
@@ -189,4 +210,85 @@
     flex-direction: column;
     align-items: center;
   }
+}
+
+/* Quiz Section */
+.quiz-section {
+  position: relative;
+  border-top: 1px solid #ccc;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px; 
+  margin: 20px;
+}
+
+.quiz-section h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.question {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+}
+
+.option-label {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.option-label:hover {
+  background-color: #e0e0e0;
+}
+
+.correct-message{
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+  background-color: #d4edda;
+  border-radius: 2px;
+}
+
+.incorrect-message{
+  margin-top: 10px;
+  color: red;
+  font-weight: bold;
+  background-color: #f8d7da;
+  border-radius: 2px;
+}
+
+
+
+/* Radio Button Styling */
+.options input[type="radio"] {
+  margin-right: 8px;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 50%; /* Make it round */
+  outline: none;
+  transition: 0.2s;
+}
+
+.options input[type="radio"]:checked {
+  border-color: #007bff;  
+  background-color: #007bff; 
+}
+
+
+
+.feedback {
+  margin-top: 15px;
 }

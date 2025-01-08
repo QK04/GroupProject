@@ -1,7 +1,14 @@
+.quiz-page{
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+}
 .quiz-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: 20px;
   padding: 100px 100px 0;
   width: 100%;
@@ -10,7 +17,7 @@
 
 .quiz-card {
   width: calc((100% - 4 * 20px) / 5);
-  height: 255px;
+  height: 200px;
   background: #f8f9fa;
   border: 1px solid #ddd;
   border-radius: 15px;
@@ -43,6 +50,24 @@
 /* Pagination */
 .quiz-pagination {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.quiz-pagination button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #90caf9;
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  color: #1565c0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 20px;
 }
@@ -86,3 +111,17 @@
   background: transparent;
   color: #1565c0;
 }
+
+.sidebar {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #ccc;
+}
+
+.sidebar.open {
+  width: 250px; /* Width when open */
+}
+

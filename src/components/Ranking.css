@@ -1,13 +1,22 @@
 /* Container */
+.ranking-page{
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;
+  color: black;
+}
 .ranking-container {
   max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 70px;
   font-family: Arial, sans-serif;
   padding: 20px;
   border-radius: 12px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: auto;
 }
 
 /* Title */
@@ -16,7 +25,7 @@
   color: #1565c0;
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 /* Top 3 Section */
@@ -32,7 +41,7 @@
 /* Top 1 Card */
 .top-card.top-1 {
   width: 180px;
-  height: 240px;
+  height: 180px;
   background-color: #fcefc7;
   border: 2px solid #ffc107;
   transform: scale(1.15); /* To make it slightly bigger than Top 2 and 3 */
@@ -44,7 +53,7 @@
 .top-card.top-2,
 .top-card.top-3 {
   width: 160px;
-  height: 210px;
+  height: 160px;
   background-color: #f8f9fa;
   border: 1px solid #ddd;
   z-index: 1;

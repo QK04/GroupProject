@@ -1,13 +1,26 @@
 /* General Container */
 .view-test-container {
   display: flex;
-  flex-direction: column;
-  width: 100vw;
+  flex-direction: row;
+  width: 100%;
   font-family: "Poppins", sans-serif;
   overflow: hidden;
   align-items: center;
 }
+.view-test-title{
+  color: black;
+ 
+}
 
+.view-test-content{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  align-items: center;
+  overflow-x: hidden;
+}
 /* Page Title */
 .tab-content {
   width: 90%;
@@ -18,7 +31,7 @@
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow-y: auto; 
-  max-height: 80vh; 
+  height: 70vh; 
 }
 
 /* Tabs Container */
@@ -26,6 +39,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  margin-top: 0px;
 }
 
 .tab-button {
@@ -35,7 +49,6 @@
   color: white;
   font-size: 1rem;
   font-weight: bold;
-  margin-top: 50px;
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -44,6 +57,7 @@
 .tab-button.active {
   background: linear-gradient(90deg, #1565c0, #1e88e5);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  
 }
 
 .tab-button:hover {
@@ -60,6 +74,7 @@
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  
 }
 
 /* Questions Section */
@@ -100,9 +115,8 @@
 /* Statistics Section */
 .statistics-section {
   text-align: center;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
-  margin-top: 20px;
 }
 
 .statistics-section .chart-container {
@@ -155,6 +169,11 @@
 .student-scores-table td {
   border-bottom: 1px solid #ddd;
 }
+.view-test-questions-list{
+  overflow-y: auto;
+  color: black;
+}
+
 
 
 /* Responsive Design */
@@ -170,6 +189,7 @@
 
   .view-test-title {
     font-size: 1.8rem;
+    color: black;
   }
 }
 

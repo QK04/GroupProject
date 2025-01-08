@@ -12,7 +12,7 @@ const ViewTest = () => {
   const [testDetails, setTestDetails] = useState(null);
   const [students, setStudents] = useState([]);
   const [activeTab, setActiveTab] = useState("questions");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("user")
@@ -138,9 +138,8 @@ const ViewTest = () => {
     <div className="view-test-container">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
+      <div className="view-test-content">
       <h1 className="view-test-title">Test Details</h1>
-
       {/* Tabs Navigation */}
       <div className="tabs-container">
         <button
@@ -162,7 +161,7 @@ const ViewTest = () => {
         {activeTab === "questions" && (
           <div className="questions-section">
             <h2 className="create-test-title">Questions</h2>
-            <div className="questions-list">
+            <div className="view-test-questions-list">
               {testDetails?.questions.map((question, index) => (
                 <div className="question-item" key={question.question_id}>
                   <h3>
@@ -224,6 +223,7 @@ const ViewTest = () => {
             </table>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

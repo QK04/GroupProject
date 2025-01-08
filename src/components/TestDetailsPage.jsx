@@ -7,21 +7,22 @@ import TopBar from "./teacherTopbar";
 import Sidebar from "./Sidebar";
 
 const TestDetailsPage = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const { testId } = useParams();
+  const { user } = useAuth();
+  const [testDetails, setTestDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-    const toggleSidebar = () => {
+  const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login');
   };
-  const { testId } = useParams(); 
-  const { user } = useAuth(); 
-  const [testDetails, setTestDetails] = useState(null); 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTestDetails = async () => {
@@ -32,7 +33,6 @@ const TestDetailsPage = () => {
       }
 
       try {
-        // Fetch test details using the provided API
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/test/${testId}/student/${user.user_id}`,
           {
@@ -46,7 +46,6 @@ const TestDetailsPage = () => {
         const responseBody = JSON.parse(response.data.body);
         console.log("Test Details Response:", responseBody);
 
-        // Handle "Not Attempted" or "Not Completed" tests as the same case
         if (
           responseBody.message === "Tests fetched successfully" ||
           responseBody.message === "Test not completed. Starting now."
@@ -56,7 +55,6 @@ const TestDetailsPage = () => {
             status: "Not Attempted",
           });
         } else if (responseBody.message === "You have already completed this test.") {
-          // The student has completed the test, show the results
           setTestDetails({
             test_id: responseBody.test_id,
             status: "Completed",
@@ -77,9 +75,6 @@ const TestDetailsPage = () => {
     fetchTestDetails();
   }, [testId, user]);
 
-  if (loading) return <p>Loading test details...</p>;
-  if (error) return <p>{error}</p>;
-
   const handleStartTest = () => {
     navigate(`/test/${testId}`);
   };
@@ -93,45 +88,61 @@ const TestDetailsPage = () => {
   };
 
   return (
-    <div className="test-details-container">
+    <div className="test-details-content">
       <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
-      
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <h2>Test Details</h2>
-      {testDetails ? (
-        <>
-          <p><strong>Test ID:</strong> {testDetails.test_id}</p>
+      <Sidebar isOpen={isSidebarOpen} />
+      <div className="test-details-container">
+        <h2>Test Details</h2>
+        {loading ? (
+          <p>Loading test details...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : testDetails ? (
+          <>
+            <p>
+              <strong>Test ID:</strong> {testDetails.test_id}
+            </p>
 
-          {/* Case 1: Test Not Attempted */}
-          {testDetails.status === "Not Attempted" ? (
-            <>
-              <p>This test has not been attempted yet.</p>
-              <button onClick={handleStartTest} className="start-button">
-                Start Test
-              </button>
-            </>
-          ) : /* Case 2: Test Completed */ (
-            <>
-              <p><strong>Status:</strong> {testDetails.status}</p>
-              {testDetails.testResult ? (
-                <>
-                  <p><strong>Test Score:</strong> {testDetails.testResult.test_point}</p>
-                  <p><strong>Submitted At:</strong> {new Date(testDetails.testResult.submitted_at).toLocaleString()}</p>
-                  <button onClick={handleViewResults} className="start-button">
-                    View Results
-                  </button>
-                </>
-              ) : (
-                <p>No result available for this test.</p>
-              )}
-            </>
-          )}
-        </>
-      ) : (
-        <p>Test details are unavailable.</p>
-      )}
+            {testDetails.status === "Not Attempted" ? (
+              <>
+                <p>This test has not been attempted yet.</p>
+                <button onClick={handleStartTest} className="start-button">
+                  Start Test
+                </button>
+              </>
+            ) : (
+              <>
+                <p>
+                  <strong>Status:</strong> {testDetails.status}
+                </p>
+                {testDetails.testResult ? (
+                  <>
+                    <p>
+                      <strong>Test Score:</strong>{" "}
+                      {testDetails.testResult.test_point}
+                    </p>
+                    <p>
+                      <strong>Submitted At:</strong>{" "}
+                      {new Date(
+                        testDetails.testResult.submitted_at
+                      ).toLocaleString()}
+                    </p>
+                    <button onClick={handleViewResults} className="start-button">
+                      View Results
+                    </button>
+                  </>
+                ) : (
+                  <p>No result available for this test.</p>
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <p>Test details are unavailable.</p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default TestDetailsPage;
+export default TestDetailsPage; 

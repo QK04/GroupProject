@@ -9,6 +9,12 @@ const TopBar = ({ toggleSidebar, toggleHistory }) => {
 
   return (
     <div className="top-bar">
+      <img
+        src={menuIcon}
+        alt="Menu"
+        className="menu-toggle"
+        onClick={toggleSidebar}
+      />
       {/* History Toggle */}
         <img
           src={historyIcon}
@@ -17,12 +23,7 @@ const TopBar = ({ toggleSidebar, toggleHistory }) => {
           onClick={toggleHistory}
         />
         
-      <img
-        src={menuIcon}
-        alt="Menu"
-        className="menu-toggle"
-        onClick={toggleSidebar}
-      />
+      
       {/* Logo */}
       <div className="logo-center">
         <img src={logoIcon} alt="Logo" className="logo" />

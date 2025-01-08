@@ -6,7 +6,7 @@ import TeacherSidebar from "./teacherSidebar";
 import StudentSidebar from "./Sidebar";
 
 const UserProfile = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [profile, setProfile] = useState({
         first_name: "",
         last_name: "",

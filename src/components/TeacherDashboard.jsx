@@ -7,7 +7,7 @@ import "./TeacherDashboard.css";
 
 const TeacherDashboard = () => {
   const navigate = useNavigate(); // Khởi tạo navigate
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Function to toggle the sidebar
   const toggleSidebar = () => {

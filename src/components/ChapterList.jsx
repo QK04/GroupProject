@@ -3,7 +3,9 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import "./ChapterList.css";
+import './ChapterList.css';
+import TopBar from "./teacherTopbar";
+import Sidebar from "./teacherSidebar";
 
 function ChapterList() {
   const [chapters, setChapters] = useState([]);
@@ -12,11 +14,15 @@ function ChapterList() {
   const [showForm, setShowForm] = useState(false);
   const [chapterName, setChapterName] = useState("");
   const [theoryContent, setTheoryContent] = useState("");
-  const [editingChapterId, setEditingChapterId] = useState(null);
+  const [editingChapterId, setEditingChapterId] = useState(null);  // State để lưu chapter đang chỉnh sửa
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
   const { subjectId } = useParams();
-  const token = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")).access_token
-    : null;
+  const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   // Fetch chapters for the given subjectId
   const fetchChapters = async () => {
@@ -117,13 +123,14 @@ function ChapterList() {
     fetchChapters();
   }, [subjectId, token]);
 
-  if (loading) {
-    return <p>Loading chapters...</p>;
-  }
 
 
 
   return (
+    <div className="chapterListPage">
+      <TopBar toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    
     <div className="chapterListContainer">
       <h2 className="chapterListTitle">Chapters for Subject: {subjectName}</h2>
 
@@ -246,6 +253,7 @@ function ChapterList() {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 }

@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 import TopBar from "./teacherTopbar";
 import Sidebar from "./teacherSidebar";
 
-
 function SubjectCard() {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const dropdownRef = useRef(null); // Reference to the dropdown menu
-  const [activeCardId, setActiveCardId] = useState(null); // Track which card's dropdown is open
+  const [error, setError] = useState(false); // Track errors
+  const dropdownRef = useRef(null); 
+  const [activeCardId, setActiveCardId] = useState(null); 
   const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).access_token : null;
   const teacher_id = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user_id : null;
   const role = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).role : null;
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     
   const fetchSubjects = async () => {
       try {
@@ -43,15 +43,14 @@ function SubjectCard() {
         setLoading(false);
       }  
     }
-  // Fetch subjects from the API on component mount
+
+
   useEffect(() => {
     fetchSubjects();
   }, [token]);
 
-  // Add a new subject
   const handleAddCard = async () => {
     try {
-
       const subject_name = prompt("Enter the subject name:");
       if (!subject_name) {
         alert("Subject name is required!");
@@ -75,36 +74,33 @@ function SubjectCard() {
         }
       );
       const addedSubject = response.data;
-      setCards([...cards, { 
-        id: addedSubject.subject_id, 
-        title: addedSubject.subject_name }]);
+      setCards([...cards, { id: addedSubject.subject_id, title: addedSubject.subject_name }]);
       await fetchSubjects();
     } catch (error) {
       console.error("Failed to add new subject:", error);
     }
   };
 
-  // Delete a subject
   const handleDeleteCard = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this card?");
     if (confirmDelete) {
       try {
         await axios.delete(
-          `${import.meta.env.VITE_API_BASE_URL}/subject/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        setCards(cards.filter((card) => card.id !== id)); // Remove card from state
+          `${import.meta.env.VITE_API_BASE_URL}/subject/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setCards(cards.filter((card) => card.id !== id));
       } catch (error) {
         console.error("Failed to delete subject:", error);
       }
     }
   };
 
-  // Edit a subject
   const handleEditCard = async (id) => {
     const newTitle = prompt("Enter a new title for the card:");
     if (newTitle) {
@@ -119,7 +115,6 @@ function SubjectCard() {
             },
           }
         );
-
         setCards(
           cards.map((card) =>
             card.id === id ? { ...card, title: response.data.subject_name || newTitle } : card
@@ -132,62 +127,59 @@ function SubjectCard() {
       }
     }
   };
-    // Function to toggle dropdown visibility
-    const toggleDropdown = (id) => {
-      setActiveCardId(activeCardId === id ? null : id);
-    };
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setActiveCardId(null); // Close dropdown if clicked outside
-        }
-      };
-  
-      // Add the event listener to document
-      document.addEventListener("click", handleClickOutside);
-  
-      // Cleanup the event listener when the component is unmounted
-      return () => {
-        document.removeEventListener("click", handleClickOutside);
-      };
-    }, []);
-  
 
-  if (loading) {
-    return <p>Loading subjects...</p>;
-  }
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const toggleDropdown = (id) => {
+    setActiveCardId(activeCardId === id ? null : id);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setActiveCardId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="main">
-    
-    <div className="cardContainer">
-      <TopBar toggleSidebar={toggleSidebar}/>
-      
-      {/* Sidebar is displayed based on the `isSidebarOpen` state */}
+    <div className="teacher-subject-main">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-        {cards.map((card) => (
-            <div key={card.id || card.title} className="subjectCard">
-                <Link
+      <div className="contentContainer">
+        <TopBar toggleSidebar={toggleSidebar} />
+        
+        <div className="mainContent">
+          {loading && <p>Loading subjects...</p>}
+          {error && <p>Failed to load subjects. Please try again later.</p>}
+          {!loading && !error && (
+            <div className="cardContainer">
+              {cards.map((card) => (
+                <div key={card.id} className="subjectCard">
+                  <Link
                     to={`/subject/${card.id}`}
-                    style={{ textDecoration: 'none' }}
-                    onClick={(e) => e.stopPropagation()} // Prevent propagation from the card to the Link
-                >
+                    style={{ textDecoration: "none" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <div className="cardTheme">
-                        <p className="title">{card.title}</p>
+                      <p className="title">{card.title}</p>
                     </div>
-                </Link>
-                {/* More icon to toggle the dropdown */}
-                <img
-                    src="src\assets\more.png"
+                  </Link>
+                  <img
+                    src="src/assets/more.png"
                     alt="Options"
                     className="moreCardImageButton"
                     onClick={(e) => {
-                        e.stopPropagation(); // Prevent click from propagating to the Link
-                        toggleDropdown(card.id);
+                      e.stopPropagation();
+                      toggleDropdown(card.id);
                     }}
                 />
                 {/* Conditional rendering of dropdown */}
@@ -199,16 +191,18 @@ function SubjectCard() {
                         <button className="Edit" onClick={() => handleEditCard(card.id)}>Edit</button>
                         <button className="Delete" onClick={() => handleDeleteCard(card.id)}>Delete</button>
                     </div>
-                )}
+                  )}
+                </div>
+              ))}
+              <button className="addCardButton" onClick={handleAddCard}>
+                Add New Card
+              </button>
             </div>
-        ))}
-        <button className="addCardButton" onClick={handleAddCard}>
-            Add New Card
-        </button>
+          )}
         </div>
+      </div>
     </div>
-);
-
-}
+  );
+};
 
 export default SubjectCard;

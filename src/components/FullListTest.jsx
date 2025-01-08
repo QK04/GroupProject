@@ -17,7 +17,7 @@ const FullListTest = () => {
   const [teacherNameFilter, setTeacherNameFilter] = useState(""); 
   const testsPerPage = 6; 
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const token = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")).access_token
@@ -150,121 +150,140 @@ const FullListTest = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="full-list-test-container">
       <TopBar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <div className="tests-list">
-        <div className="header">
-          <button className="create-test-button" onClick={() => navigate("/TestCreationOptions")}>
-            + Create Test
-          </button>
-          <div className="filter-container">
-            <select
-              value={subjectFilter}
-              onChange={(e) => setSubjectFilter(e.target.value)}
-              className="filter-dropdown"
-            >
-              <option value="">-- Select Subject --</option>
-              {subjects.map((subject) => (
-                <option key={subject.subject_id} value={subject.subject_name}>
-                  {subject.subject_name}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              placeholder="Search by Teacher Name"
-              value={teacherNameFilter}
-              onChange={(e) => setTeacherNameFilter(e.target.value)}
-            />
+      <div className="full-list-test-content">
+        {loading ? (
+          <div className="loading-container">
+            <p>Loading...</p>
           </div>
-        </div>
-        {currentTests.length > 0 ? (
-          currentTests.map((test, index) => (
-            <div className="test-item" key={test.test_id}>
-              <div className="test-icon">
-                <i className="fas fa-file-alt"></i>
-              </div>
-
-              <div className="test-content">
-                <h4>Test {indexOfFirstTest + index + 1}</h4>
-                <span className="test-date">
-                  {new Date(test.created_at).toLocaleString()}
-                </span>
-                <div className="test-details">
-                  <span>
-                    <i className="fas fa-book"></i> {test.subject_name || "N/A"}
-                  </span>
-                  <span>
-                    <i className="fas fa-user"></i> {test.teacher_name || "N/A"}
-                  </span>
+        ) : error ? (
+          <div className="error-container">
+            <p className="error-message">Error: {error}</p>
+          </div>
+        ) : (
+          <>
+            <div className="tests-list">
+              <div className="header">
+                <button
+                  className="create-test-button"
+                  onClick={() => navigate("/TestCreationOptions")}
+                >
+                  + Create Test
+                </button>
+                <div className="filter-container">
+                  <select
+                    value={subjectFilter}
+                    onChange={(e) => setSubjectFilter(e.target.value)}
+                    className="filter-dropdown"
+                  >
+                    <option value="">-- Select Subject --</option>
+                    {subjects.map((subject) => (
+                      <option key={subject.subject_id} value={subject.subject_name}>
+                        {subject.subject_name}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Search by Teacher Name"
+                    value={teacherNameFilter}
+                    onChange={(e) => setTeacherNameFilter(e.target.value)}
+                  />
                 </div>
               </div>
-
-              <div className="test-actions">
-                <button className="view-details" onClick={() => handleViewDetail(test.test_id)}>
-                  <i className="fas fa-eye"></i> View Details
-                </button>
-                {localStorage.getItem("user") &&
-                JSON.parse(localStorage.getItem("user")).user_name === test.teacher_name ? (
-                  <button className="delete" onClick={() => handleDeleteTest(test.test_id)}>
-                    <i className="fas fa-trash-alt"></i> Delete
-                  </button>
-                ) : null}
-              </div>
+              {currentTests.length > 0 ? (
+                currentTests.map((test, index) => (
+                  <div className="test-item" key={test.test_id}>
+                    <div className="test-icon">
+                      <i className="fas fa-file-alt"></i>
+                    </div>
+                    <div className="test-content">
+                      <h4>Test {indexOfFirstTest + index + 1}</h4>
+                      <span className="test-date">
+                        {new Date(test.created_at).toLocaleString()}
+                      </span>
+                      <div className="test-details">
+                        <span>
+                          <i className="fas fa-book"></i> {test.subject_name || "N/A"}
+                        </span>
+                        <span>
+                          <i className="fas fa-user"></i> {test.teacher_name || "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="test-actions">
+                      <button
+                        className="view-details"
+                        onClick={() => handleViewDetail(test.test_id)}
+                      >
+                        <i className="fas fa-eye"></i> View Details
+                      </button>
+                      {localStorage.getItem("user") &&
+                      JSON.parse(localStorage.getItem("user")).user_name ===
+                        test.teacher_name ? (
+                        <button
+                          className="delete"
+                          onClick={() => handleDeleteTest(test.test_id)}
+                        >
+                          <i className="fas fa-trash-alt"></i> Delete
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No tests available. Create a new test to get started!</p>
+              )}
             </div>
-          ))
-        ) : (
-          <p>No tests available. Create a new test to get started!</p>
+            <div className="pagination">
+              <button
+                onClick={() => paginate(1)}
+                disabled={currentPage === 1}
+                className="pagination-arrow"
+              >
+                «
+              </button>
+              <button
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="pagination-arrow"
+              >
+                ‹
+              </button>
+              {getPaginationGroup().map((pageNumber) => (
+                <button
+                  key={pageNumber}
+                  onClick={() => paginate(pageNumber)}
+                  className={currentPage === pageNumber ? "active-page" : ""}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+              <button
+                onClick={() => paginate(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="pagination-arrow"
+              >
+                ›
+              </button>
+              <button
+                onClick={() => paginate(totalPages)}
+                disabled={currentPage === totalPages}
+                className="pagination-arrow"
+              >
+                »
+              </button>
+            </div>
+          </>
         )}
-      </div>
-
-      {/* Pagination */}
-      <div className="pagination">
-        <button
-          onClick={() => paginate(1)}
-          disabled={currentPage === 1}
-          className="pagination-arrow"
-        >
-          «
-        </button>
-        <button
-          onClick={() => paginate(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="pagination-arrow"
-        >
-          ‹
-        </button>
-        {getPaginationGroup().map((pageNumber) => (
-          <button
-            key={pageNumber}
-            onClick={() => paginate(pageNumber)}
-            className={currentPage === pageNumber ? "active-page" : ""}
-          >
-            {pageNumber}
-          </button>
-        ))}
-        <button
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="pagination-arrow"
-        >
-          ›
-        </button>
-        <button
-          onClick={() => paginate(totalPages)}
-          disabled={currentPage === totalPages}
-          className="pagination-arrow"
-        >
-          »
-        </button>
       </div>
     </div>
   );
+  
 };
 
 export default FullListTest;

@@ -16,8 +16,7 @@
 
 .teacher-logo-center {
   position: absolute;
-  left: 50%; 
-  transform: translateX(-50%); /* Adjust for natural width offset */
+  left: 5%; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +24,7 @@
 
 .teacher-menu-toggle {
   position: absolute;
-  right: 15px; /* Align the menu icon to the right */
+  left: 15px; /* Align the menu icon to the right */
   display: flex;
   justify-content: center;
   align-items: center;

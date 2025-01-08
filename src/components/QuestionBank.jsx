@@ -12,7 +12,9 @@ const QuestionBank = () => {
   const [selectedSubject, setSelectedSubject] = useState(""); // Subject filter
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [showCreateQuestion, setShowCreateQuestion] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(false); // Error state
 
   const [currentPage, setCurrentPage] = useState(1); // Pagination: Current page
   const questionsPerPage = 10; // Number of questions per page
@@ -24,6 +26,8 @@ const QuestionBank = () => {
   // Fetch questions from the API
   useEffect(() => {
     const fetchQuestions = async () => {
+      setLoading(true);
+      setError(false);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/quizquestions`,
@@ -41,9 +45,13 @@ const QuestionBank = () => {
           setFilteredQuestions(questionsData); // Initially show all questions
         } else {
           console.error("Failed to fetch questions");
+          setError(true);
         }
       } catch (error) {
         console.error("Error fetching questions:", error);
+        setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -153,10 +161,11 @@ const QuestionBank = () => {
   };
 
   return (
-    <div className="question-bank-wrapper">
-      <TopBar toggleSidebar={toggleSidebar} />
+    <div className="question-bank-page">
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
+      <TopBar toggleSidebar={toggleSidebar} />
+      
+      <div className="question-bank-content">
       <div className="question-bank-container">
         <div className="content">
           <div className="header">
@@ -279,6 +288,7 @@ const QuestionBank = () => {
         >
           »
         </button>
+      </div>
       </div>
     </div>
   );

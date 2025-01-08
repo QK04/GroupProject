@@ -1,15 +1,32 @@
+.chapterListPage{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+
+}
+
 .chapterListContainer {
   padding: 20px;
   max-width: 1000px;
-  margin: 0 auto;
-  background: linear-gradient(135deg, #ffffff, #e3f2fd);
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  font-family: "Poppins", sans-serif;
-  color: #333;
+  width: 100%;
+  margin:  auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 90vh;
+  overflow-y: scroll;
+  margin-top: 60px;
+  
 }
 
-.chapterListTitle {
+/* Header */
+.chapterListContainer h2 {
   text-align: center;
   font-size: 24px;
   font-weight: bold;
