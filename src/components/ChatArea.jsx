@@ -1,25 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ChatArea.css';
-import { Divider } from '@mui/material';
 
 const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
+  // Scroll to the last message when the messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      // User question
-      onSendMessage({ text: input, sender: 'user' });
+      const userMessage = { text: input, sender: 'user' };
+      onSendMessage(userMessage);
       setInput('');
 
-      setTimeout(() => {
-        // Chatbot reply
-        onSendMessage({ text: 'Hello, this is a USTH Chatbot reply', sender: 'bot' });
-      }, 500);
+      try {
+        const response = await fetch('http://localhost:5000/api/message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: input }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const botResponse = await response.json();
+
+        if (botResponse.text) {
+          onSendMessage({ text: botResponse.text, sender: 'bot' });
+        } else {
+          onSendMessage({
+            text: 'Error: Received an invalid response from the server.',
+            sender: 'bot',
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error.message);
+        onSendMessage({
+          text: 'Error: Unable to connect to the chatbot server. Please try again later.',
+          sender: 'bot',
+        });
+      }
     }
   };
 
@@ -29,7 +53,12 @@ const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
       <div className="chat-area-divider"></div>
       <div className="chat-area-messages">
         {messages.map((msg, index) => (
-          <div key={index} className={`chat-area-message chat-area-message-${msg.sender}`}>
+          <div
+            key={index}
+            className={`chat-area-message ${
+              msg.sender === 'bot' ? 'chat-area-message-bot' : 'chat-area-message-user'
+            }`}
+          >
             {msg.text}
           </div>
         ))}
@@ -44,10 +73,14 @@ const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
         />
-        <button className="chat-area-send-button" onClick={handleSend}>Send</button>
+        <button className="chat-area-send-button" onClick={handleSend}>
+          Send
+        </button>
       </div>
     </div>
   );
 };
 
 export default ChatArea;
+
+
