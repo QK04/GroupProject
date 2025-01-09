@@ -23,12 +23,10 @@ function ChapterDetailStudent() {
 
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [question, setQuestion] = useState(null); 
+  const [userAnswer, setUserAnswer] = useState(null);
   const [quizLoading, setQuizLoading] = useState(true);
   const [quizError, setQuizError] = useState(null);
-  const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const [submissionResult, setSubmissionResult] = useState(null);
 
   const { chapterId } = useParams();
@@ -60,17 +58,13 @@ function ChapterDetailStudent() {
     }
   };
 
-  const fetchQuizData = async () => {
+  const fetchQuizQuestion = async () => {
     setQuizLoading(true);
     setQuizError(null);
-    setAnswers({});
-    setShowCorrectAnswer(false);
-    setCurrentQuestionIndex(0);
+    setSubmissionResult(null); // Reset previous results
     try {
       const response = await axios.get(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/chapter/${chapterId}/exercise`,
+        `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/quiz`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -80,48 +74,24 @@ function ChapterDetailStudent() {
       );
 
       const parsedData = JSON.parse(response.data.body);
-      const questionsArray = parsedData.questions.map((question) => ({
-        ...question,
-        questionId: question.quiz_id, // Use quiz_id as questionId
-        options: question.choices.map((choice) => ({
-          optionId: choice.choice_id, // Use choice_id as optionId
-          text: choice.choice_text,
-          isCorrect: choice.is_correct,
-        })),
-      }));
-
-      if (questionsArray.length > 0) {
-        setQuestions(questionsArray);
-      } else {
-        throw new Error("No questions found in the data");
-      }
+      console.log("Fetched Quiz Question:", parsedData);
+      setQuestion(parsedData); // Store the single quiz question
     } catch (err) {
+      console.error("Failed to fetch quiz question:", err);
       setQuizError(err.message);
     } finally {
       setQuizLoading(false);
     }
   };
 
-  const handleAnswerChange = (questionId, optionId) => {
-    setAnswers({
-      ...answers,
-      [questionId]: optionId,
-    });
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setShowCorrectAnswer(false);
-      setSubmissionResult(null); // Reset submission feedback for next question
-    } else {
-      console.log("End of Quiz");
-    }
+  const handleAnswerChange = (selectedAnswer) => {
+    setUserAnswer(selectedAnswer); // Update the selected answer
   };
 
   const handleSubmitAnswer = async () => {
     const currentUser = JSON.parse(localStorage.getItem("user"));
     const userId = currentUser ? currentUser.user_id : null;
+    console.log("User ID:", userId);
 
     if (!userId) {
       console.error("User ID not found. User might not be logged in.");
@@ -129,22 +99,24 @@ function ChapterDetailStudent() {
       return;
     }
 
+    if (!userAnswer) {
+      console.error("No answer selected.");
+      setSubmissionResult({ error: "Please select an answer before submitting." });
+      return;
+    }
+
     // Build the answer data for the POST request
     const answerData = {
       user_id: userId,
-      answers: Object.entries(answers).map(([question_id, submitted_answer]) => ({
-        question_id,
-        submitted_answer: submitted_answer.toString(),
-      })),
+      chapter_id: chapterId,
+      answer: userAnswer,
     };
-
-    // Log the answer data for debugging
-    console.log("Submitting answer data:", answerData);
+    console.log("Answer Data:", answerData);
 
     try {
-      // Send the POST request to the API
+      // Send the POST request to submit the answer
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/exercise`,
+        `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/quiz`,
         answerData,
         {
           headers: {
@@ -154,44 +126,22 @@ function ChapterDetailStudent() {
         }
       );
 
-      // Handle the response from the API
-      console.log("API Response:", response);
-
-      // Parse the response body as JSON
-      const responseData = response.data; 
-
-      // Assuming the API returns an object with an 'answers' array, 
-      // where each answer object includes 'question_id' and 'is_correct'
-      if (responseData && responseData.body) {
-        const parsedBody = JSON.parse(responseData.body);
-        if (parsedBody.answers && Array.isArray(parsedBody.answers)) {
-          // Update submissionResult with correctness information
-          setSubmissionResult({ answers: parsedBody.answers });
-
-          // Show the correct answers
-          setShowCorrectAnswer(true);
-        } else {
-          // Handle unexpected response format
-          console.error("Invalid response format: 'answers' array not found.");
-          setSubmissionResult({ error: "Invalid response format from API." });
-        }
-      } else {
-        // Handle unexpected response format
-        console.error("Invalid response format: responseData or responseData.body is null.");
-        setSubmissionResult({ error: "Invalid response format from API." });
-      }
+      // Parse the response
+      const responseData = response.data;
+      console.log("Quiz Submission Response:", responseData);
+      const parsedBody = JSON.parse(responseData.body);
+      
+      // Update submission result
+      setSubmissionResult(parsedBody);
     } catch (error) {
-      // Handle errors during the API request
-      console.error("Error submitting answers:", error);
-      setSubmissionResult({
-        error: "Failed to submit answers: " + error.message,
-      });
+      console.error("Error submitting answer:", error);
+      setSubmissionResult({ error: "Failed to submit answer." });
     }
   };
 
   useEffect(() => {
     fetchChapterDetail();
-    fetchQuizData();
+    fetchQuizQuestion();
   }, [chapterId, token]);
 
   const handleDownload = () => {
@@ -277,104 +227,48 @@ function ChapterDetailStudent() {
             </div>
             <div className="quiz-section">
               {quizLoading ? (
-                <p>Loading quiz...</p>
-              ) : questions.length > 0 ? (
+                <p>Loading quiz question...</p>
+              ) : question ? (
                 <div>
                   <h3>Quiz</h3>
-                  <h2>{questions[currentQuestionIndex].question_text}</h2>
+                  <h2>{question.question_text}</h2>
                   <div className="options">
-                    {questions[currentQuestionIndex].options.map((option) => {
-                      const isCorrect = option.isCorrect;
-                      const isSelected =
-                        answers[questions[currentQuestionIndex].questionId] ===
-                        option.optionId;
-
-                      // Determine if the option should be highlighted as correct or incorrect
-                      const shouldShowCorrect = showCorrectAnswer && isCorrect;
-                      const shouldShowIncorrect =
-                        showCorrectAnswer && isSelected && !isCorrect;
-
-                      return (
-                        <label
-                          key={option.optionId}
-                          className={`option-label ${
-                            shouldShowCorrect ? "correct" : ""
-                          } ${shouldShowIncorrect ? "incorrect" : ""}`}
-                        >
-                          <input
-                            type="radio"
-                            name={`question${currentQuestionIndex}`}
-                            value={option.optionId}
-                            checked={isSelected}
-                            onChange={() =>
-                              handleAnswerChange(
-                                questions[currentQuestionIndex].questionId,
-                                option.optionId
-                              )
-                            }
-                            disabled={showCorrectAnswer}
-                          />
-                          {option.text}
-                        </label>
-                      );
-                    })}
+                    {question.choice_text.map((choice, index) => (
+                      <label key={index} className="option-label">
+                        <input
+                          type="radio"
+                          name="quiz-option"
+                          value={choice}
+                          onChange={() => handleAnswerChange(choice)}
+                        />
+                        {choice}
+                      </label>
+                    ))}
                   </div>
 
-                  {/* Submit and Next Question Buttons */}
-                  {!showCorrectAnswer && (
-                    <button
-                      className="download-button"
-                      onClick={handleSubmitAnswer}
-                    >
-                      Submit Answer
-                    </button>
-                  )}
+                  {/* Submit Button */}
+                  <button className="submit-button" onClick={handleSubmitAnswer}>
+                    Submit Answer
+                  </button>
 
-                  {showCorrectAnswer && (
-                    <>
-                      <button
-                        className="download-button"
-                        onClick={handleNextQuestion}
-                      >
-                        Next Question
-                      </button>
-
-                      {/* Display feedback for each answer */}
-                      {submissionResult && (
-                        <div className="submission-feedback">
-                          {submissionResult.error ? (
-                            <p className="error-message">
-                              {submissionResult.error}
-                            </p>
-                          ) : (
-                            <div>
-                              {submissionResult.answers &&
-                                submissionResult.answers.map((answerResult) => {
-                                  // Find the submitted answer for this question
-                                  const submittedAnswer = answers[answerResult.question_id];
-
-                                  // Find the option text for both the correct and submitted answers
-                                  const question = questions.find(q => q.questionId === answerResult.question_id);
-                                  const correctAnswerText = question?.options.find(o => o.isCorrect)?.text;
-                                  const submittedAnswerText = question?.options.find(o => o.optionId.toString() === submittedAnswer)?.text;
-
-                                  return (
-                                    <div key={answerResult.question_id}>
-                                      <p className={answerResult.is_correct ? "correct-message" : "incorrect-message"}>
-                                      
-                                        {answerResult.is_correct ? "Correct" : `Incorrect`}
-                                      </p>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          )}
-                        </div>
+                  {/* Show Results */}
+                  {submissionResult && (
+                    <div className="submission-result">
+                      {submissionResult.error ? (
+                        <p className="error-message">{submissionResult.error}</p>
+                      ) : (
+                        <p className={submissionResult.result === "correct" ? "correct-message" : "incorrect-message"}>
+                          {submissionResult.result === "correct"
+                            ? "Correct!"
+                            : `Incorrect! The correct answer is: ${submissionResult.correct_answer}`}
+                        </p>
                       )}
-                    </>
+                    </div>
                   )}
                 </div>
-              ) : null}
+              ) : (
+                <p>No quiz question available.</p>
+              )}
             </div>
           </>
         ) : (

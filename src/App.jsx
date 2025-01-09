@@ -25,7 +25,7 @@ import StudentTheory from './components/studentTheory';
 import ChapterListStudent from './components/ChapterListStudent';
 import ResultPage from './components/ResultPage.jsx';
 import SubjectMainPage from './components/SubjectMainPage';
-
+import Exercise from './components/Exercise';
 import './App.css';
 import ChapterDetailStudent from './components/ChapterDetailStudent.jsx';
 import StudentSubjectCard from './components/studentSubjectCard.jsx';
@@ -71,7 +71,7 @@ const App = () => {
             path="/SubjectCard"
             element={<SubjectCard />}
           />
-          <Route path="/quiz" element={<QuizPage  />} />
+          <Route path="/test" element={<QuizPage  />} />
           <Route path="/ranking" element={<Ranking toggleSidebar={toggleSidebar} />} />
           <Route path="/test/:testId/details" element={<TestDetailsPage />} />
           <Route path="/test/:testId" element={<MultipleChoiceLayout />}/>
@@ -81,6 +81,7 @@ const App = () => {
           <Route path='/theory' element={<StudentTheory/>}/>
           <Route path="/subjectpage" element={<SubjectMainPage />} />
           <Route path="/subject" element={<StudentSubjectCard />} />
+          <Route path="/exercise/:subjectId" component={Exercise} />
           <Route
             path="/subject/:subjectId"
             element={
