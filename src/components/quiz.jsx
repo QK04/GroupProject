@@ -69,9 +69,7 @@ const QuizPage = () => {
 
   return (
     <div className="quiz-page">
-      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        </div>
+      
       <div className="quiz-content">
       <div className="quiz-container">
         <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />

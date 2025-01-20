@@ -1,8 +1,12 @@
 .quiz-page{
   display: flex;
   flex-direction: row;
-  height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;
+  margin-top: -100px;
+}
+
+.quiz-page::-webkit-scrollbar {
+  display: none;
 }
 .quiz-container {
   display: flex;
@@ -122,6 +126,92 @@
 }
 
 .sidebar.open {
-  width: 250px; /* Width when open */
+  width: 250px;
 }
 
+/* Responsive Styles*/
+@media (min-width: 1200px) {
+  .quiz-card {
+    width: calc((100% - 4 * 20px) / 5); /* 5 cards per row */
+  }
+  .quiz-number {
+    font-size: 70px; /* Adjust the font size for better fitting */
+  }
+}
+
+/* Medium screens (Tablets and small laptops) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .quiz-container {
+    padding: 50px 20px;
+  }
+
+  .quiz-card {
+    width: calc((100% - 3 * 20px) / 4); /* 4 cards per row */
+    height: 180px;
+  }
+
+  .quiz-number {
+    font-size: 70px; /* Adjust the font size for better fitting */
+  }
+}
+
+/* Small screens (Mobile devices) */
+@media (max-width: 767px) {
+  .quiz-container {
+    padding: 50px 20px;
+  }
+
+  .quiz-card {
+    width: calc((100% - 2 * 20px) / 3); /* 3 cards per row */
+    height: 160px;
+  }
+
+  .quiz-number {
+    font-size: 40px; /* Adjust the font size */
+  }
+
+  .quiz-pagination button {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .pagination-arrow {
+    font-size: 14px;
+  }
+
+  /* Sidebar for smaller screens */
+  .sidebar {
+    width: 0; /* Hide sidebar by default */
+  }
+
+  .sidebar.open {
+    width: 200px; /* Set appropriate sidebar width for mobile */
+  }
+}
+
+/* Extra small screens (Very small devices like older phones) */
+@media (max-width: 480px) {
+  .quiz-container {
+    padding: 30px 10px;
+  }
+
+  .quiz-card {
+    width: calc((100% - 1 * 20px) / 2); /* 2 cards per row */
+    height: 140px;
+  }
+
+  .quiz-number {
+    font-size: 20px; 
+  }
+
+  .quiz-pagination button {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+
+  .pagination-arrow {
+    font-size: 12px;
+  }
+}
