@@ -14,8 +14,17 @@ let detectedBotUserId = null; // Store bot user ID dynamically
 const activeConversations = {}; // Store active conversation IDs per user
 let xUserKey = null; // Cache the x-user-key for reuse
 
+//  CORS 
+const corsOptions = {
+  origin: ['http://34.226.119.226:3000', 'https://dat.d1g1iyq6tdi1x3.amplifyapp.com'], 
+  methods: ['GET', 'POST', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+  credentials: true, // Allow cookies or authorization headers
+};
+
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cors());
 
 app.post('/api/message', async (req, res) => {
   const { text } = req.body;
