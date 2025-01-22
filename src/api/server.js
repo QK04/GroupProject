@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import serverless from 'serverless-http';
+
 
 
 const app = express();
