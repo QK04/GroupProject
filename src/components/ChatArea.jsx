@@ -17,7 +17,7 @@ const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
       setInput('');
 
       try {
-        const response = await fetch('https://54.234.143.228:5000/api/message', { 
+        const response = await fetch('https://ec2-54-234-143-228.compute-1.amazonaws.com/api/message', { 
 
 
           method: 'POST',
