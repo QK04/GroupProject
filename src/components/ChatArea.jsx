@@ -17,7 +17,7 @@ const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
       setInput('');
 
       try {
-       const response = await fetch('https://f3de9i4b00.execute-api.us-east-1.amazonaws.com/prod', { 
+       const response = await fetch('https://f3de9i4b00.execute-api.us-east-1.amazonaws.com/prod/api/messaage', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: input }),
