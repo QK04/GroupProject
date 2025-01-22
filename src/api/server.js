@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
+import serverless from 'serverless-http';
+
 
 const app = express();
 const PORT = 5000;
@@ -16,7 +18,10 @@ let xUserKey = null; // Cache the x-user-key for reuse
 
 //  CORS 
 const corsOptions = {
-  origin: ['http://34.226.119.226:3000', 'https://dat.d1g1iyq6tdi1x3.amplifyapp.com'], 
+  origin: [
+    'http://ec2-54-234-143-228.compute-1.amazonaws.com',
+    'https://dat.d1g1iyq6tdi1x3.amplifyapp.com'
+  ], 
   methods: ['GET', 'POST', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
   credentials: true, // Allow cookies or authorization headers
