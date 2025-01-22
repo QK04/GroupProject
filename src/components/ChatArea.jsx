@@ -17,13 +17,12 @@ const ChatArea = ({ currentChat, messages, onSendMessage, isOpen }) => {
       setInput('');
 
       try {
-        const response = await fetch('https://54.234.143.228:5000/api/message', { 
-
-
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: input }),
+       const response = await fetch('http://chatbot-ALB-161671637.us-east-1.elb.amazonaws.com/api/message', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: input }),
         });
+
 
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
