@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-
+import serverless from 'serverless-http';
 
 
 const app = express();
@@ -123,4 +123,4 @@ app.post('/api/message', async (req, res) => {
   }
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`Backend running on http://0.0.0.0:${PORT}`));
+module.exports.handler = serverless(app);
