@@ -19,9 +19,9 @@ let xUserKey = null; // Cache the x-user-key for reuse
 //  CORS 
 const corsOptions = {
   origin: [
-    'http://ec2-54-234-143-228.compute-1.amazonaws.com',
-    'http://dat.d1g1iyq6tdi1x3.amplifyapp.com',
-    'http://54.234.143.228'
+    'https://ec2-54-234-143-228.compute-1.amazonaws.com',
+    'https://dat.d1g1iyq6tdi1x3.amplifyapp.com',
+    'https://54.234.143.228'
   ], 
   methods: ['GET', 'POST', 'OPTIONS'], 
   allowedHeaders: ['Content-Type', 'Authorization'], 
