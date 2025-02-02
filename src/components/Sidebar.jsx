@@ -25,7 +25,7 @@ export default function Sidebar({ isOpen }) {
     : null;
 
   const mainMenuItems = [
-    { text: 'Chat Bot', icon: addChatIcon, path: '/student-dashboard' },
+    { text: 'Chat Bot', icon: addChatIcon, path: '/chat' },
     { text: 'Subjects', icon: theoryIcon, path: '/subject', dropdown: true },
     { text: 'Rankings', icon: awardIcon, path: '/Ranking' },
     { text: 'User', icon: profileIcon, path: '/user_profile' },
