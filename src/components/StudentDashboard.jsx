@@ -39,7 +39,7 @@ const StudentDashboard = () => {
 
   return (
     <div className="student-dashboard">
-      <TopBar toggleSidebar={toggleSidebar} toggleHistory={toggleHistory} onLogout={handleLogout} />
+      <TopBar toggleSidebar={toggleSidebar} onLogout={handleLogout} />
       <div className="row-container">
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         <Outlet context={{ toggleSidebar, handleLogout }} />
