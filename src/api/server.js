@@ -90,7 +90,7 @@ app.post('/api/message', async (req, res) => {
     }
     console.log('Full List of Messages:', JSON.stringify(messagesResponse.data, null, 2));
     const messages = messagesResponse.data.messages;
-    const lastBotMessage = messages[0].payload.text ?? 'co loi xay ra';
+    const lastBotMessage = messages[0].payload?.text || 'co loi xay ra';
     
     // Dynamically detect bot user ID if not already detected
     // if (!detectedBotUserId) {
