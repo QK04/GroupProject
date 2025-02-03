@@ -136,7 +136,7 @@ const ChatArea = () => {
 
         if (response.status === 200) {
           const botResponse = await fetch(
-            ' https://d8eb-42-113-20-81.ngrok-free.app/api/message',
+            '   https://c580-42-113-20-81.ngrok-free.app/api/message',
             {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
