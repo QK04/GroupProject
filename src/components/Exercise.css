@@ -24,6 +24,10 @@
   }
   
   .chapter-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: linear-gradient(90deg, #1e88e5, #1565c0); 
     padding: 25px;
     border-radius: 12px;
