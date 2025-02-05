@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import serverless from 'serverless-http';
-
 
 const app = express();
 const PORT = 5000;
@@ -10,27 +8,14 @@ const PORT = 5000;
 // Botpress Chat API Config
 const CHAT_API_URL = 'https://chat.botpress.cloud/402fb9c8-6064-4eb0-a93a-961eec83a2b7';
 const USER_ID = 'ptdat21011';
-let humanUserId = null;
 
+let humanUserId = null;
 let detectedBotUserId = null; // Store bot user ID dynamically
 const activeConversations = {}; // Store active conversation IDs per user
 let xUserKey = null; // Cache the x-user-key for reuse
 
-//  CORS 
-const corsOptions = {
-  origin: [
-    'https://ec2-54-234-143-228.compute-1.amazonaws.com',
-    'https://dat.d1g1iyq6tdi1x3.amplifyapp.com',
-    'https://54.234.143.228'
-  ], 
-  methods: ['GET', 'POST', 'OPTIONS'], 
-  allowedHeaders: ['Content-Type', 'Authorization'], 
-  credentials: true, // Allow cookies or authorization headers
-};
-
-
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cors());
 
 app.post('/api/message', async (req, res) => {
   const { text } = req.body;
@@ -68,9 +53,11 @@ app.post('/api/message', async (req, res) => {
 
     // Step 3: Send Message to Botpress
     console.log('Step 3: Sending message to Botpress:', { conversationId, text });
+    const startTime = Date.now(); // Start time before sending request
+
     const messagesToBotpressRes = await axios.post(
       `${CHAT_API_URL}/messages`,
-      {  payload: { type: 'text', text: text.trim() }, conversationId: conversationId },
+      { payload: { type: 'text', text: text.trim() }, conversationId: conversationId },
       { headers: { 'Content-Type': 'application/json', 'x-user-key': xUserKey } }
     );
 
@@ -79,7 +66,8 @@ app.post('/api/message', async (req, res) => {
     let messagesResponse;
     let lastMessageUserId = null;
     let humanUserId = null;
-    while (lastMessageUserId == humanUserId) {
+
+    while (lastMessageUserId === humanUserId) {
       messagesResponse = await axios.get(
         `${CHAT_API_URL}/conversations/${conversationId}/messages`,
         { headers: { 'Content-Type': 'application/json', 'x-user-key': xUserKey } }
@@ -88,34 +76,17 @@ app.post('/api/message', async (req, res) => {
       humanUserId = messagesResponse.data.messages[messagesLength - 1].userId;
       lastMessageUserId = messagesResponse.data.messages[0].userId;
     }
+
+    const endTime = Date.now(); // End time after receiving the response
+    const responseTime = endTime - startTime; // Calculate response time
+
     console.log('Full List of Messages:', JSON.stringify(messagesResponse.data, null, 2));
     const messages = messagesResponse.data.messages;
-    const lastBotMessage = messages[0].payload?.text || 'co loi xay ra';
-    
-    // Dynamically detect bot user ID if not already detected
-    // if (!detectedBotUserId) {
-    //   detectedBotUserId = messages[0].userId || null;
-    //   console.log('Dynamically Detected Bot User ID:', detectedBotUserId);
-    // }
+    const lastBotMessage = messages[0].payload.text ?? 'An error occurred';
 
-    // if (detectedBotUserId) {
-    //   // Filter messages from the bot
-    //   const botMessages = messages.filter((msg) => msg.userId === detectedBotUserId);
-    //   const lastBotMessage = botMessages.find((msg) => msg.payload?.type === 'text')?.payload?.text;
+    console.log(`Bot Response Time: ${responseTime} ms`);
+    res.json({ text: lastBotMessage, responseTime: `${responseTime} ms` });
 
-    //   if (lastBotMessage) {
-    //     console.log('Final Extracted Bot Response:', lastBotMessage);
-    //     res.json({ text: lastBotMessage });
-    //   } else {
-    //     console.log('No valid bot response found in conversation history.');
-    //     res.json({ text: 'No valid bot response found. Please check your bot configuration.' });
-    //   }
-    // } else {
-    //   console.log('Failed to detect bot user ID.');
-    //   res.json({ text: 'Failed to detect bot response. Please check your bot configuration.' });
-    // }
-    // console.log('Final Extracted Bot Response:', lastBotMessage);
-    res.json({ text: lastBotMessage });
   } catch (error) {
     console.error('Error occurred:', error.message);
     if (error.response) console.error('Error Response Data:', error.response.data);
@@ -123,4 +94,4 @@ app.post('/api/message', async (req, res) => {
   }
 });
 
-module.exports.handler = serverless(app);
+app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
