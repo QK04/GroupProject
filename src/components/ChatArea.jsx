@@ -15,6 +15,7 @@ const ChatArea = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false); 
   const [currentConversation, setCurrentConversation] = useState(null);
   const messagesEndRef = useRef(null);
+  const historyRef = useRef(null);
   const navigate = useNavigate();
   const { conversationId } = useParams(); // Extract conversationId from URL
   const token = localStorage.getItem("user")
@@ -33,6 +34,7 @@ const ChatArea = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHistories, currentChat]);
+  
 
   // Fetch chat history from the API
   const fetchChatHistory = async (conversationId) => {
@@ -179,7 +181,20 @@ const ChatArea = () => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (historyRef.current && !historyRef.current.contains(event.target)) {
+        setIsHistoryOpen(false);
+      }
+    };
 
+    if (isHistoryOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isHistoryOpen]);
   const toggleHistory = () => {
     setIsHistoryOpen((prev) => !prev);
   };
@@ -218,13 +233,11 @@ const ChatArea = () => {
 
           {/* History Component */}
           {isHistoryOpen && (
-            <div className="chat-history-panel">
-              <History
-                isOpen={isHistoryOpen}
-                onChatSelect={handleChatSelect}
-              />
+            <div className="chat-history-panel" ref={historyRef}>
+              <History isOpen={isHistoryOpen} onChatSelect={handleChatSelect} />
             </div>
           )}
+          
 
           {/* Chat Messages */}
           <div className="chat-area-messages">
