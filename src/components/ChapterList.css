@@ -1,104 +1,75 @@
-
 .chapterListContainer {
-  max-width: 1000px;
-  max-height: 100vh;
-  margin: 0 auto;
   padding: 20px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-}
-.chapterListContainer::-webkit-scrollbar {
-  display: none;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #ffffff, #e3f2fd);
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  color: #333;
 }
 
-/* Header */
-.chapterListContainer h2 {
+.chapterListTitle {
   text-align: center;
   font-size: 24px;
+  font-weight: bold;
   color: #007bff;
   margin-bottom: 20px;
 }
 
-/* Create Chapter Button */
 .createChapterContainer {
   text-align: center;
   margin-bottom: 20px;
 }
 
+.test-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black; 
+  font-size: 2rem; 
+  border-radius: 12px; 
+  margin-right: 5px;
+  margin-left: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #1565c0; 
+  font-weight: bold;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
 .createChapterButton {
-  background-color: #007bff;
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
   color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
+  padding: 12px 18px;
+  border-radius: 25px; 
+  font-size: 1.1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .createChapterButton:hover {
-  background-color: #0056b3;
+  background: linear-gradient(90deg, #1e88e5, #1565c0);
+  transform: scale(1.05); 
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-.createChapterTable {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  color: #333;
-  width: 90%;
-  
-}
-
-/* Form Styles */
 .createChapterForm {
-  display: flex;
   background-color: #f9f9f9;
-  padding: 15px;
-  flex: auto;
-  justify-content: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
-
-.createChapterForm .formGroup {
-  margin-bottom: 15px;
-}
-
-.createChapterForm label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.createChapterForm input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.createChapterForm button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  font-size: 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.createChapterForm button:hover {
-  background-color: #218838;
-}
-
-/* Chapter List */
 .chapterList {
   margin-top: 20px;
 }
@@ -107,76 +78,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border: 1px solid #90caf9;
+  border-radius: 16px;
+  padding: 20px;
   margin-bottom: 15px;
-
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.chapterCard h3 {
+.chapterCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(72, 86, 109, 0.2);
+}
+
+.chapterCardContent {
+  flex: 1;
+  margin-left: 20px; 
+}
+
+.chapterCardActions {
   display: flex;
-  left: 10%;
-  font-size: 18px;
-  color: #007bff;
+  gap: 10px;
 }
 
-.chapterCard h3 a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.chapterCard h3 a:hover {
-  text-decoration: underline;
-}
-.chatpterCardButton{
-  display: flex;
-  right: 10%;
-}
-
-.chatpterCardButton{
-  display: flex;
-  right: 10%;
-}
-
-.chapterCard button {
-  background-color: #007bff;
+.chapterCardActions button {
+  background: linear-gradient(90deg, #1e88e5, #1565c0); 
   color: white;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 20px;
   border: none;
-  padding: 8px 12px;
-  font-size: 14px;
-  border-radius: 5px;
-  margin-right: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.chapterCard button:hover {
-  background-color: #0056b3;
+.chapterCardActions button:hover {
+  background: linear-gradient(90deg, #1565c0, #0d47a1); 
+  transform: scale(1.05); 
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
 }
 
-.chapterCard button:last-of-type {
-  background-color: #dc3545;
+.chapterCardActions .deleteButton {
+  background: linear-gradient(90deg, #ff0015, #dc3545);
 }
 
-.chapterCard button:last-of-type:hover {
-  background-color: #c82333;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-  .chapterListContainer {
-    padding: 10px;
-  }
-
-  .createChapterButton {
-    font-size: 14px;
-    padding: 8px 16px;
-  }
-
-  .chapterCard button {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
+.chapterCardActions .deleteButton:hover {
+  background: linear-gradient(90deg, #dc3545, #c82333);
 }

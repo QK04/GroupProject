@@ -14,8 +14,7 @@ function ChapterDetail() {
   const [videoFile, setVideoFile] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState(""); // State for storing image URL
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [imageUrl, setImageUrl] = useState("");
   const [selectedOption, setSelectedOption] = useState("youtube");
   const quillRef = useRef(null);
 
@@ -24,7 +23,6 @@ function ChapterDetail() {
     ? JSON.parse(localStorage.getItem("user")).access_token
     : null;
 
-  // Fetch chapter details
   useEffect(() => {
     const fetchChapterDetail = async () => {
       try {
@@ -39,11 +37,12 @@ function ChapterDetail() {
         );
 
         const body = JSON.parse(response.data.body);
+        console.log("body", body);
         if (body && body.data) {
           setChapter(body.data);
           setNewTheoryContent(body.data.theory_content);
           setYoutubeLink(body.data.video_url || "");
-          setImageUrl(body.data.image_url || ""); // Fetch image URL
+          setImageUrl(body.data.image_url || "");
         }
         setLoading(false);
       } catch (error) {
@@ -55,7 +54,6 @@ function ChapterDetail() {
     fetchChapterDetail();
   }, [chapterId, token]);
 
-  // Convert file to Base64
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -64,16 +62,13 @@ function ChapterDetail() {
       reader.onerror = (error) => reject(error);
     });
 
-  // Handle save functionality
   const handleSaveTheory = async () => {
     try {
       setIsUploading(true);
 
-      // Prepare content to save
       const quillContent = quillRef.current.getEditor().root.innerHTML;
       let videoUrlToSave = chapter.video_url;
 
-      // Handle video upload
       if (selectedOption === "youtube") {
         videoUrlToSave = youtubeLink;
       } else if (selectedOption === "upload" && videoFile) {
@@ -94,7 +89,6 @@ function ChapterDetail() {
         videoUrlToSave = videoResponse.data.url;
       }
 
-      // Handle image upload
       let imageUrlToSave = imageUrl;
       if (imageFile) {
         const base64Image = await toBase64(imageFile);
@@ -113,8 +107,7 @@ function ChapterDetail() {
         imageUrlToSave = imageResponse.data.imageUrl;
       }
 
-      // Save theory content, video, and image URL
-      const response = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
         {
           theory_content: quillContent,
@@ -155,99 +148,146 @@ function ChapterDetail() {
       <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
 
       <div className="chapterDetail-editorContainer">
-        {isEditing ? (
-          <div>
+        {/* Theory Content (Left Side) */}
+        <div className="chapterDetail-content">
+          {isEditing ? (
             <ReactQuill
               ref={quillRef}
               value={newTheoryContent}
               onChange={setNewTheoryContent}
               theme="snow"
-              className="chapterDetail-editor"
+              modules={{
+                toolbar: [
+                  [{ header: "1" }, { header: "2" }, { font: [] }],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["bold", "italic", "underline"],
+                  ["link"],
+                  ["blockquote"],
+                  [{ align: [] }],
+                  ["image"],
+                ],
+              }}
+              formats={[
+                "header", "font", "list", "bold", "italic", "underline", "link", "blockquote","code-block", "image", "align",
+              ]}
+              required
             />
-            <div className="chapterDetail-optionSection">
-              <label>Video Option:</label>
-              <select
-                value={selectedOption}
-                onChange={(e) => setSelectedOption(e.target.value)}
-              >
-                <option value="youtube">YouTube Link</option>
-                <option value="upload">Upload Video</option>
-              </select>
-            </div>
-            {selectedOption === "youtube" ? (
-              <div className="chapterDetail-youtubeSection">
-                <label>YouTube Link:</label>
-                <input
-                  type="text"
-                  value={youtubeLink}
-                  onChange={(e) => setYoutubeLink(e.target.value)}
-                  placeholder="Enter YouTube link"
-                />
+          ) : (
+            <div dangerouslySetInnerHTML={{ __html: chapter.theory_content }} />
+          )}
+        </div>
+
+        {/* Media (Right Side) */}
+        <div className="chapterDetail-mediaContainer">
+          {isEditing ? (
+            <div>
+              {/* Option Selector */}
+              <div style={{ marginBottom: "20px" }}>
+                <label>
+                  <input
+                    type="radio"
+                    name="videoOption"
+                    value="youtube"
+                    checked={selectedOption === "youtube"}
+                    onChange={() => setSelectedOption("youtube")}
+                  />
+                  YouTube Link
+                </label>
+                <label style={{ marginLeft: "20px" }}>
+                  <input
+                    type="radio"
+                    name="videoOption"
+                    value="upload"
+                    checked={selectedOption === "upload"}
+                    onChange={() => setSelectedOption("upload")}
+                  />
+                  Upload Video
+                </label>
               </div>
-            ) : (
-              <div className="chapterDetail-uploadSection">
-                <label>Upload Video:</label>
+
+              {/* YouTube Link */}
+              {selectedOption === "youtube" && (
+                <div>
+                  <label>YouTube Link:</label>
+                  <input
+                    type="text"
+                    value={youtubeLink}
+                    onChange={(e) => setYoutubeLink(e.target.value)}
+                    placeholder="Enter YouTube link"
+                    style={{ width: "100%", padding: "8px", marginTop: "8px" }}
+                  />
+                </div>
+              )}
+
+              {/* Upload Video */}
+              {selectedOption === "upload" && (
+                <div>
+                  <label>Upload Video:</label>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => setVideoFile(e.target.files[0])}
+                    style={{ marginTop: "8px" }}
+                  />
+                </div>
+              )}
+
+              {/* Upload Image */}
+              <div style={{ marginTop: "20px" }}>
+                <label>Upload Image:</label>
                 <input
                   type="file"
-                  accept="video/*"
-                  onChange={(e) => setVideoFile(e.target.files[0])}
+                  accept="image/*"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  style={{ marginTop: "8px" }}
                 />
-                {isUploading && <p>Uploading: {uploadProgress}%</p>}
               </div>
-            )}
-            <div className="chapterDetail-imageSection">
-              <label>Upload Image:</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files[0])}
-              />
             </div>
-            <div className="chapterDetail-buttons">
-              <button
-                className="chapterDetail-saveButton"
-                onClick={handleSaveTheory}
-                disabled={isUploading || uploadProgress > 0}
-              >
-                {isUploading ? "Saving..." : "Save"}
-              </button>
-              <button
-                className="chapterDetail-cancelButton"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div
-              className="chapterDetail-content"
-              dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
-            />
-            {chapter.video_url && (
-              <iframe
-                width="560"
-                height="315"
-                src={chapter.video_url}
-                title="Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="chapterDetail-iframe"
-              ></iframe>
+          ) : (
+            <>
+              {chapter.video_url && (
+                <iframe
+                  src={chapter.video_url}
+                  title="Video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="chapterDetail-iframe"
+                ></iframe>
+              )}
+              {imageUrl && (
+                <img
+                  src={imageUrl}
+                  alt="Chapter"
+                  className="chapterDetail-image"
+                />
+              )}
+            </>
+          )}
+
+          {/* Buttons */}
+          <div className="chapterDetail-buttons">
+            {isEditing ? (
+              <>
+                <button onClick={handleSaveTheory} disabled={isUploading}>
+                  {isUploading ? "Saving..." : "Save"}
+                </button>
+                <button
+                  className="chapterDetail-cancelButton"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setIsEditing(true)}>Edit Chapter</button>
             )}
-            {imageUrl && <img src={imageUrl} alt="Chapter" className="chapterDetail-image" />}
-            <button
-              className="chapterDetail-editButton"
-              onClick={() => setIsEditing(true)}
-            >
-              Edit Chapter
-            </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
+
+
   );
 }
 
