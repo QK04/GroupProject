@@ -26,6 +26,7 @@ import ChapterListStudent from './components/ChapterListStudent';
 import ResultPage from './components/ResultPage.jsx';
 import SubjectMainPage from './components/SubjectMainPage';
 import Exercise from './components/Exercise';
+import ChatArea from './components/ChatArea.jsx';
 import './App.css';
 import ChapterDetailStudent from './components/ChapterDetailStudent.jsx';
 import StudentSubjectCard from './components/studentSubjectCard.jsx';
@@ -40,9 +41,6 @@ const App = () => {
   return (
     <Router>
       <AuthProvider>
-        
-        
-        
         {/* Routes */}
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -99,6 +97,12 @@ const App = () => {
             element={<FullListTest/>}
           />
           <Route
+            path="/chat"
+            element={<ChatArea />}
+          />
+          <Route path="/chat/:conversationId" element={<ChatArea />} />
+
+          <Route
             path="/ViewTest/:testId"
             element={<ViewTest/>}
           />
@@ -107,6 +111,7 @@ const App = () => {
           path="/TestCreationOptions"
           element={<TestCreationOptions />} 
           />
+          
 
           <Route
             path="/test/:testId"
@@ -144,7 +149,6 @@ const App = () => {
             }
           />
           <Route path="/" element={<Navigate to="/login" />} />
-        
         </Routes>
       </AuthProvider>
     </Router>

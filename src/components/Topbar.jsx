@@ -1,7 +1,6 @@
 import React from "react";
 import menuIcon from "../assets/menu.png";
 import logoIcon from "../assets/usthlogo.png";
-import historyIcon from "../assets/history.png";
 import "./Topbar.css";
 
 const TopBar = ({ toggleSidebar, toggleHistory }) => {
@@ -15,15 +14,7 @@ const TopBar = ({ toggleSidebar, toggleHistory }) => {
         className="menu-toggle"
         onClick={toggleSidebar}
       />
-      {/* History Toggle */}
-        <img
-          src={historyIcon}
-          alt="History Icon"
-          className="history-toggle"
-          onClick={toggleHistory}
-        />
         
-      
       {/* Logo */}
       <div className="logo-center">
         <img src={logoIcon} alt="Logo" className="logo" />
