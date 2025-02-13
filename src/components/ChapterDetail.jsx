@@ -10,7 +10,7 @@ import Sidebar from "./teacherSidebar";
 function ChapterDetail() {
   const [chapter, setChapter] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newTheoryContent, setNewTheoryContent] = useState("");
   const [youtubeLink, setYoutubeLink] = useState("");
@@ -33,8 +33,8 @@ function ChapterDetail() {
 
   useEffect(() => {
     const fetchChapterDetail = async () => {
-      setLoading(true); // Start loading
-      setError(null); // Clear previous errors
+      setLoading(true);
+      setError(null);
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}`,
@@ -47,32 +47,49 @@ function ChapterDetail() {
         );
 
         const body = JSON.parse(response.data.body);
+        console.log(body);
         if (body && body.data) {
           setChapter(body.data);
           setNewTheoryContent(body.data.theory_content);
           setYoutubeLink(body.data.video_url || "");
           setImageUrl(body.data.image_url || "");
         } else {
-          setError(new Error("Chapter data not found")); // Set error if data is missing
+          setError(new Error("Chapter data not found"));
         }
       } catch (error) {
         console.error("Failed to fetch chapter detail:", error);
-        setError(error); // Set error state
+        setError(error);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
     fetchChapterDetail();
   }, [chapterId, token]);
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = (error) => reject(error);
-    });
+  const convertToEmbedUrl = (url) => {
+    if (!url) return "";
+
+    let videoId = "";
+
+    // Convert mobile YouTube URL to standard
+    if (url.includes("m.youtube.com")) {
+      url = url.replace("m.youtube.com", "www.youtube.com");
+    }
+
+    // Extract video ID from YouTube URLs
+    const match = url.match(
+      /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+    );
+
+    if (match && match[1]) {
+      videoId = match[1];
+    } else {
+      return url; // Return original URL if it doesn't match
+    }
+
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
 
   const handleSaveTheory = async () => {
     try {
@@ -84,19 +101,15 @@ function ChapterDetail() {
       if (selectedOption === "youtube") {
         videoUrlToSave = youtubeLink;
       } else if (selectedOption === "upload" && videoFile) {
-        const base64Video = await toBase64(videoFile);
+        const formData = new FormData();
+        formData.append("file", videoFile);
         const videoResponse = await axios.post(
-          `${
-            import.meta.env.VITE_API_BASE_URL
-          }/chapter/${chapterId}/upload-video`,
-          {
-            file: base64Video,
-            fileName: videoFile.name,
-          },
+          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-video`,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -105,18 +118,15 @@ function ChapterDetail() {
 
       let imageUrlToSave = imageUrl;
       if (imageFile) {
-        const base64Image = await toBase64(imageFile);
+        const formData = new FormData();
+        formData.append("image", imageFile);
         const imageResponse = await axios.put(
-          `${
-            import.meta.env.VITE_API_BASE_URL
-          }/chapter/${chapterId}/upload-image`,
-          {
-            imageBase64: base64Image,
-          },
+          `${import.meta.env.VITE_API_BASE_URL}/chapter/${chapterId}/upload-image`,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -162,7 +172,6 @@ function ChapterDetail() {
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <div className="teacher-chapterDetail-container">
-        {/* Loading and Error Handling */}
         {loading ? (
           <p>Loading chapter details...</p>
         ) : error ? (
@@ -172,7 +181,6 @@ function ChapterDetail() {
             <h2 className="chapterDetail-title">{chapter.chapter_name}</h2>
 
             <div className="chapterDetail-editorContainer">
-              {/* Theory Content (Left Side) */}
               <div className="chapterDetail-content">
                 {isEditing ? (
                   <ReactQuill
@@ -180,149 +188,46 @@ function ChapterDetail() {
                     value={newTheoryContent}
                     onChange={setNewTheoryContent}
                     theme="snow"
-                    modules={{
-                      toolbar: [
-                        [{ header: "1" }, { header: "2" }, { font: [] }],
-                        [{ list: "ordered" }, { list: "bullet" }],
-                        ["bold", "italic", "underline"],
-                        ["link"],
-                        ["blockquote", "code-block"],
-                        [{ align: [] }],
-                        ["image"],
-                      ],
-                    }}
-                    formats={[
-                      "header",
-                      "font",
-                      "list",
-                      "bold",
-                      "italic",
-                      "underline",
-                      "link",
-                      "blockquote",
-                      "code-block",
-                      "image",
-                      "align",
-                    ]}
-                    required
                   />
                 ) : (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: chapter.theory_content }}
-                  />
+                  <div dangerouslySetInnerHTML={{ __html: chapter.theory_content }} />
                 )}
               </div>
 
-              {/* Media (Right Side) */}
               <div className="chapterDetail-mediaContainer">
                 {isEditing ? (
                   <div>
-                    {/* Option Selector */}
-                    <div style={{ marginBottom: "20px" }}>
-                      <label>
-                        <input
-                          type="radio"
-                          name="videoOption"
-                          value="youtube"
-                          checked={selectedOption === "youtube"}
-                          onChange={() => setSelectedOption("youtube")}
-                        />
-                        YouTube Link
-                      </label>
-                      <label style={{ marginLeft: "20px" }}>
-                        <input
-                          type="radio"
-                          name="videoOption"
-                          value="upload"
-                          checked={selectedOption === "upload"}
-                          onChange={() => setSelectedOption("upload")}
-                        />
-                        Upload Video
-                      </label>
-                    </div>
-
-                    {/* YouTube Link */}
-                    {selectedOption === "youtube" && (
-                      <div>
-                        <label>YouTube Link:</label>
-                        <input
-                          type="text"
-                          value={youtubeLink}
-                          onChange={(e) => setYoutubeLink(e.target.value)}
-                          placeholder="Enter YouTube link"
-                          style={{
-                            width: "100%",
-                            padding: "8px",
-                            marginTop: "8px",
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Upload Video */}
-                    {selectedOption === "upload" && (
-                      <div>
-                        <label>Upload Video:</label>
-                        <input
-                          type="file"
-                          accept="video/*"
-                          onChange={(e) => setVideoFile(e.target.files[0])}
-                          style={{ marginTop: "8px" }}
-                        />
-                      </div>
-                    )}
-
-                    {/* Upload Image */}
-                    <div style={{ marginTop: "20px" }}>
-                      <label>Upload Image:</label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => setImageFile(e.target.files[0])}
-                        style={{ marginTop: "8px" }}
-                      />
-                    </div>
+                    <input
+                      type="text"
+                      value={youtubeLink}
+                      onChange={(e) => setYoutubeLink(e.target.value)}
+                      placeholder="Enter YouTube link"
+                    />
                   </div>
                 ) : (
-                  <>
-                    {chapter.video_url && (
-                      <iframe
-                        src={chapter.video_url}
-                        title="Video"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className="chapterDetail-iframe"
-                      ></iframe>
-                    )}
-                    {imageUrl && (
-                      <img
-                        src={imageUrl}
-                        alt="Chapter"
-                        className="chapterDetail-image"
-                      />
-                    )}
-                  </>
+                  chapter.video_url && (
+                    <iframe
+                      src={convertToEmbedUrl(chapter.video_url)}
+                      title="Video"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="chapterDetail-iframe"
+                    ></iframe>
+                  )
                 )}
 
-                {/* Buttons */}
+                {imageUrl && <img src={imageUrl} alt="Chapter" className="chapterDetail-image" />}
                 <div className="chapterDetail-buttons">
                   {isEditing ? (
                     <>
-                      <button onClick={handleSaveTheory} disabled={isUploading}>
+                      <button className="edit" onClick={handleSaveTheory} disabled={isUploading}>
                         {isUploading ? "Saving..." : "Save"}
                       </button>
-                      <button
-                        className="chapterDetail-cancelButton"
-                        onClick={() => setIsEditing(false)}
-                      >
-                        Cancel
-                      </button>
+                      <button className="edit" onClick={() => setIsEditing(false)}>Cancel</button>
                     </>
                   ) : (
-                    <button onClick={() => setIsEditing(true)}>
-                      Edit Chapter
-                    </button>
+                    <button className="edit" onClick={() => setIsEditing(true)}>Edit Chapter</button>
                   )}
                 </div>
               </div>
